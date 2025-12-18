@@ -24,7 +24,6 @@ function CapnhatthongsomaycaoSection() {
     try {
       setLoading(true);
       const res = await thongsomaycaoService.getThongsomaycao();
-      console.log(res.data);
       setData(res.data || []);
     } catch (err) {
       message.error('Không tải được dữ liệu');

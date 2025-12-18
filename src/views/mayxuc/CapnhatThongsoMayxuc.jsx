@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Space, Button, Popconfirm, Table } from 'antd';
+import { useEffect, useState, useMemo } from 'react';
+import { Space, Button, Popconfirm, Table, Row, Col, message, Form } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import ActionBar from '/src/sections/mayxuc/ActionBar';
 import SearchBar from '/src/sections/mayxuc/SearchBar';
 import ThongSoModal from '/src/sections/mayxuc/ThongSoModal';
@@ -13,19 +14,12 @@ function CapnhatThongsoMayxuc() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
-
-  //   const loadData = async (keyword = '') => {
-  //     setLoading(true);
-  //     const res = await thongsomayxucService.getThongsomayxuc(keyword);
-  //     setData(res || []);
-  //     setLoading(false);
-  //   };
-
+  const [searchText, setSearchText] = useState('');
+  const [form] = Form.useForm();
   const fetchData = async () => {
     try {
       setLoading(true);
       const res = await thongsomayxucService.getThongsomayxuc();
-      console.log(res.data);
       setData(res.data || []);
     } catch (err) {
       message.error('Không tải được dữ liệu');
@@ -37,7 +31,7 @@ function CapnhatThongsoMayxuc() {
   const fetchMayxuc = async () => {
     try {
       const res = await danhmucmayxucService.getDanhmucmayxucs();
-      setMayXucListt(res.data || []);
+      setMayXucList(res.data || []);
     } catch {
       message.error('Không tải được danh mục máy cào');
     }
@@ -59,6 +53,11 @@ function CapnhatThongsoMayxuc() {
     setEditing(null);
     fetchData();
   };
+  const handleOpenAdd = () => {
+    setEditing(null);
+    form.resetFields();
+    setModalOpen(true);
+  };
 
   const handleDelete = async (id) => {
     await thongsomayxucService.deleteThongsomayxuc(id);
@@ -74,7 +73,7 @@ function CapnhatThongsoMayxuc() {
   };
 
   const columns = [
-    { title: 'Máy xúc', dataIndex: 'tenMayXuc' },
+    { title: 'Thiết bị', dataIndex: 'tenThietBi' },
     { title: 'Nội dung', dataIndex: 'noiDung' },
     { title: 'Đơn vị tính', dataIndex: 'donViTinh' },
     { title: 'Thông số', dataIndex: 'thongSo' },
@@ -83,44 +82,47 @@ function CapnhatThongsoMayxuc() {
       render: (_, record) => (
         <Space>
           <Button
-            size="small"
+            icon={<EditOutlined />}
             onClick={() => {
               setEditing(record);
               setModalOpen(true);
             }}
-          >
-            Sửa
-          </Button>
+          ></Button>
           <Popconfirm title="Xóa bản ghi?" onConfirm={() => handleDelete(record.id)}>
-            <Button size="small" danger>
-              Xóa
-            </Button>
+            <Button danger icon={<DeleteOutlined />}></Button>
           </Popconfirm>
         </Space>
       )
     }
   ];
+
+  // ================= SEARCH =================
+  const filteredData = useMemo(() => {
+    if (!searchText) return data;
+    return data.filter((item) => Object.values(item).join(' ').toLowerCase().includes(searchText.toLowerCase()));
+  }, [data, searchText]);
+
   return (
     <>
-      <Space>
-        <SearchBar onSearch={fetchData} />
-
-        <ActionBar
-          onAdd={() => {
-            setEditing(null);
-            setModalOpen(true);
-          }}
-          onDeleteMultiple={handleDeleteMultiple}
-          disabledDelete={selectedRowKeys.length === 0}
-          data={data}
-        />
-      </Space>
+      <Row gutter={8}>
+        <Col flex="auto">
+          <SearchBar onSearch={setSearchText} />
+        </Col>
+        <Col>
+          <ActionBar
+            handleOpenAdd={handleOpenAdd}
+            onDeleteMultiple={handleDeleteMultiple}
+            disabledDelete={selectedRowKeys.length === 0}
+            data={data}
+          />
+        </Col>
+      </Row>
 
       <Table
         rowKey="id"
         loading={loading}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys
@@ -129,6 +131,7 @@ function CapnhatThongsoMayxuc() {
 
       <ThongSoModal
         open={modalOpen}
+        form={form}
         onCancel={() => setModalOpen(false)}
         onSubmit={handleSubmit}
         initialValues={editing}

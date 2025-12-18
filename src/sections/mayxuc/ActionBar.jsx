@@ -1,7 +1,7 @@
 import { Button, Space } from 'antd';
 import * as XLSX from 'xlsx';
 
-export default function ActionBar({ onAdd, onDeleteMultiple, disabledDelete, data }) {
+export default function ActionBar({ handleOpenAdd, onDeleteMultiple, disabledDelete, data }) {
   const exportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
@@ -11,7 +11,7 @@ export default function ActionBar({ onAdd, onDeleteMultiple, disabledDelete, dat
 
   return (
     <Space style={{ marginBottom: 16 }}>
-      <Button type="primary" onClick={onAdd}>
+      <Button type="primary" onClick={handleOpenAdd}>
         Thêm mới
       </Button>
 

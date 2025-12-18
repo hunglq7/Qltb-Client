@@ -14,7 +14,7 @@ const deleteDanhmucmayxucs = async (data) => {
 
 
 const getDanhmucmayxucs = async () => {
-    return await api.get('Danhmucmayxuc').then((response) => {
+    return await api.get('Mayxuc').then((response) => {
         return response
     });
 };

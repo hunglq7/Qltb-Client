@@ -11,7 +11,7 @@ import uiComponents from './ui-components';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [navigation, capNhatThiebi]
+  items: [navigation, capNhatThiebi, pages]
 };
 
 export default menuItems;

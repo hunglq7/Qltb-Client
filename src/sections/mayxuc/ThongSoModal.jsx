@@ -1,7 +1,16 @@
 import { useEffect } from 'react';
 import { Modal, Form, Select, Input } from 'antd';
-function ThongSoModal({ open, onCancel, onSubmit, initialValues, mayXucList }) {
-  const [form] = Form.useForm();
+function ThongSoModal({ open, form, onCancel, onSubmit, initialValues, mayXucList }) {
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 }
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 14 }
+    }
+  };
 
   useEffect(() => {
     if (open) {
@@ -9,9 +18,9 @@ function ThongSoModal({ open, onCancel, onSubmit, initialValues, mayXucList }) {
     }
   }, [open, initialValues]);
   return (
-    <Modal open={open} title={initialValues?.id ? 'Cập nhật' : 'Thêm mới'} onCancel={onCancel} onOk={() => form.submit()}>
-      <Form form={form} layout="vertical" onFinish={onSubmit}>
-        <Form.Item label="Máy xúc" name="mayXucId" rules={[{ required: true, message: 'Không được để trống' }]}>
+    <Modal zIndex={1500} open={open} title={initialValues?.id ? 'Cập nhật' : 'Thêm mới'} onCancel={onCancel} onOk={() => form.submit()}>
+      <Form form={form} onFinish={onSubmit} {...formItemLayout} initialValues={{ remember: true }}>
+        <Form.Item label="Máy xúc" name="mayXucId" rules={[{ required: true, message: 'Thiết bị phải chọn' }]}>
           <Select placeholder="Chọn máy xúc">
             {mayXucList.map((m) => (
               <Select.Option key={m.id} value={m.id}>
@@ -21,15 +30,15 @@ function ThongSoModal({ open, onCancel, onSubmit, initialValues, mayXucList }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Nội dung" name="noiDung" rules={[{ required: true, message: 'Không được để trống' }]}>
+        <Form.Item label="Nội dung" name="noiDung" rules={[{ required: true, message: 'Nội dung không được để trống' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="Đơn vị tính" name="donViTinh" rules={[{ required: true, message: 'Không được để trống' }]}>
+        <Form.Item label="Đơn vị tính" name="donViTinh" rules={[{ required: true, message: 'Đơn vị không được để trống' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="Thông số" name="thongSo" rules={[{ required: true, message: 'Không được để trống' }]}>
+        <Form.Item label="Thông số" name="thongSo" rules={[{ required: true, message: 'Thông số không được để trống' }]}>
           <Input />
         </Form.Item>
       </Form>

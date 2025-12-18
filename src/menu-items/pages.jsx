@@ -2,7 +2,7 @@
 
 const pages = {
   id: 'pages',
-  title: 'Pages',
+  title: 'Hệ thống',
   type: 'group',
   children: [
     {

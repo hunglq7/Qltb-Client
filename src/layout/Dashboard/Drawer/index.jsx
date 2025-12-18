@@ -42,8 +42,8 @@ export default function MainDrawer() {
   return (
     <nav id="pc-sidebar" className={`pc-sidebar ${drawerOpen ? 'pc-sidebar-hide mob-sidebar-active' : ''} `}>
       <div className="navbar-wrapper">
-        <div className="m-header">
-          <a className="b-brand text-primary">
+        <div className="m-header justify-content-center">
+          <a className="b-brand text-primary mt-4">
             <Image src={logo} width={74} fluid className="logo logo-lg" alt="logo" />
           </a>
         </div>

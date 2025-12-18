@@ -2,7 +2,7 @@ const icons = { dashboard: <i className="ph ph-house-line" />, layouts: <i class
 
 const navigation = {
   id: 'group-dashboard-loading-unique',
-  title: 'Navigation',
+  title: '',
   type: 'group',
   icon: icons.dashboard,
   children: [
