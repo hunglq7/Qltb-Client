@@ -7,7 +7,10 @@ import SalesPerformanceCard from 'components/cards/SalesPerformanceCard';
 import SocialStatsCard from 'components/cards/SocialStatsCard';
 import StatIndicatorCard from 'components/cards/StatIndicatorCard';
 import { UsersMap, EarningChart, RatingCard, RecentUsersCard } from 'sections/dashboard/default';
-
+import { myData } from '../../../utils/data';
+//ThietbiCard
+import ThietbiCard from '../../../components/cards/ThietbiCard';
+import { data } from 'react-router-dom';
 // ===============================|| SALES PERFORMANCE CARD - DATA ||============================== //
 
 const salesPerformanceData = [
@@ -107,9 +110,35 @@ const socialStatsData = [
 // ================================|| DASHBOARD - DEFAULT ||============================== //
 
 export default function DefaultPage() {
+  const Data = myData;
+  //Dùng vòng lặp để gán tổng vào myData
+  for (let i = 0; i < myData.length; i++) {
+    switch (Data[i].name) {
+      case 'bomnuoc':
+        Data[i].sl = nill;
+        break;
+      case 'toidien':
+        Data[i].sl = null;
+        break;
+      case 'maycao':
+        Data[i].sl = null;
+        break;
+      case 'bangtai':
+        Data[i].sl = null;
+        break;
+      default:
+        Data[i].sl = null;
+    }
+  }
+
   return (
-    <Row>
-      {/* row - 1 */}
+    <Row xs={{ cols: 1, gutter: 2 }} md={{ cols: 3, gutter: 4 }} lg={{ cols: 6, gutter: 4 }}>
+      <Col>
+        {Data.map((item) => (
+          <ThietbiCard key={item.title} {...item} />
+        ))}
+      </Col>
+      {/* row - 1
       {salesPerformanceData.map((item, index) => (
         <Col key={index} md={index === 2 ? 12 : 6} xl={4}>
           <SalesPerformanceCard {...item} />
@@ -117,30 +146,30 @@ export default function DefaultPage() {
       ))}
 
       {/* row - 2 */}
-      <Col md={6} xl={8}>
+      {/* <Col md={6} xl={8}>
         <UsersMap />
-      </Col>
-      <Col md={6} xl={4}>
+      </Col> */}
+      {/* <Col md={6} xl={4}>
         <>
           <EarningChart />
           <StatIndicatorCard data={statIndicatorData} />
         </>
-      </Col>
+      </Col> */}
 
       {/* row - 3 */}
-      {socialStatsData.map((item, index) => (
+      {/* {socialStatsData.map((item, index) => (
         <Col key={index} md={index === 0 ? 12 : 6} xl={4}>
           <SocialStatsCard {...item} />
         </Col>
-      ))}
+      ))} */}
 
       {/* row - 4 */}
-      <Col md={6} xl={4}>
+      {/* <Col md={6} xl={4}>
         <RatingCard />
       </Col>
       <Col md={6} xl={8}>
         <RecentUsersCard />
-      </Col>
+      </Col> */}
     </Row>
   );
 }
