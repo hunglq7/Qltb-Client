@@ -1,12 +1,7 @@
 import api from '../../Utils/Api'
-const updateDanhmucmayxucs = async (data) => {
-    return api.put(`Danhmucmayxuc/UpdateMultiple`, data).then(response => {
-        return response
-    })
-}
 
-const deleteDanhmucmayxucs = async (data) => {
-    return api.post(`Danhmucmayxuc/DeleteMultipale`, data).then(response => {
+const deleteDanhmucmayxucs = async (ids) => {
+    return api.post(`Mayxuc/delete-multiple`, ids).then(response => {
         return response
     })
 }
@@ -19,9 +14,28 @@ const getDanhmucmayxucs = async () => {
     });
 };
 
+const addMayxuc=async(data)=>{
+    return await api.post('Mayxuc/add',data).then((response)=>{
+        return response
+    })
+}
+const updateMayxuc=async(data)=>{
+    return await api.put('Mayxuc/update',data).then((response)=>{
+        return response
+    })
+}
+const deleteMayxuc=async(id)=>{
+    return await api.delete(`Mayxuc/${id}`).then((response)=>{
+        return response
+    })
+}
+
+
 export const danhmucmayxucService = {
-    getDanhmucmayxucs,
-    updateDanhmucmayxucs,
+    addMayxuc,
+    updateMayxuc,
+    deleteMayxuc,
+    getDanhmucmayxucs, 
     deleteDanhmucmayxucs,
 
 }

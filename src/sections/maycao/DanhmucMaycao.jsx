@@ -4,6 +4,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined
 import { danhmucmaycaoService } from '../../services/maycao/danhmucmaycaoService';
 import * as XLSX from 'xlsx';
 import MaycaoToolbar from './MaycaoToolbar';
+
 const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
   return (
     <td {...restProps}>
@@ -46,6 +47,7 @@ export default function DanhmucMaycao() {
       setLoading(false);
     }
   };
+
   // ================= ADD / UPDATE =================
   const isEditing = (record) => record.key === editingKey;
 
@@ -263,25 +265,6 @@ export default function DanhmucMaycao() {
         handleExportExcel={handleExportExcel}
         selectedRowKeys={selectedRowKeys}
       />
-      {/* <Space style={{ marginBottom: 12 }}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={addNew} disabled={editingKey !== ''}>
-          Thêm mới
-        </Button>
-
-        <Popconfirm
-          title={`Xóa ${selectedRowKeys.length} dòng đã chọn?`}
-          onConfirm={handleDeleteMultiple}
-          okText="Xóa"
-          cancelText="Hủy"
-          disabled={selectedRowKeys.length === 0}
-        >
-          <Button danger disabled={selectedRowKeys.length === 0}>
-            Xóa nhiều
-          </Button>
-        </Popconfirm>
-
-        <Button onClick={fetchData}>Tải lại</Button>
-      </Space> */}
 
       <Table
         rowSelection={rowSelection}

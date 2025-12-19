@@ -166,7 +166,6 @@ function CapnhatthongsomaycaoSection() {
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'ThongSoMayCao');
-
     XLSX.writeFile(workbook, 'Thong_so_may_cao.xlsx');
   };
   return (

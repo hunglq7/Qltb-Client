@@ -1,25 +1,35 @@
-import { Button, Space } from 'antd';
-import * as XLSX from 'xlsx';
+import { Button, Col, Popconfirm } from 'antd';
 
-export default function ActionBar({ handleOpenAdd, onDeleteMultiple, disabledDelete, data }) {
-  const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'ThongSoMayXuc');
-    XLSX.writeFile(wb, 'thong-so-may-xuc.xlsx');
-  };
+import { PlusOutlined, DownloadOutlined, DeleteFilled } from '@ant-design/icons';
 
+export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRowKeys = [], handleExportExcel }) {
   return (
-    <Space style={{ marginBottom: 16 }}>
-      <Button type="primary" onClick={handleOpenAdd}>
-        Thêm mới
-      </Button>
+    <>
+      <Col>
+        <Button icon={<PlusOutlined />} type="primary" onClick={handleOpenAdd}>
+          Thêm mới
+        </Button>
+      </Col>
 
-      <Button danger disabled={disabledDelete} onClick={onDeleteMultiple}>
-        Xóa nhiều
-      </Button>
+      <Col>
+        <Popconfirm
+          title={`Bạn có chắc muốn xóa ${selectedRowKeys.length} bản ghi đã chọn?`}
+          onConfirm={onDeleteMultiple}
+          okText="Có"
+          cancelText="Không"
+          disabled={selectedRowKeys.length === 0}
+        >
+          <Button danger icon={<DeleteFilled />} disabled={selectedRowKeys.length === 0}>
+            Xóa đã chọn
+          </Button>
+        </Popconfirm>
+      </Col>
 
-      <Button onClick={exportExcel}>Xuất Excel</Button>
-    </Space>
+      <Col>
+        <Button icon={<DownloadOutlined />} onClick={handleExportExcel}>
+          Xuất Excel
+        </Button>
+      </Col>
+    </>
   );
 }

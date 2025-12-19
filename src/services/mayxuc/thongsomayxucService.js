@@ -21,8 +21,8 @@ const deleteThongsomayxuc = async (id) => {
         return response
     })
 }
-const deleteSelectThongsomayxuc = async (data) => {
-    return api.post(`Thongsokythuatmayxuc/DeleteMultipale`, data).then(response => {
+const deleteSelectThongsomayxuc = async (ids=[]) => {
+    return api.post(`Thongsokythuatmayxuc/delete-multiple`, ids).then(response => {
         return response
     })
 }
