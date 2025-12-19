@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Space, Button, Popconfirm, Table, Row, Col, message, Form } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import ActionBar from '/src/sections/mayxuc/ActionBar';
+import ActionBar from '/src//mayxuc/ActionBar';
 import SearchBar from '/src/sections/mayxuc/SearchBar';
 import ThongSoModal from '/src/sections/mayxuc/ThongSoModal';
 import { thongsomayxucService } from '../../services/mayxuc/thongsomayxucService';
