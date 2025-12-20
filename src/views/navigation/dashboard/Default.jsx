@@ -1,19 +1,9 @@
 // react-bootstrap
 
 import { Col, Row } from 'antd';
-// project-imports
-import SalesPerformanceCard from 'components/cards/SalesPerformanceCard';
-import SocialStatsCard from 'components/cards/SocialStatsCard';
-import StatIndicatorCard from 'components/cards/StatIndicatorCard';
-import { UsersMap, EarningChart, RatingCard, RecentUsersCard } from 'sections/dashboard/default';
-import { EditOutlined, HeartOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Flex } from 'antd';
-import { createStyles } from 'antd-style';
-
 import { myData } from '../../../utils/data';
 //ThietbiCard
 import ThietbiCard from '../../../components/cards/ThietbiCard';
-import { data } from 'react-router-dom';
 
 export default function DefaultPage() {
   const Data = myData;
@@ -27,7 +17,8 @@ export default function DefaultPage() {
         Data[i].sl = null;
         break;
       case 'maycao':
-        Data[i].sl = null;
+        Data[i].sl = 15;
+        Data[i].urlDanhmuc = '/maycao/danhmucmaycao';
         break;
       case 'bangtai':
         Data[i].sl = null;

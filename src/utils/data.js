@@ -15,7 +15,9 @@ export const myData = [
         name: "toidien",
         title: "Tời điện",
         desc: "Tổng số thiết bị",
-        url: "/toidien/tonghoptoidien",
+        urlCapnhat: "/toidien/tonghoptoidien",
+        urlDanhmuc:'/toidien/danhmuctoidien',
+        urlThongso:'/toidien/capnhattoidien',
         sl: null
     },
     {
@@ -23,23 +25,27 @@ export const myData = [
         name: "bomnuoc",
         title: "Bơm nước",
         desc: "Tổng số thiết bị",
-        url: "/quatgio/capnhatquatgio",
+        url: "/bomnuoc/capnhatbomnuoc",
         sl: null
     },
     {
         image: maycao,
         name: "maycao",
         title: "Máy cào",
-        desc: "Tổng số thiết bị",
-        url: "/maycao/capnhatmaycao",
-        sl: null
+        desc: "Tổng số thiết bị",       
+        urlDanhmuc:'/maycao/danhmucmaycao',
+        urlThongso:'/maycao/capnhatthongsomaycao',
+        urlCapnhat:'/maycao/capnhatmaycao',         
+        sl: 15
     },
     {
         image: bangtai,
         name: "bangtai",
         title: "Băng tải",
         desc: "Tổng số thiết bị",
-        url: "/bangtai/capnhatbangtai",
+        urlCapnhat: "/maycao/capnhatmaycao",
+        urlDanhmuc:'/toidien/danhmuctoidien',
+        urlThongso:'/toidien/capnhattoidien',  
         sl: null
     },
     {
@@ -47,7 +53,9 @@ export const myData = [
         name: "bangtai",
         title: "Biến áp",
         desc: "Tổng số thiết bị",
-        url: "/bienap/capnhatbienap",
+        urlCapnhat: "/bienap/capnhatbienap",
+        urlDanhmuc:'/bienap/danhmucbienap',
+        urlThongso:'/toidien/capnhatbienap',
         sl: null
     },
     {
@@ -55,7 +63,7 @@ export const myData = [
         name: "capdien",
         title: "Cáp điện",
         desc: "Tổng số thiết bị",
-        url: "/capdien/capnhatcapdien",
+        url: "/capdien/danhmuccapdien",
         sl: null
     },
     {

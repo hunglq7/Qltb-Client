@@ -22,6 +22,12 @@ const capNhatThiebi = {
           title: 'Thông số máy cào',
           type: 'item',
           url: '/maycao/capnhatthongsomaycao'
+        },
+        {
+          id: 'capnhatmaycao',
+          title: 'Cập nhật máy cào',
+          type: 'item',
+          url: '/maycao/capnhatmaycao'
         }
       ]
     },

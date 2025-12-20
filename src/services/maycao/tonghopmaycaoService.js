@@ -32,7 +32,7 @@ const deleteMaycaos = async (datas) => {
     })
 }
 
-export const tonghopquatgioService = {
+export const tonghopmaycaoService = {
     getMaycao,
     getMaycaoById,
     deleteMaycao,

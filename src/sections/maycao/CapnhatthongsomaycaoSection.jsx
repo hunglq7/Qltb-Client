@@ -67,7 +67,6 @@ function CapnhatthongsomaycaoSection() {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      console.log(values);
       if (editingRecord) {
         await thongsomaycaoService.updateThongsomaycao(values);
         message.success('Cập nhật thành công');

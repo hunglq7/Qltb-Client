@@ -7,6 +7,7 @@ import ProtectRouter from './ProtectRouter';
 // render - máy cào
 const DanhmucMaycao = Loadable(lazy(() => import('views/maycao/DanhmucMaycao')));
 const ThongsoMaycao = Loadable(lazy(() => import('views/maycao/Capnhatthongsomaycao')));
+const CapnhatMaycao = Loadable(lazy(() => import('views/maycao/Capnhatmaycao')));
 // render - máy xúc
 const DanhmucMayxuc = Loadable(lazy(() => import('views/mayxuc/DanhmucMayxuc')));
 const ThongsoMayxuc = Loadable(lazy(() => import('views/mayxuc/CapnhatThongSoMayxuc')));
@@ -33,6 +34,10 @@ const CapnhatthietbiRouters = {
             {
               path: 'capnhatthongsomaycao',
               element: <ThongsoMaycao />
+            },
+            {
+              path: 'capnhatmaycao',
+              element: <CapnhatMaycao />
             }
           ]
         },
