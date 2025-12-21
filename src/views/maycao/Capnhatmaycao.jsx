@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useMemo } from 'react';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Form, Button, Flex, Space, Input, Modal, Tabs, Table, message, Tag, Row, Popconfirm } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Form, Button, Space, Modal, Tabs, Table, message, Tag, Row, Popconfirm } from 'antd';
 import { tonghopmaycaoService } from '../../services/maycao/tonghopmaycaoService';
 import { danhmucmaycaoService } from '../../services/maycao/danhmucmaycaoService';
 import { donviService } from '../../services/donvi/donviService';
@@ -9,10 +9,15 @@ import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
 import ActionBar from '/src/components/ActionBar';
 import SearchBar from '/src/components/SearchBar';
-import MaycaoModel from '../../sections/maycao/MaycaoModel';
+import MaycaoForm from '../../sections/maycao/MaycaoForm';
+import NhatkyMaycaoTable from '../../sections/maycao/NhatkyMaycaoTable';
+import ThongsokythuatTable from '../../sections/maycao/ThongsokythuatTable';
+ThongsokythuatTable;
 function Capnhatmaycao() {
   const [data, setData] = useState([]);
   const [mayCaoList, setMayCaoList] = useState([]);
+  const [maycao, setMaycao] = useState([]);
+  const [activeTab, setActiveTab] = useState('1');
   const [donViList, setDonViList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -56,7 +61,7 @@ function Capnhatmaycao() {
     fetchDonvi();
   }, []);
 
-  // ================= ADD / UPDATE =================
+  // ================= ADD =================
 
   const handleOpenAdd = () => {
     setEditing(null);
@@ -64,12 +69,26 @@ function Capnhatmaycao() {
     setModalOpen(true);
   };
 
+  // ================= EDIT =================
+  const handleOpenEdit = (record) => {
+    setEditing(record);
+    setMaycao(record);
+    form.setFieldsValue({
+      ...record,
+      ngayLap: record.ngayLap ? dayjs(record.ngayLap) : null
+    });
+
+    setModalOpen(true);
+  };
+
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     await tonghopmaycaoService.deleteMaycao(id);
     message.success('Xóa thành công');
     fetchData();
   };
 
+  // ================= DELETE SELECT =================
   const handleDeleteMultiple = async () => {
     try {
       await tonghopmaycaoService.deleteMaycaos(selectedRowKeys);
@@ -82,22 +101,28 @@ function Capnhatmaycao() {
     }
   };
 
+  // ================= SUBMIT =================
   const handleSubmit = async (values) => {
     try {
+      const payload = {
+        ...values,
+        ngayLap: values.ngayLap ? values.ngayLap.toISOString() : null
+      };
+
       if (editing) {
-        await tonghopmaycaoService.updateTonghopmaycao(values);
+        await tonghopmaycaoService.updateTonghopmaycao(payload);
         message.success('Cập nhật thành công');
       } else {
-        await tonghopmaycaoService.addTonghopmaycao(values);
+        await tonghopmaycaoService.addTonghopmaycao(payload);
         message.success('Thêm mới thành công');
       }
+
       setModalOpen(false);
       setEditing(null);
+      form.resetFields();
       fetchData();
-    } catch (err) {
-      if (!err?.errorFields) {
-        message.error('Lưu dữ liệu thất bại');
-      }
+    } catch {
+      message.error('Lưu dữ liệu thất bại');
     }
   };
 
@@ -117,19 +142,13 @@ function Capnhatmaycao() {
       title: 'Dự phòng',
       dataIndex: 'duPhong',
       key: 'duPhong',
-      render: (_, val) => <Tag color={val ? 'red' : 'green'}>{val ? 'Dự phòng' : 'Đang dùng'}</Tag>
+      render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
     },
     {
       title: 'Hành động',
       render: (_, record) => (
         <Space>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => {
-              setEditing(record);
-              setModalOpen(true);
-            }}
-          ></Button>
+          <Button icon={<EditOutlined />} onClick={() => handleOpenEdit(record)} />
           <Popconfirm title="Xóa bản ghi?" onConfirm={() => handleDelete(record.id)}>
             <Button danger icon={<DeleteOutlined />}></Button>
           </Popconfirm>
@@ -141,7 +160,14 @@ function Capnhatmaycao() {
   // ================= SEARCH =================
   const filteredData = useMemo(() => {
     if (!searchText) return data;
-    return data.filter((item) => Object.values(item).join(' ').toLowerCase().includes(searchText.toLowerCase()));
+
+    return data.filter((item) =>
+      Object.values(item)
+        .filter((v) => v !== null && v !== undefined)
+        .join(' ')
+        .toLowerCase()
+        .includes(searchText.toLowerCase())
+    );
   }, [data, searchText]);
 
   // ================= EXPORT EXCEL =================
@@ -164,6 +190,37 @@ function Capnhatmaycao() {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'ThongSoThietBi');
     XLSX.writeFile(workbook, 'Thong-So-Thiet-Bi.xlsx');
   };
+
+  const tabItems = [
+    {
+      key: '1',
+      label: 'CẬP NHẬT MÁY CÀO',
+      children: (
+        <MaycaoForm
+          open={modalOpen}
+          form={form}
+          editingRecord={editing}
+          onCancel={() => setModalOpen(false)}
+          handleSubmit={handleSubmit}
+          initialValues={editing}
+          mayCaoList={mayCaoList}
+          donViList={donViList}
+        />
+      )
+    },
+    {
+      key: '2',
+      label: 'NHẬT KÝ THIẾT BỊ',
+      disabled: !editing,
+      children: editing ? <NhatkyMaycaoTable nhatkymaycao={maycao} /> : <div>Chọn bản ghi để xem nhật ký thiết bị</div>
+    },
+    {
+      key: '3',
+      label: 'THÔNG SỐ KỸ THUẬT',
+      disabled: !editing,
+      children: editing ? <ThongsokythuatTable thongsomaycao={maycao} /> : <div>Chọn bản ghi để xem thông số kỹ thuật</div>
+    }
+  ];
   console.log('Dữ liệu:', data, mayCaoList, donViList);
   return (
     <>
@@ -189,15 +246,16 @@ function Capnhatmaycao() {
         }}
       />
 
-      <MaycaoModel
+      <Modal
+        title={editing ? 'Cập nhật thiết bị' : 'Thêm mới thiết bị'}
         open={modalOpen}
-        form={form}
+        footer={null} // ✅ để Form tự submit
         onCancel={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-        initialValues={editing}
-        mayCaoList={mayCaoList}
-        donViList={donViList}
-      />
+        zIndex={1500}
+        width={900}
+      >
+        <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabItems}></Tabs>
+      </Modal>
     </>
   );
 }

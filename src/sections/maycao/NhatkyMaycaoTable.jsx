@@ -1,16 +1,35 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Form, Input, Button, Space, Popconfirm, message } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { danhmucmaycaoService } from '../../services/maycao/danhmucmaycaoService';
+import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Tag, Switch, DatePicker } from 'antd';
+import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { nhatkymaycaoService } from '../../services/maycao/nhatkymaycaoService';
+import SearchBar from '../../components/SearchBar';
+import ActionBar from '../../components/ActionBar';
 import * as XLSX from 'xlsx';
-import MaycaoToolbar from './MaycaoToolbar';
+import dayjs from 'dayjs';
+// ================= EditableCell =================
 
-const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
+const EditableCell = ({ editing, dataIndex, title, inputType, record, children, ...restProps }) => {
+  let inputNode;
+
+  switch (inputType) {
+    case 'boolean':
+      inputNode = <Switch />;
+      break;
+    case 'date':
+      inputNode = <DatePicker format={'DD/MM/YYYY'} />;
+      break;
+    default:
+      inputNode = <Input />;
+  }
   return (
     <td {...restProps}>
       {editing ? (
-        <Form.Item name={dataIndex} style={{ margin: 0 }}>
-          <Input />
+        <Form.Item
+          name={dataIndex} // 👈 BẮT BUỘC
+          valuePropName={inputType === 'boolean' ? 'checked' : 'value'}
+          style={{ margin: 0 }}
+        >
+          {inputNode}
         </Form.Item>
       ) : (
         children
@@ -19,13 +38,14 @@ const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
   );
 };
 
-export default function DanhmucMaycao() {
+function NhatkyMaycaoTable({ nhatkymaycao }) {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const id = nhatkymaycao?.id ?? nhatkymaycao?.mayCaoId ?? null;
 
   // ================= LOAD DATA =================
   useEffect(() => {
@@ -35,7 +55,8 @@ export default function DanhmucMaycao() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await danhmucmaycaoService.getDanhmucmaycaos();
+      const res = await nhatkymaycaoService.getNhatkyById(id);
+      console.log('res', res);
       const mapped = res.data.map((item) => ({
         ...item,
         key: item.id
@@ -48,57 +69,57 @@ export default function DanhmucMaycao() {
     }
   };
 
-  // ================= ADD / UPDATE =================
+  // ================= EDIT =================
   const isEditing = (record) => record.key === editingKey;
-
   const edit = (record) => {
     form.setFieldsValue({
-      tenThietBi: record.tenThietBi,
-      loaiThietBi: record.loaiThietBi,
-      ghiChu: record.ghiChu
+      ...record,
+      ngayThang: record.ngayThang ? dayjs(record.ngayThang) : null
     });
     setEditingKey(record.key);
   };
+  const cancel = () => setEditingKey('');
 
-  const cancel = () => {
-    if ((editingKey + '').startsWith('new_')) {
-      setData((prev) => prev.filter((i) => i.key !== editingKey));
-    }
-    setEditingKey('');
-  };
-
+  // ================= SAVE =================
   const save = async (key) => {
     try {
       const row = await form.validateFields();
-      const record = data.find((i) => i.key === key);
-
+      const record = data.find((item) => item.key === key);
+      if (!record) {
+        message.error('Không tìm thấy dòng dữ liệu');
+        return;
+      }
       const payload = {
-        id: record.id ?? 0,
-        tenThietBi: row.tenThietBi,
-        loaiThietBi: row.loaiThietBi,
-        ghiChu: row.ghiChu
+        ...record,
+        ...row,
+        tongHopMayCaoId: record.tongHopMayCaoId ?? id,
+        ngayThang: row.ngayThang
+          ? row.ngayThang.toISOString() // ✅ nên gửi ISO
+          : null
       };
-
-      setLoading(true);
-
-      if ((key + '').startsWith('new_')) {
-        await danhmucmaycaoService.addDanhmucmaycao(payload);
-        message.success('Thêm thành công');
-        fetchData();
+      if (!payload.tongHopMayCaoId) {
+        message.error('Thiếu thông tin tổng hợp máy cào');
+        return;
+      }
+      if (String(key).startsWith('new_')) {
+        // ➕ THÊM MỚI
+        const { id, key, ...createPayload } = payload;
+        console.log('createPayload', createPayload);
+        await nhatkymaycaoService.addNhatkymaycao(createPayload);
+        message.success('Thêm mới thành công');
       } else {
-        await danhmucmaycaoService.updateDanhmucmaycao(payload);
+        // ✏️ CẬP NHẬT
+
+        await nhatkymaycaoService.updateNhatkymaycao(payload);
         message.success('Cập nhật thành công');
-        setData((prev) => prev.map((item) => (item.key === key ? { ...item, ...payload } : item)));
       }
 
       setEditingKey('');
+      fetchData();
     } catch (err) {
-      message.error('Lưu thất bại');
-    } finally {
-      setLoading(false);
+      message.error('Lỗi dữ liệu');
     }
   };
-
   // ================= DELETE =================
   const handleDelete = async (record) => {
     try {
@@ -107,7 +128,7 @@ export default function DanhmucMaycao() {
       if ((record.key + '').startsWith('new_')) {
         setData((prev) => prev.filter((i) => i.key !== record.key));
       } else {
-        await danhmucmaycaoService.deleteDanhmucmaycao(record.id);
+        await nhatkymaycaoService.deleteNhatkymaycao(record.id);
         setData((prev) => prev.filter((i) => i.key !== record.key));
       }
 
@@ -121,13 +142,16 @@ export default function DanhmucMaycao() {
 
   // ================= ADD-NEW=================
 
-  const addNew = () => {
+  const handleOpenAdd = () => {
     const key = `new_${Date.now()}`;
     const newRow = {
       key,
       id: null,
-      tenThietBi: '',
-      loaiThietBi: '',
+      tongHopMayCaoId: id,
+      ngayThang: dayjs(),
+      donVi: '',
+      viTri: '',
+      trangThai: true,
       ghiChu: ''
     };
     setData((prev) => [newRow, ...prev]);
@@ -137,19 +161,42 @@ export default function DanhmucMaycao() {
 
   const columns = [
     {
-      title: 'Tên thiết bị',
-      dataIndex: 'tenThietBi',
-      editable: true
+      title: 'Ngày tháng',
+      dataIndex: 'ngayThang',
+      key: 'ngayThang',
+      width: 160,
+      editable: true,
+      inputType: 'date', // 👈 QUAN TRỌNG
+      fixed: 'left',
+      render: (val) => (val && dayjs(val).isValid() ? dayjs(val).format('DD/MM/YYYY') : '-')
     },
     {
-      title: 'Loại thiết bị',
-      dataIndex: 'loaiThietBi',
-      editable: true
+      title: 'Đơn vị',
+      dataIndex: 'donVi',
+      key: 'donVi',
+      editable: true,
+      fixed: 'left'
+    },
+    {
+      title: 'Vị trí',
+      dataIndex: 'viTri',
+      key: 'viTri',
+      editable: true,
+      width: 160
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'trangThai',
+      editable: true,
+      key: 'trangThai',
+      render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
     },
     {
       title: 'Ghi chú',
       dataIndex: 'ghiChu',
-      editable: true
+      key: 'ghiChu',
+      editable: true,
+      width: 160
     },
     {
       title: 'Hành động',
@@ -172,13 +219,17 @@ export default function DanhmucMaycao() {
     }
   ];
 
+  // ================= MERGEDColums Truyền inputType xuống Cell=================
   const mergedColumns = columns.map((col) => {
     if (!col.editable) return col;
+
     return {
       ...col,
       onCell: (record) => ({
         record,
+        inputType: col.dataIndex === 'trangThai' ? 'boolean' : col.dataIndex === 'ngayThang' ? 'date' : 'text',
         dataIndex: col.dataIndex,
+        title: col.title,
         editing: isEditing(record)
       })
     };
@@ -212,7 +263,7 @@ export default function DanhmucMaycao() {
       console.log(ids);
       // 👉 GỌI API 1 LẦN DUY NHẤT
       if (ids.length > 0) {
-        await danhmucmaycaoService.deleteDanhmucmaycaos(ids);
+        await nhatkymaycaoService.deleteNhatkyMaycaos(ids);
       }
 
       // 👉 CẬP NHẬT UI
@@ -258,19 +309,22 @@ export default function DanhmucMaycao() {
   };
   return (
     <Form form={form} component={false}>
-      <MaycaoToolbar
-        onSearch={setSearchText}
-        handleOpenAdd={addNew}
-        handleDeleteMultiple={handleDeleteMultiple}
-        handleExportExcel={handleExportExcel}
-        selectedRowKeys={selectedRowKeys}
-      />
+      <Row gutter={8} style={{ marginBottom: 12 }}>
+        <SearchBar onSearch={setSearchText} />
+        <ActionBar
+          handleOpenAdd={handleOpenAdd}
+          onDeleteMultiple={handleDeleteMultiple}
+          disabledDelete={selectedRowKeys.length === 0}
+          selectedRowKeys={selectedRowKeys}
+          handleExportExcel={handleExportExcel}
+        />
+      </Row>
 
       <Table
         rowSelection={rowSelection}
         components={{ body: { cell: EditableCell } }}
         bordered
-        dataSource={data}
+        dataSource={filteredData}
         columns={mergedColumns}
         rowKey="key"
         loading={loading}
@@ -279,3 +333,5 @@ export default function DanhmucMaycao() {
     </Form>
   );
 }
+
+export default NhatkyMaycaoTable;

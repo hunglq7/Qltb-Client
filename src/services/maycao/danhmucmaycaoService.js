@@ -6,8 +6,7 @@ const updateDanhmucmaycaos = async (data) => {
 }
 
 const deleteDanhmucmaycaos = async (ids) => {
-    debugger;
-    return api.post(`Danhmucmaycao/DeleteMultipale`, {data:ids}).then(response => {
+    return api.post(`Danhmucmaycao/DeleteMultipale`, ids).then(response => {
         return response
     })
 }

@@ -122,6 +122,7 @@ export default function DanhmucMayXuc() {
     form.setFieldsValue(newItem);
     setEditingKey(tempId);
   };
+
   // ================= DELETE SELECT=================
   const handleDeleteMultiple = async () => {
     await danhmucmayxucService.deleteDanhmucmayxucs(selectedRowKeys);
