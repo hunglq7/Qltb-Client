@@ -11,6 +11,7 @@ const CapnhatMaycao = Loadable(lazy(() => import('views/maycao/Capnhatmaycao')))
 // render - máy xúc
 const DanhmucMayxuc = Loadable(lazy(() => import('views/mayxuc/DanhmucMayxuc')));
 const ThongsoMayxuc = Loadable(lazy(() => import('views/mayxuc/CapnhatThongSoMayxuc')));
+const CapnhatMayxuc = Loadable(lazy(() => import('views/mayxuc/Capnhatmayxuc')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -51,6 +52,10 @@ const CapnhatthietbiRouters = {
             {
               path: 'capnhatthongsomayxuc',
               element: <ThongsoMayxuc />
+            },
+            {
+              path: 'capnhatmayxuc',
+              element: <CapnhatMayxuc />
             }
           ]
         }

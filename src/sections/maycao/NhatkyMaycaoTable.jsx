@@ -56,7 +56,6 @@ function NhatkyMaycaoTable({ nhatkymaycao }) {
     try {
       setLoading(true);
       const res = await nhatkymaycaoService.getNhatkyById(id);
-      console.log('res', res);
       const mapped = res.data.map((item) => ({
         ...item,
         key: item.id

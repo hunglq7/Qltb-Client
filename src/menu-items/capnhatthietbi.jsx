@@ -48,6 +48,12 @@ const capNhatThiebi = {
           title: 'Thông số máy xúc',
           type: 'item',
           url: '/mayxuc/capnhatthongsomayxuc'
+        },
+        {
+          id: 'capnhatmayxuc',
+          title: 'Cập nhật máy xúc',
+          type: 'item',
+          url: '/mayxuc/capnhatmayxuc'
         }
       ]
     }
