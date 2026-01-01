@@ -54,6 +54,7 @@ const capNhatThiebi = {
           title: 'Cập nhật máy xúc',
           type: 'item',
           url: '/mayxuc/capnhatmayxuc'
+<<<<<<< HEAD
         }
       ]
     },
@@ -80,6 +81,8 @@ const capNhatThiebi = {
           title: 'Cập nhật  tời điện',
           type: 'item',
           url: '/toidien/capnhattoidien'
+=======
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
         }
       ]
     }

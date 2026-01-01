@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+<<<<<<< HEAD
 import { Form, Button, Space, Modal, Tabs, Table, message, Tag, Row, Popconfirm, Col } from 'antd';
 import { useTonghopmayxucStore } from '../../stores/tonghopmayxucStore';
 import { useDanhmucmayxucStore } from '../../stores/danhmucmayxucStore';
@@ -16,11 +17,35 @@ import MayxucForm from '../../sections/mayxuc/MayxucForm';
 function Capnhatmayxuc() {
   const [activeTab, setActiveTab] = useState('1');
   const [mayxuc, setMayxuc] = useState([]);
+=======
+import { Form, Button, Space, Modal, Tabs, Table, message, Tag, Row, Popconfirm } from 'antd';
+import { capnhatmayxucService } from '../../services/mayxuc/capnhatmayxucService';
+import { danhmucmayxucService } from '../..//services/mayxuc/danhmucmayxucService';
+import { donviService } from '../../services/donvi/donviService';
+import { loaithietbiService } from '../../services/loaithietbi/loaithietbiService';
+import * as XLSX from 'xlsx';
+import dayjs from 'dayjs';
+import ActionBar from '/src/components/ActionBar';
+import SearchBar from '/src/components/SearchBar';
+import MayxucForm from '../../sections/mayxuc/MayxucForm';
+import NhatkyMayxucTable from '../..//sections/mayxuc/NhatkyMayxucTable';
+import ThongsoMayXucTable from '../../sections/mayxuc/ThongsoMayXucTable';
+
+function Capnhatmayxuc() {
+  const [data, setData] = useState([]);
+  const [mayXucList, setMayXucList] = useState([]);
+  const [loaiThietBiList, setLoaiThietBiList] = useState([]);
+  const [mayxuc, setMayxuc] = useState([]);
+  const [activeTab, setActiveTab] = useState('1');
+  const [donViList, setDonViList] = useState([]);
+  const [loading, setLoading] = useState(false);
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
+<<<<<<< HEAD
   const { dataDanhmucMayxuc, fetchDanhmucmayxuc } = useDanhmucmayxucStore();
   const { dataDonvi, fetchDonvi } = useDonviStore();
   const { dataLoaithietbi, fetchLoaithietbi } = useLoaithietbiStore();
@@ -43,6 +68,53 @@ function Capnhatmayxuc() {
     ];
   }, [dataTonghopMayxuc]);
 
+=======
+
+  // ================= LOAD DATA =================
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await capnhatmayxucService.getMayxuc();
+      setData(res.data || []);
+    } catch (err) {
+      message.error('Không tải được dữ liệu');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMayxuc = async () => {
+    try {
+      const res = await danhmucmayxucService.getDanhmucmayxucs();
+      setMayXucList(res.data || []);
+    } catch {
+      message.error('Không tải được danh mục máy xúc');
+    }
+  };
+  const fetchDonvi = async () => {
+    try {
+      const res = await donviService.getDonvi();
+      setDonViList(res.data || []);
+    } catch {
+      message.error('Không tải được danh mục máy xúc');
+    }
+  };
+  const fetchLoaiThietBi = async () => {
+    try {
+      const res = await loaithietbiService.getLoaithietbi();
+      setLoaiThietBiList(res.data || []);
+    } catch {
+      message.error('Không tải được danh mục máy xúc');
+    }
+  };
+  useEffect(() => {
+    fetchData();
+    fetchMayxuc();
+    fetchDonvi();
+    fetchLoaiThietBi();
+  }, []);
+
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
   // ================= ADD =================
 
   const handleOpenAdd = () => {
@@ -65,18 +137,31 @@ function Capnhatmayxuc() {
 
   // ================= DELETE =================
   const handleDelete = async (id) => {
+<<<<<<< HEAD
     await deleteTonghopmayxuc(id);
     message.success('Xóa thành công');
     fetchTonghopmayxuc();
+=======
+    await capnhatmayxucService.deleteMayxuc(id);
+    message.success('Xóa thành công');
+    fetchData();
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
   };
 
   // ================= DELETE SELECT =================
   const handleDeleteMultiple = async () => {
     try {
+<<<<<<< HEAD
       await deleteMultiple(selectedRowKeys);
       message.success('Xóa nhiều thành công');
       setSelectedRowKeys([]);
       fetchTonghopmayxuc();
+=======
+      await capnhatmayxucService.deleteMayxucs(selectedRowKeys);
+      message.success('Xóa nhiều thành công');
+      setSelectedRowKeys([]);
+      fetchData();
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
     } catch (error) {
       console.log('error,', error);
       message.error('Xóa bản ghi thất bại');
@@ -88,6 +173,7 @@ function Capnhatmayxuc() {
     try {
       const payload = {
         ...values,
+<<<<<<< HEAD
         ngayLap: values.ngayLap ? values.ngayLap.format('YYYY-MM-DD') : null
       };
       if (editing) {
@@ -95,24 +181,46 @@ function Capnhatmayxuc() {
         message.success('Cập nhật thành công');
       } else {
         await createTonghopmayxuc(payload);
+=======
+        Id: editing ? editing.id : undefined,
+        ngayLap: values.ngayLap ? values.ngayLap.toISOString() : null
+      };
+
+      if (editing) {
+        await capnhatmayxucService.updateTonghopmayxuc(payload);
+        message.success('Cập nhật thành công');
+      } else {
+        await capnhatmayxucService.addTonghopmayxuc(payload);
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
         message.success('Thêm mới thành công');
       }
 
       setModalOpen(false);
       setEditing(null);
       form.resetFields();
+<<<<<<< HEAD
       fetchTonghopmayxuc();
+=======
+      fetchData();
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
     } catch {
       message.error('Lưu dữ liệu thất bại');
     }
   };
 
   // ================= CREATE COLUMS =================
+<<<<<<< HEAD
 
   const columns = [
     { title: 'Mã quản lý', dataIndex: 'maQuanLy', key: 'maQuanLy' },
     { title: 'Tên thiết bị', dataIndex: 'tenMayXuc', key: 'tenMayXuc' },
     { title: 'Đơn vị', dataIndex: 'tenPhongBan', key: 'tenPhongBan' },
+=======
+  const columns = [
+    { title: 'Mã quản lý', dataIndex: 'maQuanLy', key: 'maQuanLy' },
+    { title: 'Tên thiết bị', dataIndex: 'tenMayXuc', key: 'tenThietBi' },
+    { title: 'Đơn vị', dataIndex: 'tenPhongBan', key: 'tenDonVi' },
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
     { title: 'Vị trí lắp đặt', dataIndex: 'viTriLapDat', key: 'viTriLapDat' },
     {
       title: 'Ngày lắp đặt',
@@ -120,7 +228,10 @@ function Capnhatmayxuc() {
       key: 'ngayLap',
       render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '')
     },
+<<<<<<< HEAD
     { title: 'Tình trạng TB', dataIndex: 'tinhTrang', key: 'tinhTrang' },
+=======
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
     {
       title: 'Dự phòng',
       dataIndex: 'duPhong',
@@ -142,21 +253,32 @@ function Capnhatmayxuc() {
 
   // ================= SEARCH =================
   const filteredData = useMemo(() => {
+<<<<<<< HEAD
     if (!searchText) return dataSource;
 
     return dataTonghopMayxuc.filter((item) =>
+=======
+    if (!searchText) return data;
+
+    return data.filter((item) =>
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
       Object.values(item)
         .filter((v) => v !== null && v !== undefined)
         .join(' ')
         .toLowerCase()
         .includes(searchText.toLowerCase())
     );
+<<<<<<< HEAD
   }, [dataSource, searchText]);
+=======
+  }, [data, searchText]);
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
 
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
+<<<<<<< HEAD
       'Thiết bị': dataDanhmuc.find((x) => x.id === item.danhmuctoitrucId)?.tenThietBi || '',
       'Nội dung': item.tenThietBi,
       'Đơn vị tính': item.viTriLapDat,
@@ -172,12 +294,62 @@ function Capnhatmayxuc() {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Tonghopmayxuc');
     XLSX.writeFile(workbook, 'Tong-hop-may-xuc.xlsx');
+=======
+      'Mã quản lý': item.maQuanLy,
+      'Thiết bị': item.tenMayXuc,
+      'Đơn vị': item.tenPhongBan,
+      'Loại thiết bị': item.loaiThietBi,
+      'Vị trí lắp đặt': item.viTriLapDat,
+      'Ngày lắp đặt': item.ngayLap ? dayjs(item.ngayLap).format('DD/MM/YYYY') : '',
+      'Tình trạng TB': item.duPhong ? 'Đang dùng' : 'Dự phòng',
+      'Số lượng': item.soLuong,
+      'Tình trạng hoạt động': item.tinhTrang,
+      'Ghi chú': item.ghiChu
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData, {
+      header: [
+        'STT',
+        'Mã quản lý',
+        'Thiết bị',
+        'Đơn vị',
+        'Loại thiết bị',
+        'Vị trí lắp đặt',
+        'Ngày lắp đặt',
+        'Tình trạng TB',
+        'Số lượng',
+        'Tình trạng hoạt động',
+        'Ghi chú'
+      ]
+    });
+
+    worksheet['!cols'] = [
+      { wch: 5 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 25 },
+      { wch: 20 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 30 }
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Cap-nhat-may-xuc');
+    XLSX.writeFile(workbook, 'Cap-nhat-may-xuc.xlsx');
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
   };
 
   const tabItems = [
     {
       key: '1',
+<<<<<<< HEAD
       label: 'CẬP NHẬT TỜI ĐIỆN',
+=======
+      label: 'CẬP NHẬT MÁY XÚC',
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
       children: (
         <MayxucForm
           open={modalOpen}
@@ -186,9 +358,15 @@ function Capnhatmayxuc() {
           onCancel={() => setModalOpen(false)}
           handleSubmit={handleSubmit}
           initialValues={editing}
+<<<<<<< HEAD
           mayXucList={dataDanhmucMayxuc}
           donViList={dataDonvi}
           loaiThietBiList={dataLoaithietbi}
+=======
+          mayXucList={mayXucList}
+          donViList={donViList}
+          loaiThietBiList={loaiThietBiList}
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
         />
       )
     },
@@ -196,7 +374,11 @@ function Capnhatmayxuc() {
       key: '2',
       label: 'NHẬT KÝ THIẾT BỊ',
       disabled: !editing,
+<<<<<<< HEAD
       children: editing ? <NhatkyMayxucTable thongsomayxuc={mayxuc} /> : <div>Chọn bản ghi để xem nhật ký thiết bị</div>
+=======
+      children: editing ? <NhatkyMayxucTable nhatkymayxuc={mayxuc} /> : <div>Chọn bản ghi để xem nhật ký thiết bị</div>
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
     },
     {
       key: '3',
@@ -218,6 +400,7 @@ function Capnhatmayxuc() {
           handleExportExcel={handleExportExcel}
         />
       </Row>
+<<<<<<< HEAD
       <Row style={{ marginBottom: 16 }}>
         <Col span={24}>
           <Tag variant="outlined" color="blue">
@@ -230,6 +413,8 @@ function Capnhatmayxuc() {
           </Tag>
         </Col>
       </Row>
+=======
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
 
       <Table
         rowKey="id"

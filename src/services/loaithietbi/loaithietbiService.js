@@ -1,10 +1,16 @@
+<<<<<<< HEAD
 import api from '/src/utils/Api'
+=======
+import api from '../../Utils/Api'
+
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
 
 const getLoaithietbi = async () => {
     return await api.get('Loaithietbi').then((response) => {
         return response
     });
 };
+<<<<<<< HEAD
 const addLoaithietbi = async (data) => {
     return await api.post('Loaithietbi', data).then(response => {
         return response
@@ -33,5 +39,12 @@ export const loaithietbiService = {
     updateLoaithietbi,
     deleteLoaithietbi,
     deleteLoaithietbis
+=======
+
+
+
+export const loaithietbiService = {
+    getLoaithietbi
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
 
 }

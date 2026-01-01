@@ -12,11 +12,14 @@ const CapnhatMaycao = Loadable(lazy(() => import('views/maycao/Capnhatmaycao')))
 const DanhmucMayxuc = Loadable(lazy(() => import('views/mayxuc/DanhmucMayxuc')));
 const ThongsoMayxuc = Loadable(lazy(() => import('views/mayxuc/CapnhatThongSoMayxuc')));
 const CapnhatMayxuc = Loadable(lazy(() => import('views/mayxuc/Capnhatmayxuc')));
+<<<<<<< HEAD
 //render - Tời điện
 
 const DanhmucToidien = Loadable(lazy(() => import('views/toidien/Danhmuctoidien')));
 const ThongsoToidien = Loadable(lazy(() => import('views/toidien/Thongsotoidien')));
 const CapnhatToidien = Loadable(lazy(() => import('views/toidien/Capnhattoidien')));
+=======
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -61,6 +64,7 @@ const CapnhatthietbiRouters = {
             {
               path: 'capnhatmayxuc',
               element: <CapnhatMayxuc />
+<<<<<<< HEAD
             }
           ]
         },
@@ -78,6 +82,8 @@ const CapnhatthietbiRouters = {
             {
               path: 'capnhattoidien',
               element: <CapnhatToidien />
+=======
+>>>>>>> 537f274e78cef12bbe19b109ca1c996ea85717c9
             }
           ]
         }
