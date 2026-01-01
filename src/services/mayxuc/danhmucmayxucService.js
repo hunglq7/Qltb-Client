@@ -5,9 +5,6 @@ const deleteDanhmucmayxucs = async (ids) => {
         return response
     })
 }
-
-
-
 const getDanhmucmayxucs = async () => {
     return await api.get('Mayxuc').then((response) => {
         return response

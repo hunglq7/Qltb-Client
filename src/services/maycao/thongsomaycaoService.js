@@ -11,8 +11,12 @@ const addThongsomaycao = async (data) => {
         return response
     })
 }
-const updateThongsomaycao = async (data) => {
-    return api.put(`Thongsokythuatmaycao/update`, data).then(response => {
+const updateThongsomaycao = async (id,data) => {
+    const maycaos={
+        id:id,
+        ...data
+    }
+    return api.put(`Thongsokythuatmaycao/update`, maycaos).then(response => {
         return response
     })
 }
@@ -22,7 +26,7 @@ const deleteThongsomaycao = async (id) => {
     })
 }
 const deleteSelectThongsomaycao = async (data) => {
-    return api.post(`Thongsokythuatmaycao/DeleteMultipale`, data).then(response => {
+    return api.post(`Thongsokythuatmaycao/DeleteMultiple`, data).then(response => {
         return response
     })
 }

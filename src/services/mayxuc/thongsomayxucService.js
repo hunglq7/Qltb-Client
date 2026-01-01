@@ -1,4 +1,6 @@
 import api from '../../Utils/Api'
+
+
 const getThongsomayxuc = async () => {
     return await api.get('Thongsokythuatmayxuc').then((response) => {
         return response
@@ -11,8 +13,12 @@ const addThongsomayxuc = async (data) => {
         return response
     })
 }
-const updateThongsomayxuc = async (data) => {
-    return api.put(`Thongsokythuatmayxuc/update`, data).then(response => {
+const updateThongsomayxuc = async (id,data) => {
+    const mayxucs={
+        id:id,
+        ...data
+    }
+    return api.put(`Thongsokythuatmayxuc/update`,mayxucs).then(response => {
         return response
     })
 }

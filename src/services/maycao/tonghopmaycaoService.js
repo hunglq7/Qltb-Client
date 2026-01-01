@@ -15,8 +15,12 @@ const addTonghopmaycao = async (data) => {
         return response
     })
 }
-const updateTonghopmaycao = async (data) => {
-    return api.put(`Tonghopmaycao/update`, data).then(response => {
+const updateTonghopmaycao = async (id,data) => {
+    const maycaos={
+        id:id,
+        ...data
+    }
+    return api.put(`Tonghopmaycao/update`, maycaos).then(response => {
         return response
     })
 }
@@ -27,7 +31,7 @@ const deleteMaycao = async (id) => {
 }
 
 const deleteMaycaos = async (datas) => {
-    return await api.post(`Tonghopmaycao/DeleteMultipale`, datas).then(response => {
+    return await api.post(`Tonghopmaycao/DeleteMultiple`, datas).then(response => {
         return response
     })
 }

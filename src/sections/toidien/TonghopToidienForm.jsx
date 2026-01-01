@@ -1,8 +1,8 @@
 import React from 'react';
 import { SaveOutlined } from '@ant-design/icons';
-import { Select, Input, Form, DatePicker, Flex, Space, Button, Switch } from 'antd';
+import { Select, Input, Form, DatePicker, Space, Button, Switch } from 'antd';
 const { TextArea } = Input;
-function MaycaoForm({ handleSubmit, form, mayCaoList = [], donViList = [], onCancel }) {
+function TonghopToidienForm({ handleSubmit, form, toiTrucList = [], donViList = [], onCancel }) {
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -19,16 +19,16 @@ function MaycaoForm({ handleSubmit, form, mayCaoList = [], donViList = [], onCan
       <Form.Item name="maQuanLy" label="Mã quản lý">
         <Input />
       </Form.Item>
-      <Form.Item name="mayCaoId" label="Máy cào" rules={[{ required: true, message: 'Vui lòng chọn máy cào' }]}>
-        <Select placeholder="Chọn máy cào">
-          {mayCaoList.map((item) => (
+      <Form.Item name="thietbiId" label="Thiết bị" rules={[{ required: true, message: 'Vui lòng chọn thiết bị' }]}>
+        <Select placeholder="Chọn tời điện">
+          {toiTrucList.map((item) => (
             <Select.Option key={item.id} value={item.id}>
               {item.tenThietBi}
             </Select.Option>
           ))}
         </Select>
       </Form.Item>
-      <Form.Item name="donViId" label="Đơn vị" rules={[{ required: true, message: 'Vui lòng chọn đơn vị' }]}>
+      <Form.Item name="donViSuDungId" label="Đơn vị" rules={[{ required: true, message: 'Vui lòng chọn đơn vị' }]}>
         <Select placeholder="Chọn đơn vị">
           {donViList.map((item) => (
             <Select.Option key={item.id} value={item.id}>
@@ -43,26 +43,20 @@ function MaycaoForm({ handleSubmit, form, mayCaoList = [], donViList = [], onCan
       <Form.Item name="viTriLapDat" label="Vị trí lắp đặt" rules={[{ required: true, message: 'Không được để trống' }]}>
         <Input />
       </Form.Item>
-      <Form.Item name="chieuDaiMay" label="Chiều dài máy" rules={[{ required: true, message: 'Không được để trống' }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item name="soLuongCauMang" label="SL cầu máng" rules={[{ required: true, message: 'Không được để trống' }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item name="soLuongXich" label="SL xích" rules={[{ required: true, message: 'Không được để trống' }]}>
-        <Input />
-      </Form.Item>
-
-      <Form.Item name="tinhTrangThietBi" label="Tình trạng TB" rules={[{ required: true, message: 'Không được để trống' }]}>
-        <Input />
-      </Form.Item>
-
       <Form.Item name="soLuong" label="Số lượng" rules={[{ required: true, message: 'Không được để trống' }]}>
         <Input />
       </Form.Item>
-      <Form.Item name="duPhong" label="Tình trạng">
-        <Switch />
+      <Form.Item name="tinhTrangThietBi" label="Tình trạng thiết bị" rules={[{ required: true, message: 'Không được để trống' }]}>
+        <Input />
       </Form.Item>
+      <Form.Item name="mucDichSuDung" label="Mục đích sử dụng" rules={[{ required: true, message: 'Không được để trống' }]}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item name="duPhong" label="Tình trạng">
+        <Switch checkedChildren="Đang dùng" unCheckedChildren="Dự phòng" />
+      </Form.Item>
+
       <Form.Item name="ghiChu" label="Ghi chú">
         <TextArea />
       </Form.Item>
@@ -90,4 +84,4 @@ function MaycaoForm({ handleSubmit, form, mayCaoList = [], donViList = [], onCan
   );
 }
 
-export default MaycaoForm;
+export default TonghopToidienForm;

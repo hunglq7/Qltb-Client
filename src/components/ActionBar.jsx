@@ -2,7 +2,7 @@ import { Button, Col, Popconfirm } from 'antd';
 
 import { PlusOutlined, DownloadOutlined, DeleteFilled } from '@ant-design/icons';
 
-export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRowKeys = [], handleExportExcel }) {
+export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRowKeys = [], handleExportExcel, disabledDelete }) {
   return (
     <>
       <Col>
@@ -17,9 +17,10 @@ export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRow
           onConfirm={onDeleteMultiple}
           okText="Có"
           cancelText="Không"
-          disabled={selectedRowKeys.length === 0}
+          // disabled={selectedRowKeys.length === 0}
+          disabled={disabledDelete}
         >
-          <Button danger icon={<DeleteFilled />} disabled={selectedRowKeys.length === 0}>
+          <Button danger icon={<DeleteFilled />} disabled={disabledDelete}>
             Xóa đã chọn
           </Button>
         </Popconfirm>

@@ -44,7 +44,7 @@ function CapnhatThongsoMayxuc() {
     fetchMayxuc();
   }, []);
 
-  // ================= ADD / UPDATE =================
+  // ================= ADD =================
 
   const handleOpenAdd = () => {
     setEditing(null);
@@ -52,12 +52,13 @@ function CapnhatThongsoMayxuc() {
     setModalOpen(true);
   };
 
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     await thongsomayxucService.deleteThongsomayxuc(id);
     message.success('Xóa thành công');
     fetchData();
   };
-
+  // ================= DELETE MULTIPLE =================
   const handleDeleteMultiple = async () => {
     try {
       await thongsomayxucService.deleteSelectThongsomayxuc(selectedRowKeys);
@@ -70,9 +71,10 @@ function CapnhatThongsoMayxuc() {
     }
   };
 
+  // ================= SAVE =================
   const handleSubmit = async (values) => {
     if (editing) {
-      await thongsomayxucService.updateThongsomayxuc(values);
+      await thongsomayxucService.updateThongsomayxuc(editing.id, values);
       message.success('Cập nhật thành công');
     } else {
       await thongsomayxucService.addThongsomayxuc(values);

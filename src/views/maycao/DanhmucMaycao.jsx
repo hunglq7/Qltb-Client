@@ -187,6 +187,7 @@ export default function DanhmucMaycao() {
       })
     };
   });
+
   //Khai báo biến chọn dòng dữ liệu
   // ================= SELECT-ROW =================
   const rowSelection = {
@@ -257,7 +258,6 @@ export default function DanhmucMaycao() {
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucmaycao');
-
     XLSX.writeFile(workbook, 'Danh_muc_may_cao.xlsx');
   };
   return (

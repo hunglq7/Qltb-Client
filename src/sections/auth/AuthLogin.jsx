@@ -17,7 +17,7 @@ import { emailSchema, passwordSchema } from 'utils/validationSchema';
 
 // assets
 import DarkLogo from 'assets/images/logo-dark.svg';
-
+import Logo from 'assets/images/logo-tmd.svg';
 // antd
 import { message } from 'antd';
 
@@ -65,7 +65,7 @@ export default function AuthLoginForm({ className, link }) {
   return (
     <MainCard className="mb-0 w-100 ">
       <div className="text-center">
-        <Image src={DarkLogo} alt="logo" />
+        <Image style={{ width: 84, height: 64 }} src={Logo} alt="logo" />
       </div>
 
       <Form onSubmit={handleSubmit(onSubmit)}>

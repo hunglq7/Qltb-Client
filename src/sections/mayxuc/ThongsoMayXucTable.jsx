@@ -1,27 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
-import { thongsomayxucService } from '../../services/mayxuc/thongsomayxucService';
+import React, { useEffect } from 'react';
+import { Table, Spin } from 'antd';
+import { useThongsomayxucStore } from '../../stores/thongsomayxucStore';
 
 function ThongsoMayXucTable({ thongsomayxuc }) {
-  const [data, setData] = useState([]);
-  const thongsomayxucData = thongsomayxuc;
-  // ================= GET DATA =================
+  const { dataThongsoMayxuc, getThongsomayxucById, loading } = useThongsomayxucStore();
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await thongsomayxucService.getThongsomayxucDetailById(thongsomayxucData.mayXucId);
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, [thongsomayxucData]);
+    if (thongsomayxuc?.mayxucId) {
+      getThongsomayxucById(thongsomayxuc.mayxucId);
+    }
+  }, [thongsomayxuc?.mayxucId]);
+
   const columns = [
-    { title: 'Nội dung', dataIndex: 'noiDung', key: 'noiDung' },
-    { title: 'Đơn vị tính', dataIndex: 'donViTinh', key: 'donViTinh' },
-    { title: 'Thông số', dataIndex: 'thongSo', key: 'thongSo' }
+    {
+      title: 'Nội dung',
+      dataIndex: 'noiDung'
+    },
+    {
+      title: 'Đơn vị tính',
+      dataIndex: 'donViTinh',
+      width: 150
+    },
+    {
+      title: 'Thông số',
+      dataIndex: 'thongSo',
+      width: 150
+    }
   ];
-  return <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />;
+
+  return (
+    <Spin spinning={loading}>
+      <Table
+        rowKey="id"
+        dataSource={Array.isArray(dataThongsoMayxuc) ? dataThongsoMayxuc : []}
+        columns={columns}
+        pagination={false}
+        bordered
+      />
+    </Spin>
+  );
 }
+
 export default ThongsoMayXucTable;

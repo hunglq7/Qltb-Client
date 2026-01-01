@@ -70,7 +70,7 @@ function Capnhatthongsomaycao() {
     try {
       const values = await form.validateFields();
       if (editing) {
-        await thongsomaycaoService.updateThongsomaycao(values);
+        await thongsomaycaoService.updateThongsomaycao(editing.id, values);
         message.success('Cập nhật thành công');
       } else {
         await thongsomaycaoService.addThongsomaycao(values);

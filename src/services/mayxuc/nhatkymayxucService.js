@@ -18,14 +18,14 @@ const addNhatkymayxuc = async (data) => {
 }
 
 const updateNhatkymayxuc = async (data) => {
-    return await api.put(`Nhatkymayxuc/Update`, data).then(response => {
+    return await api.put(`Nhatkymayxuc/update`, data).then(response => {
         return response
     })
 }
 
 
 const deleteNhatkyMayxucs = async (datas) => {
-    return await api.post(`Nhatkymayxuc/DeleteMultipale`, datas).then(response => {
+    return await api.post(`Nhatkymayxuc/DeleteMultiplet`, datas).then(response => {
         return response
     })
 }

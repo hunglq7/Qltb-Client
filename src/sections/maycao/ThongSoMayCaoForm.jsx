@@ -25,27 +25,25 @@ function ThongSoMayCaoForm({ form, mayCaoList, handleSubmit, onCancel }) {
         <Input />
       </Form.Item>
       {/* Nút Lưu / Hủy */}
-      <Form.Item>
-        <Flex justify="start">
-          <Space>
-            <Button
-              type="primary"
-              htmlType="submit" // 👈 gọi handleSubmit
-              icon={<SaveOutlined />}
-            >
-              Lưu
-            </Button>
+      <Form.Item wrapperCol={{ offset: 6 }}>
+        <Space>
+          <Button
+            type="primary"
+            htmlType="submit" // 👈 gọi handleSubmit
+            icon={<SaveOutlined />}
+          >
+            Lưu
+          </Button>
 
-            <Button
-              onClick={() => {
-                form.resetFields(); // optional
-                onCancel?.(); // 👈 đóng form
-              }}
-            >
-              Hủy
-            </Button>
-          </Space>
-        </Flex>
+          <Button
+            onClick={() => {
+              form.resetFields(); // optional
+              onCancel?.(); // 👈 đóng form
+            }}
+          >
+            Hủy
+          </Button>
+        </Space>
       </Form.Item>
     </Form>
   );

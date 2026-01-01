@@ -1,4 +1,4 @@
-import api from '../../utils/Api'
+import api from '/src/utils/Api'
 
 const getDonvi = async () => {
     return await api.get('Phongban').then((response) => {

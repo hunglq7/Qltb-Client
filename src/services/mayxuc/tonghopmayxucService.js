@@ -11,7 +11,7 @@ const getMayxucById = async (id) => {
     });
 };
 const addTonghopmayxuc = async (data) => {
-    return api.post(`Tonghopmayxuc`, data).then(response => {
+    return api.post(`Tonghopmayxuc/Add`, data).then(response => {
         return response
     })
 }
@@ -27,12 +27,12 @@ const deleteMayxuc = async (id) => {
 }
 
 const deleteMayxucs = async (datas) => {
-    return await api.post(`Tonghopmayxuc/DeleteMultipale`, datas).then(response => {
+    return await api.post(`Tonghopmayxuc/DeleteMultiple`, datas).then(response => {
         return response
     })
 }
 
-export const capnhatmayxucService = {
+export const tonghopmayxucService = {
     getMayxuc,
     getMayxucById,
     deleteMayxuc,

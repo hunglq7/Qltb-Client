@@ -48,6 +48,38 @@ const capNhatThiebi = {
           title: 'Thông số máy xúc',
           type: 'item',
           url: '/mayxuc/capnhatthongsomayxuc'
+        },
+        {
+          id: 'capnhatmayxuc',
+          title: 'Cập nhật máy xúc',
+          type: 'item',
+          url: '/mayxuc/capnhatmayxuc'
+        }
+      ]
+    },
+    {
+      id: 'toidien',
+      title: 'Tời điện',
+      type: 'collapse',
+      icon: <i className="ph ph-map-trifold" />,
+      children: [
+        {
+          id: 'danhmuc',
+          title: 'Danh mục tời điện',
+          type: 'item',
+          url: '/toidien/danhmuctoidien'
+        },
+        {
+          id: 'thongso',
+          title: 'Thông số  tời điện',
+          type: 'item',
+          url: '/toidien/thongsotoidien'
+        },
+        {
+          id: 'capnhat',
+          title: 'Cập nhật  tời điện',
+          type: 'item',
+          url: '/toidien/capnhattoidien'
         }
       ]
     }
