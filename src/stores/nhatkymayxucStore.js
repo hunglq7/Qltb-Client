@@ -1,74 +1,99 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { nhatkymayxucService } from '../services/mayxuc/nhatkymayxucService';
-export const useNhatkymayxucStore=create((set,get)=>({
-dataNhatkyMayxuc:[],
-loading: false,
-getNhatkymayxucById:async(id)=>{
-    set({loading:true});
+import { nhatkymayxucService } from '/src/services/mayxuc/nhatkymayxucService';
+
+export const useNhatkymayxucStore = create((set, get) => ({
+  // ================= STATE =================
+  dataNhatkyMayxuc: [],
+  loading: false,
+
+  // ================= GET BY TONGHOP ID =================
+  getNhatkymayxucById: async (tonghopmayxucId) => {
     try {
-        const data= await nhatkymayxucService.getNhatkyById(id);
-        set({dataNhatkyMayxuc:data.data,loading:false})
-    } catch (error) {
-       message.error('Failed to fetch Nhatkymayxuc');
-      set({ loading: false });  
-    }
-},
-createNhatkymayxuc: async (items) => {
-    set({ loading: true });
-    try {
-      const data = await nhatkymayxucService.addNhatkymayxuc(items);
-      set({ dataNhatkyMayxuc: [...get().dataNhatkyMayxuc, data], loading: false });
-    } catch (error) {
-      message.error('Failed to create Nhatkymayxuc');
+      set({ loading: true });
+      const res = await nhatkymayxucService.getNhatkyById(tonghopmayxucId);
+      console.log(res.data)
+      set({ dataNhatkyMayxuc: res.data.data || [] });
+    } catch (err) {
+      console.error(err);
+      message.error(res.data.message);
+    } finally {
       set({ loading: false });
     }
   },
- updateNhatkymayxuc: async (id,items) => {
-    set({ loading: true });
+
+  // ================= ADD =================
+  createNhatkymayxuc: async (payload) => {
     try {
-      const mayxucs={
-        id:id,
-        ...items
-      }
-      const data = await nhatkymayxucService.updateNhatkymayxuc(mayxucs);
-      const updatedNhatkymayxuc= get().dataNhatkyMayxuc.map((dv) => (dv.id === id ? data : dv));
-      set({ dataNhatkyMayxuc: updatedNhatkymayxuc, loading: false });
-    } catch (error) {
-      message.error('Failed to update Nhatkymayxuc');
+      set({ loading: true });
+
+      // Validate frontend level
+      if (!payload.tonghopmayxucId)
+        throw new Error('Thiếu tonghopmayxucId');
+
+      await nhatkymayxucService.addNhatkymayxuc(payload);
+    } catch (err) {
+      console.error(err);
+      message.error('Thêm mới thất bại');
+      throw err;
+    } finally {
       set({ loading: false });
     }
   },
+
+  // ================= UPDATE =================
+  updateNhatkymayxuc: async (id,payload) => {
+    try {
+      set({ loading: true });
+
+      if (!payload.id) throw new Error('Thiếu id cập nhật');
+
+      await nhatkymayxucService.updateNhatkymayxuc(id,payload);
+    } catch (err) {
+      console.error(err);
+      message.error('Cập nhật thất bại');
+      throw err;
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  // ================= DELETE ONE =================
   deleteNhatkymayxuc: async (id) => {
-    set({ loading: true });
     try {
+      set({ loading: true });
       await nhatkymayxucService.deleteNhatkymayxuc(id);
-      set({ 
-        dataNhatkyMayxuc: get().dataNhatkyMayxuc.filter((item) => item._id !== id), 
-        loading: false 
-      });
-      message.success('Xóa thành công');
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       message.error('Xóa thất bại');
+      throw err;
+    } finally {
       set({ loading: false });
     }
   },
-  // Thêm vào useThongsomayxucStore
-deleteMultiple: async (selectedIds) => {
-    set({ loading: true });
+
+  // ================= DELETE MULTIPLE =================
+  deleteMultiple: async (ids) => {
     try {
-        // selectedIds phải là mảng phẳng [1, 2, 3]
-        await nhatkymayxucService.deleteNhatkyMayxucs(selectedIds);        
-        
-        const currentData = get(). dataNhatkyMayxuc;
-        // Sử dụng item.id để khớp với rowKey="id" trong Table
-        const newData = currentData.filter(item => !selectedIds.includes(item.id));        
-        
-        set({  dataNhatkyMayxuc: newData, loading: false });
-    } catch (error) {
-        message.error('Lỗi khi xóa nhiều bản ghi');
-        set({ loading: false });
-        throw error; // Quăng lỗi để Component bắt được
+      if (!ids || ids.length === 0)
+        throw new Error('Danh sách id rỗng');
+
+      set({ loading: true });
+      await nhatkymayxucService.deleteNhatkyMayxucs(ids);
+    } catch (err) {
+      console.error(err);
+      message.error('Xóa nhiều dòng thất bại');
+      throw err;
+    } finally {
+      set({ loading: false });
     }
-}
+  },
+
+  // ================= RESET =================
+  resetStore: () => {
+    set({
+      dataNhatkyMayxuc: [],
+      loading: false
+    });
+  }
 }));
