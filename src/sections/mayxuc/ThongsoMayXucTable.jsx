@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Table, Spin } from 'antd';
-import { useThongsomayxucStore } from '../../stores/thongsomayxucStore';
+import { useThongsomayxucStore } from '../../stores/mayxuc/thongsomayxucStore';
 
 function ThongsoMayXucTable({ thongsomayxuc }) {
   const { dataThongsoMayxuc, getThongsomayxucById, loading } = useThongsomayxucStore();

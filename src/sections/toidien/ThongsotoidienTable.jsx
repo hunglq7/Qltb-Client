@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Table, Spin } from 'antd';
-import { useThongsotoidienStore } from '../../stores/thongsotoidienStore';
+import { useThongsotoidienStore } from '../../stores/toidien/thongsotoidienStore';
 function ThongsotoidienTable({ tonghoptoidien }) {
   const { dataThongso, getThongsotoidienById, loading } = useThongsotoidienStore();
   useEffect(() => {

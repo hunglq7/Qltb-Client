@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { loaithietbiService } from '../services/loaithietbi/loaithietbiService';
+import { loaithietbiService } from '/src/services/loaithietbi/loaithietbiService';
 export const useLoaithietbiStore=create((set,get)=>({
 dataLoaithietbi:[],
 loading: false,

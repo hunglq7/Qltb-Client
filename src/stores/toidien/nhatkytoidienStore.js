@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { nhatkyTonghoptoitrucService } from '../services/toidien/nhatkytoidienService';
+import { nhatkyTonghoptoitrucService } from '/src/services/toidien/nhatkytoidienService';
 
 export const useNhatkytoidienStore = create((set, get) => ({
   // ================= STATE =================

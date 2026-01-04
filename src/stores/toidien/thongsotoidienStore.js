@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { thongsokythuattoidienService } from '../services/toidien/thongsotoidienService';
+import { thongsokythuattoidienService } from '/src/services/toidien/thongsotoidienService';
 export const useThongsotoidienStore=create((set,get)=>({
 dataThongso:[],
 loading: false,

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { danhmucmayxucService } from '../services/mayxuc/danhmucmayxucService';
+import { danhmucmayxucService } from '/src/services/mayxuc/danhmucmayxucService';
 export const useDanhmucmayxucStore=create((set,get)=>({
 dataDanhmucMayxuc:[],
 loading: false,

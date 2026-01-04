@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { tonghoptoidienService } from '../services/toidien/capnhattoidienService';
+import { tonghoptoidienService } from '/src/services/toidien/capnhattoidienService';
 export const useTonghoptoidienStore=create((set,get)=>({
 dataTonghop:[],
 totalRecords:[],

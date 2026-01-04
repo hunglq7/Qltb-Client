@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
-import { useDanhmuctoidienStore } from '../../stores/damuctoidienStore';
+import { useDanhmuctoidienStore } from '../../stores/toidien/damuctoidienStore';
 
 /* ================= Editable Cell ================= */
 const EditableCell = ({ editing, dataIndex, inputType, children, ...restProps }) => {

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { danhmuctoidienService } from '../services/toidien/danhmuctoidienService';
+import { danhmuctoidienService } from '/src/services/toidien/danhmuctoidienService';
 export const useDanhmuctoidienStore=create((set,get)=>({
 dataDanhmuc:[],
 loading: false,

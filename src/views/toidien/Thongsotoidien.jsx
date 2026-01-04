@@ -5,8 +5,8 @@ import MainCard from '../../components/MainCard';
 import ActionBar from '/src/components/ActionBar';
 import SearchBar from '/src/components/SearchBar';
 import ThongsoToidienModal from '/src/sections/toidien/ThongsoToidienModal';
-import { useThongsotoidienStore } from '../../stores/thongsotoidienStore';
-import { useDanhmuctoidienStore } from '../../stores/damuctoidienStore';
+import { useThongsotoidienStore } from '../../stores/toidien/thongsotoidienStore';
+import { useDanhmuctoidienStore } from '../../stores/toidien/damuctoidienStore';
 import * as XLSX from 'xlsx';
 
 function Thongsotoidien() {

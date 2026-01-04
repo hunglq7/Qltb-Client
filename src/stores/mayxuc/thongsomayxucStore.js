@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { thongsomayxucService } from '../services/mayxuc/thongsomayxucService';
+import { thongsomayxucService } from '/src/services/mayxuc/thongsomayxucService';
 
 export const useThongsomayxucStore = create((set, get) => ({
   dataThongsoMayxuc: [],

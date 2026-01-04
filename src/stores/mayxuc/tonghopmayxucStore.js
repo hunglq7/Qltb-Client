@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { tonghopmayxucService } from '../services/mayxuc/tonghopmayxucService';
+import { tonghopmayxucService } from '/src/services/mayxuc/tonghopmayxucService';
 export const useTonghopmayxucStore=create((set,get)=>({
 dataTonghopMayxuc:[],
 totalRecords:[],

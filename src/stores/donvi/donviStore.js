@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { donviService } from '../services/donvi/donviService';
+import { donviService } from '/src/services/donvi/donviService';
 export const useDonviStore=create((set,get)=>({
 dataDonvi:[],
 loading: false,
