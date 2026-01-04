@@ -51,5 +51,6 @@ export const thongsomaycaoService = {
     updateThongsomaycao,
     deleteThongsomaycao,
     deleteSelectThongsomaycao,
-    getThongsomaycaoDetailById
+    getThongsomaycaoDetailById,
+   
 }

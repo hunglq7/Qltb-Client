@@ -14,6 +14,24 @@ fetchThongsotoidien:async()=>{
       set({ loading: false });  
     }
 },
+
+getThongsotoidienById: async (id) => {
+  set({ loading: true });
+  try {
+    const res = await thongsokythuattoidienService.getThongsotoidienDetailById(id);
+
+    const list = Array.isArray(res.data)
+      ? res.data
+      : res.data?.data || [];
+
+    set({
+      dataThongso: list,
+      loading: false
+    });
+  } catch {
+    set({ dataThongso: [], loading: false });
+  }
+},
 createThongsotoidien: async (Thongso) => {
     set({ loading: true });
     try {

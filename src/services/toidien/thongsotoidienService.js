@@ -24,10 +24,16 @@ const deleteMultipleThongsokythuattoidien = async (listItems) => {
     debugger
     return await api.post('Thongsokythuattoitruc/DeleteMultiple', listItems).then((response) => response);
 };
+const getThongsotoidienDetailById = async (id) => {
+    return await api.get(`Thongsokythuattoitruc/DetailById/${id}`).then(response => {
+        return response
+    })
+}
 export const thongsokythuattoidienService={
     getThongsokythuattoidien,
     createThongsokythuattoidien,
     updateThongsokythuattoidien,
     deleteThongsokythuattoidien,
-    deleteMultipleThongsokythuattoidien
+    deleteMultipleThongsokythuattoidien,
+    getThongsotoidienDetailById
 }

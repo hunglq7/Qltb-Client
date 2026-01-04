@@ -1,14 +1,15 @@
 import React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Form, Button, Space, Modal, Tabs, Table, message, Tag, Row, Popconfirm, Col } from 'antd';
+import { Form, Button, Space, Modal, Tabs, Table, message, Tag, Row, Popconfirm } from 'antd';
+import MainCard from 'components/MainCard';
 import { useDanhmuctoidienStore } from '../../stores/damuctoidienStore';
 import { useTonghoptoidienStore } from '../../stores/tonghoptoidienStore';
 import { useDonviStore } from '../../stores/donviStore';
 import ThongsotoidienTable from '../../sections/toidien/ThongsotoidienTable';
 import NhatkytoidienTable from '../../sections/toidien/NhatkytoidienTable';
 import * as XLSX from 'xlsx';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import ActionBar from '/src/components/ActionBar';
 import SearchBar from '/src/components/SearchBar';
 import TonghopToidienForm from '../../sections/toidien/TonghopToidienForm';
@@ -16,30 +17,57 @@ import TonghopToidienForm from '../../sections/toidien/TonghopToidienForm';
 function Capnhattoidien() {
   const [activeTab, setActiveTab] = useState('1');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [toiDien, setToiDien] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [searchText, setSearchText] = useState('');
+  const [filters, setFilters] = useState({
+    keyword: '',
+    duPhong: null,
+    tuNgay: null,
+    denNgay: null
+  });
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0
+  });
   const [form] = Form.useForm();
   const { dataDanhmuc, fetchDanhmuctoidien } = useDanhmuctoidienStore();
   const { dataDonvi, fetchDonvi } = useDonviStore();
-  const { dataTonghop, loading, fetchTonghoptoidien, createTonghoptoidien, updateTonghoptoidien, deleteTonghoptoidien, deleteMultiple } =
-    useTonghoptoidienStore();
+  const {
+    dataTonghop,
+    loading,
+    fetchTonghoptoidien,
+    createTonghoptoidien,
+    updateTonghoptoidien,
+    deleteTonghoptoidien,
+    deleteMultiple,
+    getTonghoptoidienPaging,
+    totalRecords
+  } = useTonghoptoidienStore();
 
   //================= Load Data ===========================
   useEffect(() => {
     fetchDonvi();
     fetchDanhmuctoidien();
-    fetchTonghoptoidien();
+    fetchData();
   }, []);
 
-  const dataSource = useMemo(() => {
-    return [
-      ...dataTonghop.map((item) => ({
-        ...item
-      }))
-    ];
-  }, [dataTonghop]);
-  console.log(dataSource);
+  // 1. Sửa hàm fetchData để đồng bộ pagination
+  const fetchData = async (page = 1, size = 10) => {
+    await getTonghoptoidienPaging({
+      ...filters,
+      pageIndex: page,
+      pageSize: size
+    });
+    // Nếu bạn muốn quản lý state pagination tại component:
+    setPagination((prev) => ({
+      ...prev,
+      current: page,
+      pageSize: size
+      // total: res.totalRecords // Lấy từ store hoặc res
+    }));
+  };
 
   // ================= ADD =================
 
@@ -52,6 +80,7 @@ function Capnhattoidien() {
   // ================= EDIT =================
   const handleOpenEdit = (record) => {
     setEditing(record);
+    setToiDien(record);
     form.setFieldsValue({
       ...record,
       ngayLap: record.ngayLap ? dayjs(record.ngayLap) : null
@@ -137,40 +166,45 @@ function Capnhattoidien() {
     }
   ];
 
-  // ================= SEARCH =================
-  const filteredData = useMemo(() => {
-    if (!searchText) return dataSource;
+  // // ================= SEARCH =================
+  // const filteredData = useMemo(() => {
+  //   if (!searchText) return dataSource;
 
-    return dataTonghop.filter((item) =>
-      Object.values(item)
-        .filter((v) => v !== null && v !== undefined)
-        .join(' ')
-        .toLowerCase()
-        .includes(searchText.toLowerCase())
-    );
-  }, [dataSource, searchText]);
+  //   return dataTonghop.filter((item) =>
+  //     Object.values(item)
+  //       .filter((v) => v !== null && v !== undefined)
+  //       .join(' ')
+  //       .toLowerCase()
+  //       .includes(searchText.toLowerCase())
+  //   );
+  // }, [dataSource, searchText]);
 
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
-    const exportData = filteredData.map((item, index) => ({
+    const exportData = dataTonghop.map((item, index) => ({
       STT: index + 1,
-      'Thiết bị': dataDanhmuc.find((x) => x.id === item.danhmuctoitrucId)?.tenThietBi || '',
-      'Nội dung': item.tenThietBi,
-      'Đơn vị tính': item.viTriLapDat,
-      'Thông số kỹ thuật': item.tenDonVi
+      'Mã quản lý': item.maQuanLy,
+      'Thiết bị': item.tenThietBi,
+      'Ngày lắp': dayjs(item.ngayLap).format('DD/MM/YYYY'),
+      'Đơn vị': item.phongBan,
+      'Tình trạng thiết bị': item.tinhTrangThietBi,
+      'Vị trí lắp đặt': item.viTriLapDat,
+      'Dự phòng': item.duPhong ? 'Đang dùng' : 'Dự phòng'
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData, {
-      header: ['STT', 'Thiết bị', 'Nội dung', 'Đơn vị tính', 'Thông số kỹ thuật']
+      header: ['STT', 'Mã quản lý', 'Thiết bị', 'Ngày lắp', 'Đơn vị', 'Tình trạng thiết bị', 'Vị trí lắp đặt', 'Dự phòng']
     });
 
-    worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }, { wch: 45 }, { wch: 15 }, { wch: 30 }];
+    worksheet['!cols'] = [{ wch: 5 }, { wch: 15 }, { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 30 }, { wch: 30 }, { wch: 15 }];
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'ThongSoThietBi');
-    XLSX.writeFile(workbook, 'Thong-So-Thiet-Bi.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Capnhattoidien');
+    XLSX.writeFile(workbook, `Cap-Nhat-Toi-Dien-${dayjs(new Date()).format('DD-MM-YYYY')}.xlsx`);
   };
 
+  // Thay đổi danh sách các lựa chọn số bản ghi trên mỗi trang
+  const sizeChange = ['10', '20', '50', '100', '500', '1000', '2000', '5000', '10000'];
   const tabItems = [
     {
       key: '1',
@@ -192,20 +226,20 @@ function Capnhattoidien() {
       key: '2',
       label: 'NHẬT KÝ THIẾT BỊ',
       disabled: !editing,
-      children: editing ? <NhatkytoidienTable tonghoptoidien={dataTonghop} /> : <div>Chọn bản ghi để xem nhật ký thiết bị</div>
+      children: editing ? <NhatkytoidienTable tonghoptoidien={toiDien} /> : <div>Chọn bản ghi để xem nhật ký thiết bị</div>
     },
     {
       key: '3',
       label: 'THÔNG SỐ KỸ THUẬT',
       disabled: !editing,
-      children: editing ? <ThongsotoidienTable tonghoptoidien={dataTonghop} /> : <div>Chọn bản ghi để xem thông số kỹ thuật</div>
+      children: editing ? <ThongsotoidienTable tonghoptoidien={toiDien} /> : <div>Chọn bản ghi để xem thông số kỹ thuật</div>
     }
   ];
 
   return (
-    <>
+    <MainCard>
       <Row gutter={8} style={{ marginBottom: 12 }}>
-        <SearchBar onSearch={setSearchText} />
+        <SearchBar setFilters={setFilters} fetchData={fetchData} filters={filters} pagination={pagination} />
         <ActionBar
           handleOpenAdd={handleOpenAdd}
           onDeleteMultiple={handleDeleteMultiple}
@@ -214,27 +248,24 @@ function Capnhattoidien() {
           handleExportExcel={handleExportExcel}
         />
       </Row>
-      <Row style={{ marginBottom: 16 }}>
-        <Col span={24}>
-          <Tag variant="outlined" color="blue">
-            <h6 className="flex justify-content-center align-items-center">
-              Tổng số thiết bị:{' '}
-              <span style={{ color: 'red' }}>
-                <b>{filteredData.length}</b>
-              </span>{' '}
-            </h6>
-          </Tag>
-        </Col>
-      </Row>
 
       <Table
         rowKey="id"
         loading={loading}
         columns={columns}
-        dataSource={filteredData}
+        dataSource={dataTonghop}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys
+        }}
+        pagination={{
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          total: totalRecords, // Lấy từ store
+          onChange: (page, pageSize) => fetchData(page, pageSize), // Sửa lại cách gọi hàm
+          showSizeChanger: true,
+          pageSizeOptions: sizeChange, // Thêm dòng này để hiển thị các tùy chọn của bạn
+          showTotal: (total) => `Tổng số: ${total} bản ghi`
         }}
       />
 
@@ -248,7 +279,7 @@ function Capnhattoidien() {
       >
         <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabItems}></Tabs>
       </Modal>
-    </>
+    </MainCard>
   );
 }
 

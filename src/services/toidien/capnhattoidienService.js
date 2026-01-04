@@ -4,6 +4,12 @@ const getTonghoptoidien = async () => {
         return response
     });
 };
+
+const getTonghoptoidienPaging = async(data)=>{  
+    return await api.get('Tonghoptoitruc/search',{params: data}).then((response)=>{        
+        return response
+    })
+}
 const createTonghoptoidien=async (data)=>{   
     return await api.post('Tonghoptoitruc/Add',data).then((response)=>{
         return response
@@ -29,5 +35,6 @@ export const tonghoptoidienService={
     createTonghoptoidien,
     updateTonghoptoidien,
     deleteTonghoptoidien,
-    deleteMultipleTonghoptoidien
+    deleteMultipleTonghoptoidien,
+    getTonghoptoidienPaging
 }

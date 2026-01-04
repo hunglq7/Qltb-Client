@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-
 import { Form, Button, Space, Modal, Tabs, Table, message, Tag, Row, Popconfirm, Col } from 'antd';
 import { useTonghopmayxucStore } from '../../stores/tonghopmayxucStore';
 import { useDanhmucmayxucStore } from '../../stores/danhmucmayxucStore';
@@ -10,7 +9,7 @@ import { useLoaithietbiStore } from '../../stores/loaithietbiStore';
 import NhatkyMayxucTable from '../../sections/mayxuc/NhatkyMayxucTable';
 import ThongsoMayXucTable from '../../sections/mayxuc/ThongsoMayXucTable';
 import * as XLSX from 'xlsx';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import ActionBar from '/src/components/ActionBar';
 import SearchBar from '/src/components/SearchBar';
 import MayxucForm from '../../sections/mayxuc/MayxucForm';
@@ -20,30 +19,55 @@ function Capnhatmayxuc() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
   const { dataDanhmucMayxuc, fetchDanhmucmayxuc } = useDanhmucmayxucStore();
   const { dataDonvi, fetchDonvi } = useDonviStore();
   const { dataLoaithietbi, fetchLoaithietbi } = useLoaithietbiStore();
-  const { dataTonghopMayxuc, loading, fetchTonghopmayxuc, createTonghopmayxuc, updateTonghopmayxuc, deleteTonghopmayxuc, deleteMultiple } =
-    useTonghopmayxucStore();
-
+  const {
+    dataTonghopMayxuc,
+    loading,
+    fetchTonghopmayxuc,
+    createTonghopmayxuc,
+    updateTonghopmayxuc,
+    deleteTonghopmayxuc,
+    deleteMultiple,
+    getTonghopmayxucPaging,
+    totalRecords
+  } = useTonghopmayxucStore();
+  const [filters, setFilters] = useState({
+    keyword: '',
+    duPhong: null,
+    tuNgay: null,
+    denNgay: null
+  });
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0
+  });
   //================= Load Data ===========================
   useEffect(() => {
     fetchDonvi();
     fetchDanhmucmayxuc();
-    fetchTonghopmayxuc();
     fetchLoaithietbi();
+    fetchData();
   }, []);
 
-  const dataSource = useMemo(() => {
-    return [
-      ...dataTonghopMayxuc.map((item) => ({
-        ...item
-      }))
-    ];
-  }, [dataTonghopMayxuc]);
-
+  // 1. Sửa hàm fetchData để đồng bộ pagination
+  const fetchData = async (page = 1, size = 10) => {
+    await getTonghopmayxucPaging({
+      ...filters,
+      pageIndex: page,
+      pageSize: size
+    });
+    // Nếu bạn muốn quản lý state pagination tại component:
+    setPagination((prev) => ({
+      ...prev,
+      current: page,
+      pageSize: size
+      // total: res.totalRecords // Lấy từ store hoặc res
+    }));
+  };
 
   // ================= ADD =================
 
@@ -67,22 +91,18 @@ function Capnhatmayxuc() {
 
   // ================= DELETE =================
   const handleDelete = async (id) => {
-
     await deleteTonghopmayxuc(id);
     message.success('Xóa thành công');
     fetchTonghopmayxuc();
-
   };
 
   // ================= DELETE SELECT =================
   const handleDeleteMultiple = async () => {
     try {
-
       await deleteMultiple(selectedRowKeys);
       message.success('Xóa nhiều thành công');
       setSelectedRowKeys([]);
       fetchTonghopmayxuc();
-
     } catch (error) {
       console.log('error,', error);
       message.error('Xóa bản ghi thất bại');
@@ -110,14 +130,12 @@ function Capnhatmayxuc() {
       setEditing(null);
       form.resetFields();
       fetchTonghopmayxuc();
-
     } catch {
       message.error('Lưu dữ liệu thất bại');
     }
   };
 
   // ================= CREATE COLUMS =================
-
 
   const columns = [
     { title: 'Mã quản lý', dataIndex: 'maQuanLy', key: 'maQuanLy' },
@@ -151,26 +169,9 @@ function Capnhatmayxuc() {
     }
   ];
 
-  // ================= SEARCH =================
-  const filteredData = useMemo(() => {
-
-    if (!searchText) return dataSource;
-
-    return dataTonghopMayxuc.filter((item) =>
-
-      Object.values(item)
-        .filter((v) => v !== null && v !== undefined)
-        .join(' ')
-        .toLowerCase()
-        .includes(searchText.toLowerCase())
-    );
-
-  }, [dataSource, searchText]);
-
-
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
-    const exportData = filteredData.map((item, index) => ({
+    const exportData = dataTonghopMayxuc.map((item, index) => ({
       STT: index + 1,
 
       'Thiết bị': dataDanhmuc.find((x) => x.id === item.danhmuctoitrucId)?.tenThietBi || '',
@@ -188,9 +189,8 @@ function Capnhatmayxuc() {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Tonghopmayxuc');
     XLSX.writeFile(workbook, 'Tong-hop-may-xuc.xlsx');
-
   };
-
+  const sizeChange = ['10', '20', '50', '100', '500', '1000', '2000', '5000', '10000'];
   const tabItems = [
     {
       key: '1',
@@ -208,7 +208,6 @@ function Capnhatmayxuc() {
           mayXucList={dataDanhmucMayxuc}
           donViList={dataDonvi}
           loaiThietBiList={dataLoaithietbi}
-
         />
       )
     },
@@ -217,7 +216,6 @@ function Capnhatmayxuc() {
       label: 'NHẬT KÝ THIẾT BỊ',
       disabled: !editing,
       children: editing ? <NhatkyMayxucTable thongsomayxuc={mayxuc} /> : <div>Chọn bản ghi để xem nhật ký thiết bị</div>
-
     },
     {
       key: '3',
@@ -226,11 +224,11 @@ function Capnhatmayxuc() {
       children: editing ? <ThongsoMayXucTable thongsomayxuc={mayxuc} /> : <div>Chọn bản ghi để xem thông số kỹ thuật</div>
     }
   ];
-
+  console.log(dataTonghopMayxuc);
   return (
     <>
       <Row gutter={8} style={{ marginBottom: 12 }}>
-        <SearchBar onSearch={setSearchText} />
+        <SearchBar setFilters={setFilters} fetchData={fetchData} filters={filters} pagination={pagination} />
         <ActionBar
           handleOpenAdd={handleOpenAdd}
           onDeleteMultiple={handleDeleteMultiple}
@@ -239,26 +237,24 @@ function Capnhatmayxuc() {
           handleExportExcel={handleExportExcel}
         />
       </Row>
-      <Row style={{ marginBottom: 16 }}>
-        <Col span={24}>
-          <Tag variant="outlined" color="blue">
-            <h6 className="flex justify-content-center align-items-center">
-              Tổng số thiết bị:{' '}
-              <span style={{ color: 'red' }}>
-                <b>{filteredData.length}</b>
-              </span>{' '}
-            </h6>
-          </Tag>
-        </Col>
-      </Row>
+
       <Table
         rowKey="id"
         loading={loading}
         columns={columns}
-        dataSource={filteredData}
+        dataSource={dataTonghopMayxuc}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys
+        }}
+        pagination={{
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          total: totalRecords, // Lấy từ store
+          onChange: (page, pageSize) => fetchData(page, pageSize), // Sửa lại cách gọi hàm
+          showSizeChanger: true,
+          pageSizeOptions: sizeChange, // Thêm dòng này để hiển thị các tùy chọn của bạn
+          showTotal: (total) => `Tổng số: ${total} bản ghi`
         }}
       />
       <Modal
@@ -267,7 +263,7 @@ function Capnhatmayxuc() {
         footer={null} // ✅ để Form tự submit
         onCancel={() => setModalOpen(false)}
         zIndex={1500}
-        width={900}
+        width={1000}
       >
         <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabItems}></Tabs>
       </Modal>

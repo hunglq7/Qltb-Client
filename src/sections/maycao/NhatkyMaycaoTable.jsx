@@ -14,7 +14,7 @@ const EditableCell = ({ editing, dataIndex, title, inputType, record, children, 
 
   switch (inputType) {
     case 'boolean':
-      inputNode = <Switch />;
+      inputNode = <Switch checkedChildren="Bật" unCheckedChildren="Tắt" />;
       break;
     case 'date':
       inputNode = <DatePicker format={'DD/MM/YYYY'} />;
@@ -74,6 +74,7 @@ function NhatkyMaycaoTable({ nhatkymaycao }) {
   const edit = (record) => {
     form.setFieldsValue({
       ...record,
+      trangThai: record.trangThai === 'Đang dùng',
       ngayThang: record.ngayThang ? dayjs(record.ngayThang) : null
     });
     setEditingKey(record.key);
@@ -92,6 +93,7 @@ function NhatkyMaycaoTable({ nhatkymaycao }) {
       const payload = {
         ...record,
         ...row,
+        trangThai: row.trangThai ? 'Đang dùng' : 'Dự phòng',
         tongHopMayCaoId: record.tongHopMayCaoId ?? id,
         ngayThang: row.ngayThang
           ? row.ngayThang.toISOString() // ✅ nên gửi ISO
@@ -186,10 +188,11 @@ function NhatkyMaycaoTable({ nhatkymaycao }) {
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'trangThai',
+      dataIndex: 'trangThai', // Đổi duPhong thành trangThai cho khớp backend
       editable: true,
+      inputType: 'boolean',
       key: 'trangThai',
-      render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
+      render: (value) => <Tag color={value === 'Đang dùng' ? 'green' : 'red'}>{value === 'Đang dùng' ? 'Đang dùng' : 'Dự phòng'}</Tag>
     },
     {
       title: 'Ghi chú',

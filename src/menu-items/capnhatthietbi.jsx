@@ -1,5 +1,6 @@
 // ==============================|| MENU ITEMS - CHARTS & MAPS ||============================== //
-
+import { SearchOutlined } from '@ant-design/icons';
+import { icons } from 'antd/es/image/PreviewGroup';
 const capNhatThiebi = {
   id: 'capnhatthietbi',
   title: 'Cập nhật thiết bị',
@@ -9,7 +10,7 @@ const capNhatThiebi = {
       id: 'maycao',
       title: 'Máy cào',
       type: 'collapse',
-      icon: <i className="ph ph-chart-donut" />,
+      icon: <i className="ti ti-device-imac-pause" />,
       children: [
         {
           id: 'danhmuc',
@@ -35,7 +36,7 @@ const capNhatThiebi = {
       id: 'mayxuc',
       title: 'Máy xúc',
       type: 'collapse',
-      icon: <i className="ph ph-map-trifold" />,
+      icon: <i className="ph ph-table" />,
       children: [
         {
           id: 'danhmuc',
@@ -54,7 +55,6 @@ const capNhatThiebi = {
           title: 'Cập nhật máy xúc',
           type: 'item',
           url: '/mayxuc/capnhatmayxuc'
-
         }
       ]
     },
@@ -62,7 +62,7 @@ const capNhatThiebi = {
       id: 'toidien',
       title: 'Tời điện',
       type: 'collapse',
-      icon: <i className="ph ph-map-trifold" />,
+      icon: <i className="ph ph-tree-structure" />,
       children: [
         {
           id: 'danhmuc',
@@ -81,7 +81,6 @@ const capNhatThiebi = {
           title: 'Cập nhật  tời điện',
           type: 'item',
           url: '/toidien/capnhattoidien'
-
         }
       ]
     }

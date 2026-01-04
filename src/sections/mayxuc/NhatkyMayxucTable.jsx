@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 const EditableCell = ({ editing, dataIndex, inputType, children, ...restProps }) => {
   let inputNode;
 
-  if (inputType === 'boolean') inputNode = <Switch />;
+  if (inputType === 'boolean') inputNode = <Switch checkedChildren="Bật" unCheckedChildren="Tắt" />;
   else if (inputType === 'date') inputNode = <DatePicker format="DD/MM/YYYY" />;
   else inputNode = <Input />;
 
@@ -87,6 +87,7 @@ function NhatkyMayxucTable({ thongsomayxuc }) {
   const edit = (record) => {
     form.setFieldsValue({
       ...record,
+      trangThai: record.trangThai === 'Đang dùng',
       ngaythang: record.ngaythang ? dayjs(record.ngaythang) : null
     });
     setEditingKey(record.key);
@@ -110,18 +111,18 @@ function NhatkyMayxucTable({ thongsomayxuc }) {
       const payload = {
         id: record.id,
         tonghopmayxucId,
-        ngaythang: row.ngaythang ? row.ngaythang.toISOString() : null,
+        ngaythang: row.ngaythang ? dayjs(row.ngaythang).format('YYYY-MM-DD') : null,
         donVi: row.donVi,
         viTri: row.viTri,
-        trangThai: row.trangThai,
+        trangThai: row.trangThai ? 'Đang dùng' : 'Dự phòng',
         ghiChu: row.ghiChu
       };
-
+      const { id, ...createPayload } = payload;
       if (String(key).startsWith('new_')) {
-        await createNhatkymayxuc(payload);
+        await createNhatkymayxuc(createPayload);
         message.success('Thêm mới thành công');
       } else {
-        await updateNhatkymayxuc(payload.id, payload);
+        await updateNhatkymayxuc(id, payload);
         message.success('Cập nhật thành công');
       }
 
@@ -174,10 +175,11 @@ function NhatkyMayxucTable({ thongsomayxuc }) {
     { title: 'Vị trí', dataIndex: 'viTri', editable: true },
     {
       title: 'Trạng thái',
-      dataIndex: 'trangThai',
+      dataIndex: 'trangThai', // Đổi duPhong thành trangThai cho khớp backend
       editable: true,
       inputType: 'boolean',
-      render: (v) => <Tag color={v ? 'green' : 'red'}>{v ? 'Đang dùng' : 'Dự phòng'}</Tag>
+      key: 'trangThai',
+      render: (value) => <Tag color={value === 'Đang dùng' ? 'green' : 'red'}>{value === 'Đang dùng' ? 'Đang dùng' : 'Dự phòng'}</Tag>
     },
     { title: 'Ghi chú', dataIndex: 'ghiChu', editable: true },
     {

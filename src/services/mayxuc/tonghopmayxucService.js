@@ -4,7 +4,11 @@ const getMayxuc = async () => {
         return response
     });
 };
-
+const getTonghopmayxucPaging = async(data)=>{  
+    return await api.get('Tonghopmayxuc/search',{params: data}).then((response)=>{        
+        return response
+    })
+}
 const getMayxucById = async (id) => {
     return await api.get(`Tonghopmayxuc/${id}`).then((response) => {
         return response
@@ -39,5 +43,6 @@ export const tonghopmayxucService = {
     deleteMayxucs,
     addTonghopmayxuc,
     updateTonghopmayxuc,
+    getTonghopmayxucPaging
 
 }

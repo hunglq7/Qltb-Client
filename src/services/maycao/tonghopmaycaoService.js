@@ -4,7 +4,11 @@ const getMaycao = async () => {
         return response
     });
 };
-
+const getTonghopmaycaoPaging = async(data)=>{  
+    return await api.get('Tonghopmaycao/search',{params: data}).then((response)=>{        
+        return response
+    })
+}
 const getMaycaoById = async (id) => {
     return await api.get(`Tonghopmaycao/${id}`).then((response) => {
         return response
@@ -43,5 +47,6 @@ export const tonghopmaycaoService = {
     deleteMaycaos,
     addTonghopmaycao,
     updateTonghopmaycao,
+    getTonghopmaycaoPaging
 
 }

@@ -3,6 +3,7 @@ import { message } from 'antd';
 import { tonghoptoidienService } from '../services/toidien/capnhattoidienService';
 export const useTonghoptoidienStore=create((set,get)=>({
 dataTonghop:[],
+totalRecords:[],
 loading: false,
 fetchTonghoptoidien:async()=>{
     set({loading:true});
@@ -13,6 +14,17 @@ fetchTonghoptoidien:async()=>{
        message.error('Failed to fetch Tonghoptoidien');
       set({ loading: false });  
     }
+},
+
+getTonghoptoidienPaging:async(req)=>{
+  set({loading:true});
+  try {  
+    const data=await tonghoptoidienService.getTonghoptoidienPaging(req);     
+    set({dataTonghop:data.data.items,totalRecords:data.data.totalRecords,loading:false})
+  } catch (error) {
+     message.error('Failed to get TonghoptoidienPaging');
+      set({ loading: false }); 
+  }
 },
 createTonghoptoidien: async (items) => {
     set({ loading: true });

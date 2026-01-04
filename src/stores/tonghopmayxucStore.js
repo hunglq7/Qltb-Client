@@ -3,6 +3,7 @@ import { message } from 'antd';
 import { tonghopmayxucService } from '../services/mayxuc/tonghopmayxucService';
 export const useTonghopmayxucStore=create((set,get)=>({
 dataTonghopMayxuc:[],
+totalRecords:[],
 loading: false,
 fetchTonghopmayxuc:async()=>{
     set({loading:true});
@@ -13,6 +14,17 @@ fetchTonghopmayxuc:async()=>{
        message.error('Failed to fetch Tonghopmayxuc');
       set({ loading: false });  
     }
+},
+
+getTonghopmayxucPaging:async(req)=>{
+  set({loading:true});
+  try {  
+    const data=await tonghopmayxucService.getTonghopmayxucPaging(req);     
+    set({dataTonghopMayxuc:data.data.items,totalRecords:data.data.totalRecords,loading:false})
+  } catch (error) {
+     message.error('Failed to get TonghoptoidienPaging');
+      set({ loading: false }); 
+  }
 },
 createTonghopmayxuc: async (items) => {
     set({ loading: true });
