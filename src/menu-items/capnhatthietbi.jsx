@@ -83,6 +83,32 @@ const capNhatThiebi = {
           url: '/toidien/capnhattoidien'
         }
       ]
+    },
+    {
+      id: 'bomnuoc',
+      title: 'Bơm nước',
+      type: 'collapse',
+      icon: <i className="ph ph-tree-structure" />,
+      children: [
+        {
+          id: 'danhmucbomnuoc',
+          title: 'Danh mục bơm nước',
+          type: 'item',
+          url: '/bomnuoc/danhmucbomnuoc'
+        },
+        {
+          id: 'thongsobomnuoc',
+          title: 'Thông số bơm nước',
+          type: 'item',
+          url: '/bomnuoc/thongsobomnuoc'
+        },
+        {
+          id: 'capnhatbomnuoc',
+          title: 'Cập nhật bơm nước',
+          type: 'item',
+          url: '/bomnuoc/capnhatbomnuoc'
+        }
+      ]
     }
   ]
 };

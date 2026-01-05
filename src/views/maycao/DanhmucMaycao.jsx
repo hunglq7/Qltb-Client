@@ -3,8 +3,8 @@ import { Table, Form, Input, Button, Space, Popconfirm, message, Row } from 'ant
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { danhmucmaycaoService } from '../../services/maycao/danhmucmaycaoService';
 import * as XLSX from 'xlsx';
-import SearchBar from '../../components/SearchBar';
-import ActionBar from '../../components/ActionBar';
+import SearchBar from '/src/components/SearchBar';
+import ActionBar from '/src/components/ActionBar';
 
 // ================= EDIT ABLECELL =================
 const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
