@@ -54,7 +54,7 @@ export default function ThietbiCard({ image, title, desc, sl, urlCapnhat, urlDan
           <Meta title={title} />
           <div className="mt-2 d-flex justify-content-between">
             <Meta description={desc} />
-            <Badge count={sl ? sl : 0} />
+            <Badge overflowCount={1000} count={sl ? sl : 0} />
           </div>
         </Card>
       </Col>

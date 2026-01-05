@@ -8,6 +8,7 @@ import aptomat from '/src/assets/images/thietbi/Ap-to-mat.png'
 import maykhoan from '/src/assets/images/thietbi/Maykhoan.jpg'
 import khoidongtu from '/src/assets/images/thietbi/khoi-dong-tu.jpg'
 import toidien from '/src/assets/images/thietbi/toidien.jpg'
+import mayxuc from '/src/assets/images/thietbi/ZCY-60.jpg'
 
 export const myData = [
     {
@@ -15,9 +16,19 @@ export const myData = [
         name: "toidien",
         title: "Tời điện",
         desc: "Tổng số thiết bị",
-        urlCapnhat: "/toidien/tonghoptoidien",
+        urlCapnhat: "/toidien/capnhattoidien",
         urlDanhmuc:'/toidien/danhmuctoidien',
-        urlThongso:'/toidien/capnhattoidien',
+        urlThongso:'/toidien/thongsotoidien',
+        sl: null
+    },
+     {
+        image: mayxuc,
+        name: "mayxuc",
+        title: "Máy xúc",
+        desc: "Tổng số thiết bị",
+        urlCapnhat: "/mayxuc/capnhatmayxuc",
+        urlDanhmuc:'/mayxuc/danhmucmayxuc',
+        urlThongso:'/mayxuc/capnhatthongsomayxuc',
         sl: null
     },
     {
@@ -36,7 +47,7 @@ export const myData = [
         urlDanhmuc:'/maycao/danhmucmaycao',
         urlThongso:'/maycao/capnhatthongsomaycao',
         urlCapnhat:'/maycao/capnhatmaycao',         
-        sl: 15
+        sl: null
     },
     {
         image: bangtai,

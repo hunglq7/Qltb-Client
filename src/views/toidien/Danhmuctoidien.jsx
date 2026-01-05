@@ -3,7 +3,7 @@ import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Switch, Da
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
-
+import MainCard from '/src/components/MainCard';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
 import { useDanhmuctoidienStore } from '../../stores/toidien/damuctoidienStore';
@@ -234,36 +234,38 @@ function Danhmuctoidien() {
     XLSX.writeFile(workbook, 'Danh_muc_toi_dien.xlsx');
   };
   return (
-    <Form form={form} component={false}>
-      <Row gutter={8} style={{ marginBottom: 12 }}>
-        <SearchBar onSearch={setSearchText} />
-        <ActionBar
-          handleOpenAdd={handleOpenAdd}
-          onDeleteMultiple={handleDeleteMultiple}
-          disabledDelete={!selectedRowKeys.length}
-          handleExportExcel={handleExportExcel}
-        />
-      </Row>
+    <MainCard>
+      <Form form={form} component={false}>
+        <Row gutter={8} style={{ marginBottom: 12 }}>
+          <SearchBar onSearch={setSearchText} />
+          <ActionBar
+            handleOpenAdd={handleOpenAdd}
+            onDeleteMultiple={handleDeleteMultiple}
+            disabledDelete={!selectedRowKeys.length}
+            handleExportExcel={handleExportExcel}
+          />
+        </Row>
 
-      <Table
-        bordered
-        loading={loading}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
-          getCheckboxProps: (record) => ({
-            disabled: String(record.key).startsWith('new_')
-          })
-        }}
-        components={{ body: { cell: EditableCell } }}
-        dataSource={filteredData}
-        columns={mergedColumns}
-        selectedRowKeys={selectedRowKeys}
-        disabledDelete={selectedRowKeys.length === 0}
-        pagination={{ pageSize: 6 }}
-        rowKey={(record) => record.id ?? record.key}
-      />
-    </Form>
+        <Table
+          bordered
+          loading={loading}
+          rowSelection={{
+            selectedRowKeys,
+            onChange: setSelectedRowKeys,
+            getCheckboxProps: (record) => ({
+              disabled: String(record.key).startsWith('new_')
+            })
+          }}
+          components={{ body: { cell: EditableCell } }}
+          dataSource={filteredData}
+          columns={mergedColumns}
+          selectedRowKeys={selectedRowKeys}
+          disabledDelete={selectedRowKeys.length === 0}
+          pagination={{ pageSize: 6 }}
+          rowKey={(record) => record.id ?? record.key}
+        />
+      </Form>
+    </MainCard>
   );
 }
 

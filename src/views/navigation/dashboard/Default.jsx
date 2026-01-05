@@ -1,11 +1,24 @@
 // react-bootstrap
-
+import { useEffect } from 'react';
 import { Col, Row } from 'antd';
 import { myData } from '../../../utils/data';
 //ThietbiCard
 import ThietbiCard from '../../../components/cards/ThietbiCard';
-
+import { useTonghoptoidienStore } from '../../../stores/toidien/tonghoptoidienStore';
+import { useTonghopmayxucStore } from '../../../stores/mayxuc/tonghopmayxucStore';
+import { useTonghopmaycaoStore } from '../../../stores/maycao/tonghopmaycaoStore';
 export default function DefaultPage() {
+  const { dataTonghop, fetchTonghoptoidien } = useTonghoptoidienStore();
+  const { dataTonghopMayxuc, fetchTonghopmayxuc } = useTonghopmayxucStore();
+  const { dataTonghopMaycao, fetchTonghopMaycao } = useTonghopmaycaoStore();
+  const TongToidien = dataTonghop.length;
+  const TongMayxuc = dataTonghopMayxuc.length;
+  const TongMaycao = dataTonghopMaycao.length;
+  useEffect(() => {
+    fetchTonghoptoidien();
+    fetchTonghopmayxuc();
+    fetchTonghopMaycao();
+  }, []);
   const Data = myData;
   //Dùng vòng lặp để gán tổng vào myData
   for (let i = 0; i < myData.length; i++) {
@@ -14,11 +27,13 @@ export default function DefaultPage() {
         Data[i].sl = null;
         break;
       case 'toidien':
-        Data[i].sl = null;
+        Data[i].sl = TongToidien;
         break;
       case 'maycao':
-        Data[i].sl = 15;
-        Data[i].urlDanhmuc = '/maycao/danhmucmaycao';
+        Data[i].sl = TongMaycao;
+        break;
+      case 'mayxuc':
+        Data[i].sl = TongMayxuc;
         break;
       case 'bangtai':
         Data[i].sl = null;

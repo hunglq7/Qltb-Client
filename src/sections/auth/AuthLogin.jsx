@@ -116,12 +116,12 @@ export default function AuthLoginForm({ className, link }) {
         </div>
 
         {/* Register */}
-        <Stack direction="horizontal" className="justify-content-between align-items-end mt-4">
+        {/* <Stack direction="horizontal" className="justify-content-between align-items-end mt-4">
           <h6 className={`f-w-500 mb-0 ${className}`}>Don't have an Account?</h6>
           <a href={link} className="link-primary">
             Create Account
           </a>
-        </Stack>
+        </Stack> */}
       </Form>
     </MainCard>
   );
