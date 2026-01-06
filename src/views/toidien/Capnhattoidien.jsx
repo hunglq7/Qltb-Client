@@ -152,12 +152,8 @@ function Capnhattoidien() {
       title: 'Dự phòng',
       dataIndex: 'duPhong',
       key: 'duPhong',
-      // render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
+
       render: (value) => (
-        // <Badge className="me-2 f-12" bg={value ? 'brand-color-1' : 'brand-color-2'}>
-        //   {value ? 'Đang dùng' : 'Dự phòng'}
-        // </Badge>
-        // <Badge className="me-2 f-12">{value ? 'Đang dùng' : 'Dự phòng'}</Badge>
         <i className={value ? `ti ti-circle-filled f-12 text-success m-r-15` : `ti ti-circle-filled f-12 text-danger m-r-15`}>
           {value ? ' Đang dùng' : ' Dự phòng'}
         </i>
