@@ -1,18 +1,17 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { danhmucbomnuocService } from '../../services/bomnuoc/danhmucbomnuocService';
-
-export const useDanhmucbomnuocStore = create((set, get) => ({
-  dataDanhmucbomnuoc: [],
+import { thongsobomnuocService } from '../../services/bomnuoc/thongsobomnuocService';
+export const useThongsobomnuocStore = create((set, get) => ({
+  dataThongsobomnuoc: [],
   loading: false,
 
   // ================= FETCH =================
-  fetchDanhmucbomnuoc: async () => {
+  fetchThongsobomnuoc: async () => {
     set({ loading: true });
     try {
-      const res = await danhmucbomnuocService.getDanhmucbomnuoc();
+      const res = await thongsobomnuocService.getThongsobomnuoc();
       set({
-        dataDanhmucbomnuoc: res.data,
+        dataThongsobomnuoc: res.data,
         loading: false
       });
     } catch (error) {
@@ -22,13 +21,13 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
   },
 
   // ================= CREATE =================
-  createDanhmucbomnuoc: async (payload) => {
+  createThongsobomnuoc: async (payload) => {
     set({ loading: true });
     try {
-      const res = await danhmucbomnuocService.addDanhmucbomnuoc(payload);
+      const res = await thongsobomnuocService.addThongsobomnuoc(payload);
 
       set({
-        dataDanhmucbomnuoc: [...get().dataDanhmucbomnuoc, res.data],
+        dataThongsobomnuoc: [...get().dataThongsobomnuoc, res.data],
         loading: false
       });
     
@@ -39,16 +38,16 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
   },
 
   // ================= UPDATE =================
-  updateDanhmucbomnuoc: async (payload) => {
+  updateThongsobomnuoc: async (payload) => {
     set({ loading: true });
     try {
-      const res = await danhmucbomnuocService.updateDanhmucbomnuoc(payload);
+      const res = await thongsobomnuocService.updateThongsobomnuoc(payload);
 
-      const newData = get().dataDanhmucbomnuoc.map(item =>
+      const newData = get().dataThongsobomnuoc.map(item =>
         item.id === res.data.id ? res.data : item
       );
       set({
-        dataDanhmucbomnuoc: newData,
+        dataThongsobomnuoc: newData,
         loading: false
       });     
     } catch (error) {
@@ -58,13 +57,13 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
   },
 
   // ================= DELETE ONE =================
-  deleteDanhmucbomnuoc: async (id) => {
+  deleteThongsobomnuoc: async (id) => {
     set({ loading: true });
     try {
-      await danhmucbomnuocService.deleteDanhmucbomnuoc(id);
+      await thongsobomnuocService.deleteThongsobomnuoc(id);
 
       set({
-        dataDanhmucbomnuoc: get().dataDanhmucbomnuoc.filter(item => item.id !== id),
+        dataThongsobomnuoc: get().dataThongsobomnuoc.filter(item => item.id !== id),
         loading: false
       });
 
@@ -76,13 +75,13 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
   },
 
   // ================= DELETE MULTIPLE =================
-  deleteMultipleDanhmucbomnuoc: async (ids) => {
+  deleteMultipleThongsobomnuoc: async (ids) => {
     set({ loading: true });
     try {
-      await danhmucbomnuocService.deleteDanhmucbomnuocs(ids);
+      await thongsobomnuocService.deleteThongsobomnuocs(ids);
 
       set({
-        dataDanhmucbomnuoc: get().dataDanhmucbomnuoc.filter(
+        dataThongsobomnuoc: get().dataThongsobomnuoc.filter(
           item => !ids.includes(item.id)
         ),
         loading: false

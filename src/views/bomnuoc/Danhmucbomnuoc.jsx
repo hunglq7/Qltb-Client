@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Form, Input, Button, Space, Popconfirm, message, Row } from 'antd';
+import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { useDanhmucbomnuocStore } from '../../stores/bomnuoc/danhmucbomnuocStore';
 import MainCard from '/src/components/MainCard';
@@ -33,7 +33,7 @@ const Danhmucbomnuoc = () => {
     createDanhmucbomnuoc,
     updateDanhmucbomnuoc,
     deleteDanhmucbomnuoc,
-    deleteMultiple
+    deleteMultipleDanhmucbomnuoc
   } = useDanhmucbomnuocStore();
   // ================= LOAD DATA =================
   useEffect(() => {
@@ -171,19 +171,28 @@ const Danhmucbomnuoc = () => {
   /* ================= Delete Multiple ================= */
 
   const handleDeleteMultiple = () => {
-    Modal.confirm({
-      title: `Xóa ${selectedRowKeys.length} bản ghi?`,
-      onOk: async () => {
-        // Chỉ lấy những ID là kiểu số (đã tồn tại trong DB)
-        const validIds = selectedRowKeys.filter((key) => typeof key === 'number' && !isNaN(key));
+    if (!selectedRowKeys.length) return;
 
-        if (validIds.length === 0) {
-          message.warning('Không có bản ghi hợp lệ để xóa trên server');
-          return;
+    Modal.confirm({
+      title: `Xóa ${selectedRowKeys.length} bản ghi đã chọn?`,
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      onOk: async () => {
+        try {
+          // chỉ lấy ID số (bỏ new_xxx)
+          const validIds = selectedRowKeys.filter((id) => typeof id === 'number');
+
+          if (!validIds.length) {
+            message.warning('Không có bản ghi hợp lệ');
+            return;
+          }
+
+          await deleteMultipleDanhmucbomnuoc(validIds);
+          setSelectedRowKeys([]);
+          fetchDanhmucbomnuoc();
+        } catch (error) {
+          message.error('Xóa nhiều thất bại');
         }
-        await deleteMultiple(validIds);
-        setSelectedRowKeys([]);
-        fetchDanhmucbomnuoc();
       }
     });
   };
@@ -217,6 +226,7 @@ const Danhmucbomnuoc = () => {
           <ActionBar
             handleOpenAdd={handleOpenAdd}
             onDeleteMultiple={handleDeleteMultiple}
+            selectedRowKeys={selectedRowKeys}
             disabledDelete={!selectedRowKeys.length}
             handleExportExcel={handleExportExcel}
           />
