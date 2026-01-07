@@ -63,10 +63,13 @@ getTonghopbomnuocPaging:async(req)=>{
   },
 
   // ================= UPDATE =================
-  updateTonghopbomnuoc: async (payload) => {
+  updateTonghopbomnuoc: async (id,payload) => {
+    const items={
+      id,...payload
+    }
     set({ loading: true });
     try {
-      const res = await tonghopbomnuocService.updateTonghopbomnuoc(payload);
+      const res = await tonghopbomnuocService.updateTonghopbomnuoc(items);
       const newData = get().dataTonghopbomnuoc.map(item =>
         item.id === res.data.id ? res.data : item
       );

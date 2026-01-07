@@ -39,13 +39,11 @@ const Tonghopbomnuoc = () => {
     dataTonghopbomnuoc,
     loading,
     totalRecords,
-    fetchTonghopbomnuoc,
     getTonghopbomnuocPaging,
     getTonghopbomnuocById,
     createTonghopbomnuoc,
     updateTonghopbomnuoc,
     deleteTonghopbomnuoc,
-
     deleteMultipleTonghopbomnuoc
   } = useTonghopbomnuocStore();
 
@@ -108,7 +106,7 @@ const Tonghopbomnuoc = () => {
       message.error('Xóa bản ghi thất bại');
     }
   };
-  // ================= SUBMIT =================
+  // ================= SAVE =================
   const handleSubmit = async (values) => {
     try {
       const payload = {
@@ -146,7 +144,6 @@ const Tonghopbomnuoc = () => {
       render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '')
     },
     { title: 'Tình trạng TB', dataIndex: 'tinhTrangThietBi', key: 'tinhTrangThietBi' },
-    { title: 'Mục đích sử dụng', dataIndex: 'mucDichSuDung', key: 'mucDichSuDung' },
     {
       title: 'Dự phòng',
       dataIndex: 'duPhong',

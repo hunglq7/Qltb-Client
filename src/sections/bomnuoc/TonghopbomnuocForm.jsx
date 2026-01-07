@@ -49,10 +49,6 @@ const TonghopbomnuocForm = ({ handleSubmit, form, bomNuocList = [], donViList = 
       <Form.Item name="tinhTrangThietBi" label="Tình trạng thiết bị">
         <Input />
       </Form.Item>
-      <Form.Item name="mucDichSuDung" label="Mục đích sử dụng">
-        <Input />
-      </Form.Item>
-
       <Form.Item name="duPhong" label="Tình trạng">
         <Switch checkedChildren="Đang dùng" unCheckedChildren="Dự phòng" />
       </Form.Item>

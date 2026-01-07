@@ -219,7 +219,6 @@ function NhatkytoidienTable({ tonghoptoidien }) {
         }
   );
 
-  console.log(dataNhatkyToiDien);
   return (
     <Form form={form} component={false}>
       <Row gutter={8} style={{ marginBottom: 12 }}>

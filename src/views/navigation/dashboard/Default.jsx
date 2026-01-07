@@ -7,6 +7,8 @@ import ThietbiCard from '../../../components/cards/ThietbiCard';
 import { useTonghoptoidienStore } from '../../../stores/toidien/tonghoptoidienStore';
 import { useTonghopmayxucStore } from '../../../stores/mayxuc/tonghopmayxucStore';
 import { useTonghopmaycaoStore } from '../../../stores/maycao/tonghopmaycaoStore';
+import DuphongBomnuocChart from '../../../sections/charts/apex-charts/DuphongBomnuocChart';
+import MainCard from '../../../components/MainCard';
 export default function DefaultPage() {
   const { dataTonghop, fetchTonghoptoidien } = useTonghoptoidienStore();
   const { dataTonghopMayxuc, fetchTonghopmayxuc } = useTonghopmayxucStore();
@@ -44,12 +46,24 @@ export default function DefaultPage() {
   }
 
   return (
-    <div className="container-fluid">
-      <Row xs={{ cols: 1, gutter: 2 }} md={{ cols: 3, gutter: 4 }} lg={{ cols: 6, gutter: 4 }}>
-        {Data.map((item) => (
-          <ThietbiCard key={item.title} {...item} />
-        ))}
-      </Row>
-    </div>
+    <Row>
+      <Col sm={24}>
+        <MainCard title="Biểu đồ thiết bị bơm nước">
+          <DuphongBomnuocChart />
+        </MainCard>
+      </Col>
+      <Col sm={24}>
+        <MainCard title="Biểu đồ thiết bị bơm nước">
+          <DuphongBomnuocChart />
+        </MainCard>
+      </Col>
+    </Row>
+    // <div className="container-fluid">
+    //   <Row xs={{ cols: 1, gutter: 2 }} md={{ cols: 3, gutter: 4 }} lg={{ cols: 6, gutter: 4 }}>
+    //     {Data.map((item) => (
+    //       <ThietbiCard key={item.title} {...item} />
+    //     ))}
+    //   </Row>
+    // </div>
   );
 }

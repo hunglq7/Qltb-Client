@@ -1,7 +1,7 @@
 import api from '../../Utils/Api';
 
 const getTonghopbomnuoc = () =>
-  api.get(`Tonghopbomnuoc`);
+  api.get(`Tonghopbomnuoc/getAll`);
 const getTonghopbomnuocPaging=(data)=>
   api.get('Tonghopbomnuoc/search',{params: data})
 const addTonghopbomnuoc = (data) =>
