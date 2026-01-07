@@ -7,20 +7,20 @@ const pages = {
   children: [
     {
       id: 'authentication',
-      title: 'Authentication',
+      title: 'Tài khoản',
       type: 'collapse',
       icon: <i className="ph ph-lock-key" />,
       children: [
         {
           id: 'login',
-          title: 'Login',
+          title: 'Đăng nhập',
           type: 'item',
           url: '/login',
           target: true
         },
         {
           id: 'register',
-          title: 'Register',
+          title: 'Đăng ký',
           type: 'item',
           url: '/register',
           target: true

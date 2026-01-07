@@ -88,7 +88,7 @@ const capNhatThiebi = {
       id: 'bomnuoc',
       title: 'Bơm nước',
       type: 'collapse',
-      icon: <i className="ph ph-tree-structure" />,
+      icon: <i className="ph ph-pencil-ruler" />,
       children: [
         {
           id: 'danhmucbomnuoc',
@@ -106,7 +106,7 @@ const capNhatThiebi = {
           id: 'capnhatbomnuoc',
           title: 'Cập nhật bơm nước',
           type: 'item',
-          url: '/bomnuoc/capnhatbomnuoc'
+          url: '/bomnuoc/tonghopbomnuoc'
         }
       ]
     }

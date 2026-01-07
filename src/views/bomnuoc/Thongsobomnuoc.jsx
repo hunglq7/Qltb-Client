@@ -46,6 +46,18 @@ const Thongsobomnuoc = () => {
     setModalOpen(true);
   };
 
+  // ================= Acction EDIT =================
+  const handleOpenEdit = (record) => {
+    setEditing(record);
+    form.setFieldsValue({
+      bomNuocId: record.bomNuocId,
+      noiDung: record.noiDung,
+      donViTinh: record.donViTinh,
+      thongSo: record.thongSo
+    });
+    setModalOpen(true);
+  };
+
   // ================= DELETE =================
   const handleDelete = async (id) => {
     await deleteThongsobomnuoc(id);
@@ -87,7 +99,7 @@ const Thongsobomnuoc = () => {
 
   // ================= CREATE COLUMS =================
   const columns = [
-    { title: 'Thiết bị', dataIndex: 'tenToiTruc' },
+    { title: 'Thiết bị', dataIndex: 'tenThietBi' },
     { title: 'Nội dung', dataIndex: 'noiDung' },
     { title: 'Đơn vị tính', dataIndex: 'donViTinh' },
     { title: 'Thông số', dataIndex: 'thongSo' },
@@ -95,13 +107,7 @@ const Thongsobomnuoc = () => {
       title: 'Hành động',
       render: (_, record) => (
         <Space>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => {
-              setEditing(record);
-              setModalOpen(true);
-            }}
-          ></Button>
+          <Button icon={<EditOutlined />} onClick={() => handleOpenEdit(record)}></Button>
           <Popconfirm title="Xóa bản ghi?" onConfirm={() => handleDelete(record.id)}>
             <Button danger icon={<DeleteOutlined />}></Button>
           </Popconfirm>
@@ -113,8 +119,8 @@ const Thongsobomnuoc = () => {
   // ================= SEARCH =================
   const filteredData = useMemo(() => {
     if (!searchText) return dataSource;
-    return dataDanhmucbomnuoc.filter((item) => Object.values(item).join(' ').toLowerCase().includes(searchText.toLowerCase()));
-  }, [dataDanhmucbomnuoc, searchText]);
+    return dataSource.filter((item) => Object.values(item).join(' ').toLowerCase().includes(searchText.toLowerCase()));
+  }, [dataSource, searchText]);
 
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
@@ -136,6 +142,7 @@ const Thongsobomnuoc = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'ThongSoBomNuoc');
     XLSX.writeFile(workbook, 'Thong-So-Bom-Nuoc.xlsx');
   };
+  console.log(dataSource);
   return (
     <>
       <MainCard>
@@ -173,7 +180,7 @@ const Thongsobomnuoc = () => {
             onSubmit={handleSubmit}
             selectDataList={dataDanhmucbomnuoc}
             selectLable={'Thiết bị'}
-            selectName={'bomnuocId'}
+            selectName={'bomNuocId'}
           />
         </Modal>
       </MainCard>

@@ -22,6 +22,7 @@ const CapnhatToidien = Loadable(lazy(() => import('views/toidien/Capnhattoidien'
 //Render- Bơm nước
 const DanhmucBomnuoc = Loadable(lazy(() => import('views/bomnuoc/Danhmucbomnuoc')));
 const ThongsoBomnuoc = Loadable(lazy(() => import('views/bomnuoc/Thongsobomnuoc')));
+const TonghopBomnuoc = Loadable(lazy(() => import('views/bomnuoc/Tonghopbomnuoc')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -96,6 +97,10 @@ const CapnhatthietbiRouters = {
             {
               path: 'thongsobomnuoc',
               element: <ThongsoBomnuoc />
+            },
+            {
+              path: 'tonghopbomnuoc',
+              element: <TonghopBomnuoc />
             }
           ]
         }

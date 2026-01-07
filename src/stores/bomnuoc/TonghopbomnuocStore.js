@@ -1,17 +1,17 @@
 import { create } from 'zustand';
 import { message } from 'antd';
-import { thongsobomnuocService } from '../../services/bomnuoc/thongsobomnuocService';
-export const useThongsobomnuocStore = create((set, get) => ({
-  dataThongsobomnuoc: [],
+import { tonghopbomnuocService } from '../../services/bomnuoc/tonghopbomnuocService';
+export const useTonghopbomnuocStore = create((set, get) => ({
+  dataTonghopbomnuoc: [],
   loading: false,
-
+totalRecords:[],
   // ================= FETCH =================
-  fetchThongsobomnuoc: async () => {
+  fetchTonghopbomnuoc: async () => {
     set({ loading: true });
     try {
-      const res = await thongsobomnuocService.getThongsobomnuoc();
+      const res = await tonghopbomnuocService.getTonghopbomnuoc();
       set({
-        dataThongsobomnuoc: res.data,
+        dataTonghopbomnuoc: res.data,
         loading: false
       });
     } catch (error) {
@@ -19,31 +19,40 @@ export const useThongsobomnuocStore = create((set, get) => ({
       set({ loading: false });
     }
   },
-
-  getThongsobomnuocById: async (id) => {
+getTonghopbomnuocPaging:async(req)=>{
+  set({loading:true});
+  try {  
+    const data=await tonghopbomnuocService.getTonghopbomnuocPaging(req);     
+    set({dataTonghopbomnuoc:data.data.items,totalRecords:data.data.totalRecords,loading:false})
+  } catch (error) {
+     message.error('Failed to get TonghopbomnuocPaging');
+      set({ loading: false }); 
+  }
+},
+  getTonghopbomnuocById: async (id) => {
   set({ loading: true });
   try {
-    const res = await thongsobomnuocService.getThongsobomnuocDetaiById(id);
+    const res = await tonghopbomnuocService.getTonghopbomnuocDetaiById(id);
     const list = Array.isArray(res.data)
       ? res.data
       : res.data?.data || [];
     set({
-      dataThongsobomnuoc: list,
+      dataTonghopbomnuoc: list,
       loading: false
     });
   } catch {
-    set({ dataThongsobomnuoc: [], loading: false });
+    set({ dataTonghopbomnuoc: [], loading: false });
   }
 },
 
   // ================= CREATE =================
-  createThongsobomnuoc: async (payload) => {
+  createTonghopbomnuoc: async (payload) => {
     set({ loading: true });
     try {
-      const res = await thongsobomnuocService.addThongsobomnuoc(payload);
+      const res = await tonghopbomnuocService.addTonghopbomnuoc(payload);
 
       set({
-        dataThongsobomnuoc: [...get().dataThongsobomnuoc, res.data],
+        dataTonghopbomnuoc: [...get().dataTonghopbomnuoc, res.data],
         loading: false
       });
     
@@ -54,15 +63,15 @@ export const useThongsobomnuocStore = create((set, get) => ({
   },
 
   // ================= UPDATE =================
-  updateThongsobomnuoc: async (payload) => {
+  updateTonghopbomnuoc: async (payload) => {
     set({ loading: true });
     try {
-      const res = await thongsobomnuocService.updateThongsobomnuoc(payload);
-      const newData = get().dataThongsobomnuoc.map(item =>
+      const res = await tonghopbomnuocService.updateTonghopbomnuoc(payload);
+      const newData = get().dataTonghopbomnuoc.map(item =>
         item.id === res.data.id ? res.data : item
       );
       set({
-        dataThongsobomnuoc: newData,
+        dataTonghopbomnuoc: newData,
         loading: false
       });     
     } catch (error) {
@@ -72,13 +81,13 @@ export const useThongsobomnuocStore = create((set, get) => ({
   },
 
   // ================= DELETE ONE =================
-  deleteThongsobomnuoc: async (id) => {
+  deleteTonghopbomnuoc: async (id) => {
     set({ loading: true });
     try {
-      await thongsobomnuocService.deleteThongsobomnuoc(id);
+      await tonghopbomnuocService.deleteTonghopbomnuoc(id);
 
       set({
-        dataThongsobomnuoc: get().dataThongsobomnuoc.filter(item => item.id !== id),
+        dataTonghopbomnuoc: get().dataTonghopbomnuoc.filter(item => item.id !== id),
         loading: false
       });
     
@@ -89,12 +98,12 @@ export const useThongsobomnuocStore = create((set, get) => ({
   },
 
   // ================= DELETE MULTIPLE =================
-  deleteMultipleThongsobomnuoc: async (ids) => {
+  deleteMultipleTonghopbomnuoc: async (ids) => {
     set({ loading: true });
     try {
-      await thongsobomnuocService.deleteThongsobomnuocs(ids);
+      await tonghopbomnuocService.deleteTonghopbomnuocs(ids);
       set({
-        dataThongsobomnuoc: get().dataThongsobomnuoc.filter(
+        dataTonghopbomnuoc: get().dataTonghopbomnuoc.filter(
           item => !ids.includes(item.id)
         ),
         loading: false
