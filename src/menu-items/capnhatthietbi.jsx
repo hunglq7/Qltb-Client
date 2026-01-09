@@ -109,6 +109,32 @@ const capNhatThiebi = {
           url: '/bomnuoc/tonghopbomnuoc'
         }
       ]
+    },
+    {
+      id: 'quatgio',
+      title: 'Quạt gió',
+      type: 'collapse',
+      icon: <i className="ph ph-table" />,
+      children: [
+        {
+          id: 'danhmucquatgio',
+          title: 'Danh mục quạt gió',
+          type: 'item',
+          url: '/quatgio/danhmucquatgio'
+        },
+        {
+          id: 'thongsoquatgio',
+          title: 'Thông số quạt gió',
+          type: 'item',
+          url: '/quatgio/thongsoquatgio'
+        },
+        {
+          id: 'capnhatquatgio',
+          title: 'Cập nhật quạt gió',
+          type: 'item',
+          url: '/quatgio/tonghopquatgio'
+        }
+      ]
     }
   ]
 };

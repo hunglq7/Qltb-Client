@@ -2,18 +2,16 @@ import React, { useMemo, useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { Card, Spin, Empty, Select } from 'antd';
 import dayjs from 'dayjs';
-import { useTonghopbomnuocStore } from '/src/stores/bomnuoc/TonghopbomnuocStore';
-
-const DuphongBomnuocChart = () => {
-  const { dataTonghopbomnuoc, loading, fetchTonghopbomnuoc } = useTonghopbomnuocStore();
-
+import { useTonghopmayxucStore } from '../../../stores/mayxuc/tonghopmayxucStore';
+const MayxucChart = () => {
+  const { dataTonghopMayxuc, loading, fetchTonghopmayxuc } = useTonghopmayxucStore();
   useEffect(() => {
-    fetchTonghopbomnuoc();
+    fetchTonghopmayxuc();
   }, []);
   // ✅ LUÔN ÉP DATA VỀ ARRAY
   const listData = useMemo(
-    () => (Array.isArray(dataTonghopbomnuoc) ? dataTonghopbomnuoc : dataTonghopbomnuoc?.items || []),
-    [dataTonghopbomnuoc]
+    () => (Array.isArray(dataTonghopMayxuc) ? dataTonghopMayxuc : dataTonghopMayxuc?.items || []),
+    [dataTonghopMayxuc]
   );
 
   /* ================= BIỂU ĐỒ DỰ PHÒNG ================= */
@@ -97,14 +95,27 @@ const DuphongBomnuocChart = () => {
         text: `Thống kê thiết bị theo tháng - ${selectedYear}`,
         align: 'center'
       },
+      colors: ['#722ed1'],
       xaxis: {
-        categories: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12']
+        categories: [
+          'Tháng 1',
+          'Tháng 2',
+          'Tháng 3',
+          'Tháng 4',
+          'Tháng 5',
+          'Tháng 6',
+          'Tháng 7',
+          'Tháng 8',
+          'Tháng 9',
+          'Tháng 10',
+          'Tháng 11',
+          'Tháng 12'
+        ]
       },
       dataLabels: { enabled: true }
     }),
     [selectedYear]
   );
-
   /* ================= RENDER ================= */
   if (loading) {
     return (
@@ -117,7 +128,6 @@ const DuphongBomnuocChart = () => {
   if (!listData.length) {
     return <Empty description="Không có dữ liệu" />;
   }
-
   return (
     <div style={{ display: 'flex', gap: 20, padding: 20, flexWrap: 'wrap' }}>
       <Card style={{ flex: 1, minWidth: 400 }}>
@@ -159,4 +169,4 @@ const DuphongBomnuocChart = () => {
   );
 };
 
-export default DuphongBomnuocChart;
+export default MayxucChart;

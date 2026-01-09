@@ -23,6 +23,9 @@ const CapnhatToidien = Loadable(lazy(() => import('views/toidien/Capnhattoidien'
 const DanhmucBomnuoc = Loadable(lazy(() => import('views/bomnuoc/Danhmucbomnuoc')));
 const ThongsoBomnuoc = Loadable(lazy(() => import('views/bomnuoc/Thongsobomnuoc')));
 const TonghopBomnuoc = Loadable(lazy(() => import('views/bomnuoc/Tonghopbomnuoc')));
+
+//Render - Quạt gió
+const DanhmucQuatgio = Loadable(lazy(() => import('views/quatgio/Danhmucquatgio')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -101,6 +104,15 @@ const CapnhatthietbiRouters = {
             {
               path: 'tonghopbomnuoc',
               element: <TonghopBomnuoc />
+            }
+          ]
+        },
+        {
+          path: 'quatgio',
+          children: [
+            {
+              path: 'danhmucquatgio',
+              element: <DanhmucQuatgio />
             }
           ]
         }

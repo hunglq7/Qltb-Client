@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { useDanhmucbomnuocStore } from '../../stores/bomnuoc/danhmucbomnuocStore';
+import { useDanhmucquatgioStore } from '../../stores/quatgio/danhmucquatgioStore';
 import MainCard from '/src/components/MainCard';
 import * as XLSX from 'xlsx';
 import SearchBar from '/src/components/SearchBar';
@@ -21,37 +21,37 @@ const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
     </td>
   );
 };
-const Danhmucbomnuoc = () => {
+const Danhmucquatgio = () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [localData, setLocalData] = useState([]);
   const {
-    dataDanhmucbomnuoc,
+    dataDanhmucquatgio,
     loading,
-    fetchDanhmucbomnuoc,
-    createDanhmucbomnuoc,
-    updateDanhmucbomnuoc,
-    deleteDanhmucbomnuoc,
-    deleteMultipleDanhmucbomnuoc
-  } = useDanhmucbomnuocStore();
+    fetchDanhmucquatgio,
+    createDanhmucquatgio,
+    updateDanhmucquatgio,
+    deleteDanhmucquatgio,
+    deleteMultipleDanhmucquatgio
+  } = useDanhmucquatgioStore();
 
   // ================= LOAD DATA =================
   useEffect(() => {
-    fetchDanhmucbomnuoc();
+    fetchDanhmucquatgio();
   }, []);
 
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
     return [
       ...localData,
-      ...dataDanhmucbomnuoc.map((item) => ({
+      ...dataDanhmucquatgio.map((item) => ({
         ...item,
         key: item.id
       }))
     ];
-  }, [dataDanhmucbomnuoc, localData]);
+  }, [dataDanhmucquatgio, localData]);
 
   // ================= EDIT =================
   const isEditing = (record) => record.key === editingKey;
@@ -65,7 +65,7 @@ const Danhmucbomnuoc = () => {
   };
 
   // ================= CANCEL =================
-  //=====================  Actions CANCEL ==========================
+
   const cancel = () => {
     setLocalData([]);
     setEditingKey('');
@@ -83,28 +83,27 @@ const Danhmucbomnuoc = () => {
       };
 
       if (String(key).startsWith('new_')) {
-        await createDanhmucbomnuoc(payload);
+        await createDanhmucquatgio(payload);
         message.success('Thêm mới thành công');
       } else {
-        await updateDanhmucbomnuoc(payload);
+        await updateDanhmucquatgio(payload);
         message.success('Cập nhật thành công');
       }
 
-      fetchDanhmucbomnuoc();
+      fetchDanhmucquatgio();
       setEditingKey('');
       setLocalData([]);
     } catch {
       message.error('Lỗi lưu dữ liệu');
     }
   };
-
   //======================DELETE==================================
   const handleDelete = async (record) => {
     if (String(record.key).startsWith('new_')) {
       setLocalData([]);
     } else {
-      await deleteDanhmucbomnuoc(record.id);
-      fetchDanhmucbomnuoc();
+      await deleteDanhmucquatgio(record.id);
+      fetchDanhmucquatgio();
     }
   };
 
@@ -189,9 +188,9 @@ const Danhmucbomnuoc = () => {
             return;
           }
 
-          await deleteMultipleDanhmucbomnuoc(validIds);
+          await deleteMultipleDanhmucquatgio(validIds);
           setSelectedRowKeys([]);
-          fetchDanhmucbomnuoc();
+          fetchDanhmucquatgio();
         } catch (error) {
           message.error('Xóa nhiều thất bại');
         }
@@ -216,8 +215,8 @@ const Danhmucbomnuoc = () => {
     worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }, { wch: 25 }];
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucbomnuoc');
-    XLSX.writeFile(workbook, 'Danh_muc_bom-nuoc.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucquatgio');
+    XLSX.writeFile(workbook, 'Danh_muc_quat-gio.xlsx');
   };
 
   return (
@@ -257,4 +256,4 @@ const Danhmucbomnuoc = () => {
   );
 };
 
-export default Danhmucbomnuoc;
+export default Danhmucquatgio;

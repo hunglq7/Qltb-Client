@@ -7,7 +7,10 @@ import ThietbiCard from '../../../components/cards/ThietbiCard';
 import { useTonghoptoidienStore } from '../../../stores/toidien/tonghoptoidienStore';
 import { useTonghopmayxucStore } from '../../../stores/mayxuc/tonghopmayxucStore';
 import { useTonghopmaycaoStore } from '../../../stores/maycao/tonghopmaycaoStore';
-import DuphongBomnuocChart from '../../../sections/charts/apex-charts/DuphongBomnuocChart';
+import BomnuocChart from '../../../sections/charts/apex-charts/BomnuocChart';
+import MaycaoChart from '../../../sections/charts/apex-charts/MaycaoChart';
+import MayxucChart from '../../../sections/charts/apex-charts/MayxucChart';
+import ToidienChart from '../../../sections/charts/apex-charts/ToidienChart';
 import MainCard from '../../../components/MainCard';
 export default function DefaultPage() {
   const { dataTonghop, fetchTonghoptoidien } = useTonghoptoidienStore();
@@ -48,13 +51,23 @@ export default function DefaultPage() {
   return (
     <Row>
       <Col sm={24}>
-        <MainCard title="Biểu đồ thiết bị bơm nước">
-          <DuphongBomnuocChart />
+        <MainCard title="Biểu đồ thiết bị Máy cào">
+          <MaycaoChart />
+        </MainCard>
+      </Col>
+      <Col sm={24}>
+        <MainCard title="Biểu đồ thiết bị Máy xúc">
+          <MayxucChart />
+        </MainCard>
+      </Col>
+      <Col sm={24}>
+        <MainCard title="Biểu đồ thiết bị Tời điện">
+          <ToidienChart />
         </MainCard>
       </Col>
       <Col sm={24}>
         <MainCard title="Biểu đồ thiết bị bơm nước">
-          <DuphongBomnuocChart />
+          <BomnuocChart />
         </MainCard>
       </Col>
     </Row>
