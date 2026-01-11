@@ -114,7 +114,7 @@ const capNhatThiebi = {
       id: 'quatgio',
       title: 'Quạt gió',
       type: 'collapse',
-      icon: <i className="ph ph-table" />,
+      icon: <i className="ph ph-airplane-landing " />,
       children: [
         {
           id: 'danhmucquatgio',

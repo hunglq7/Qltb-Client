@@ -1,43 +1,42 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Space, Button, Popconfirm, Table, Row, message, Form, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import MainCard from '/src//components/MainCard';
+import MainCard from '/src/components/MainCard';
 import ActionBar from '/src/components/ActionBar';
 import SearchBar from '/src/components/SearchBar';
 import ThongsoForm from '../../components/ThongsoForm';
-import { useDanhmucbomnuocStore } from '../../stores/bomnuoc/danhmucbomnuocStore';
-import { useThongsobomnuocStore } from '../../stores/bomnuoc/thongsobomnuocStore';
+import { useDanhmucquatgioStore } from '../../stores/quatgio/danhmucquatgioStore';
+import { useThongsoquatgioStore } from '../../stores/quatgio/thongsoquatgioStore';
 import * as XLSX from 'xlsx';
-const Thongsobomnuoc = () => {
+
+const Thongsoquatgio = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
-  const { dataDanhmucbomnuoc, fetchDanhmucbomnuoc } = useDanhmucbomnuocStore();
+  const { dataDanhmucquatgio, fetchDanhmucquatgio } = useDanhmucquatgioStore();
   const {
-    dataThongsobomnuoc,
+    dataThongsoquatgio,
     loading,
-    fetchThongsobomnuoc,
-    createThongsobomnuoc,
-    updateThongsobomnuoc,
-    deleteThongsobomnuoc,
-    deleteMultipleThongsobomnuoc
-  } = useThongsobomnuocStore();
-
+    fetchThongsoquatgio,
+    createThongsoquatgio,
+    updateThongsoquatgio,
+    deleteThongsoquatgio,
+    deleteMultipleThongsoquatgio
+  } = useThongsoquatgioStore();
   //================= Load Data ===========================
   useEffect(() => {
-    fetchThongsobomnuoc();
-    fetchDanhmucbomnuoc();
+    fetchDanhmucquatgio();
+    fetchThongsoquatgio();
   }, []);
-
   const dataSource = useMemo(() => {
     return [
-      ...dataThongsobomnuoc.map((item) => ({
+      ...dataThongsoquatgio.map((item) => ({
         ...item
       }))
     ];
-  }, [dataThongsobomnuoc]);
+  }, [dataThongsoquatgio]);
 
   // ================= Acction ADD =================
 
@@ -51,19 +50,18 @@ const Thongsobomnuoc = () => {
   const handleOpenEdit = (record) => {
     setEditing(record);
     form.setFieldsValue({
-      bomNuocId: record.bomNuocId,
+      quatGioId: record.quatGioId,
       noiDung: record.noiDung,
       donViTinh: record.donViTinh,
       thongSo: record.thongSo
     });
     setModalOpen(true);
   };
-
   // ================= DELETE =================
   const handleDelete = async (id) => {
-    await deleteThongsobomnuoc(id);
+    await deleteThongsoquatgio(id);
     message.success('Xóa thành công');
-    fetchThongsobomnuoc();
+    fetchThongsoquatgio();
   };
 
   // ================= DELETE MULTIPLE =================
@@ -72,50 +70,30 @@ const Thongsobomnuoc = () => {
       // Lọc lấy các ID hợp lệ (kiểu number) trước khi gửi
       const ids = selectedRowKeys.filter((key) => typeof key === 'number');
       if (ids.length > 0) {
-        await deleteMultipleThongsobomnuoc(ids);
+        await deleteMultipleThongsoquatgio(ids);
         message.success('Xóa nhiều thành công');
         setSelectedRowKeys([]);
-        fetchThongsobomnuoc();
+        fetchThongsoquatgio();
       }
     } catch (error) {
       console.error('Lỗi:', error);
       message.error('Xóa bản ghi đã chọn thất bại');
     }
   };
+
   // ================= SAVE =================
   const handleSubmit = async (values) => {
     if (editing) {
-      await updateThongsobomnuoc(values);
-      fetchThongsobomnuoc();
+      await updateThongsoquatgio(editing.id, values);
       message.success('Cập nhật thành công');
     } else {
-      await createThongsobomnuoc(values);
-      fetchThongsobomnuoc();
+      await createThongsoquatgio(values);
       message.success('Thêm mới thành công');
     }
-
+    fetchThongsoquatgio();
     setModalOpen(false);
     setEditing(null);
   };
-
-  // ================= CREATE COLUMS =================
-  const columns = [
-    { title: 'Thiết bị', dataIndex: 'tenThietBi' },
-    { title: 'Nội dung', dataIndex: 'noiDung' },
-    { title: 'Đơn vị tính', dataIndex: 'donViTinh' },
-    { title: 'Thông số', dataIndex: 'thongSo' },
-    {
-      title: 'Hành động',
-      render: (_, record) => (
-        <Space>
-          <Button icon={<EditOutlined />} onClick={() => handleOpenEdit(record)}></Button>
-          <Popconfirm title="Xóa bản ghi?" onConfirm={() => handleDelete(record.id)}>
-            <Button danger icon={<DeleteOutlined />}></Button>
-          </Popconfirm>
-        </Space>
-      )
-    }
-  ];
 
   // ================= SEARCH =================
   const filteredData = useMemo(() => {
@@ -140,10 +118,28 @@ const Thongsobomnuoc = () => {
     worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }, { wch: 45 }, { wch: 15 }, { wch: 30 }];
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'ThongSoBomNuoc');
-    XLSX.writeFile(workbook, 'Thong-So-Bom-Nuoc.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'ThongSoQuatGio');
+    XLSX.writeFile(workbook, 'Thong-So-Quat-Gio.xlsx');
   };
 
+  // ================= CREATE COLUMS =================
+  const columns = [
+    { title: 'Thiết bị', dataIndex: 'tenThietBi' },
+    { title: 'Nội dung', dataIndex: 'noiDung' },
+    { title: 'Đơn vị tính', dataIndex: 'donViTinh' },
+    { title: 'Thông số', dataIndex: 'thongSo' },
+    {
+      title: 'Hành động',
+      render: (_, record) => (
+        <Space>
+          <Button icon={<EditOutlined />} onClick={() => handleOpenEdit(record)}></Button>
+          <Popconfirm title="Xóa bản ghi?" onConfirm={() => handleDelete(record.id)}>
+            <Button danger icon={<DeleteOutlined />}></Button>
+          </Popconfirm>
+        </Space>
+      )
+    }
+  ];
   return (
     <>
       <MainCard>
@@ -179,9 +175,9 @@ const Thongsobomnuoc = () => {
           <ThongsoForm
             form={form}
             onSubmit={handleSubmit}
-            selectDataList={dataDanhmucbomnuoc}
+            selectDataList={dataThongsoquatgio}
             selectLable={'Thiết bị'}
-            selectName={'bomNuocId'}
+            selectName={'quatGioId'}
           />
         </Modal>
       </MainCard>
@@ -189,4 +185,4 @@ const Thongsobomnuoc = () => {
   );
 };
 
-export default Thongsobomnuoc;
+export default Thongsoquatgio;

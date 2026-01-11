@@ -4,6 +4,7 @@ import { lazy } from 'react';
 import DashboardLayout from 'layout/Dashboard';
 import Loadable from 'components/Loadable';
 import ProtectRouter from './ProtectRouter';
+import Tonghopquatgio from '../views/quatgio/Tonghopquatgio';
 // render - máy cào
 const DanhmucMaycao = Loadable(lazy(() => import('views/maycao/DanhmucMaycao')));
 const ThongsoMaycao = Loadable(lazy(() => import('views/maycao/Capnhatthongsomaycao')));
@@ -26,6 +27,8 @@ const TonghopBomnuoc = Loadable(lazy(() => import('views/bomnuoc/Tonghopbomnuoc'
 
 //Render - Quạt gió
 const DanhmucQuatgio = Loadable(lazy(() => import('views/quatgio/Danhmucquatgio')));
+const ThongsoQuatgio = Loadable(lazy(() => import('views/quatgio/Thongsoquatgio')));
+const TonghopQuatgio = Loadable(lazy(() => import('views/quatgio/Tonghopquatgio')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -113,6 +116,14 @@ const CapnhatthietbiRouters = {
             {
               path: 'danhmucquatgio',
               element: <DanhmucQuatgio />
+            },
+            {
+              path: 'thongsoquatgio',
+              element: <ThongsoQuatgio />
+            },
+            {
+              path: 'tonghopquatgio',
+              element: <Tonghopquatgio />
             }
           ]
         }
