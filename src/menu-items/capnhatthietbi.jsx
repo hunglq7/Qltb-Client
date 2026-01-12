@@ -135,6 +135,26 @@ const capNhatThiebi = {
           url: '/quatgio/tonghopquatgio'
         }
       ]
+    },
+    {
+      id: 'giacot',
+      title: 'Giá cột',
+      type: 'collapse',
+      icon: <i className="ph ph-aperture " />,
+      children: [
+        {
+          id: 'danhmucgiacot',
+          title: 'Danh mục giá, cột',
+          type: 'item',
+          url: '/giacot/danhmucgiacot'
+        },
+        {
+          id: 'capnhatgiacot',
+          title: 'Cập nhật giá cột',
+          type: 'item',
+          url: '/giacot/capnhatgiacot'
+        }
+      ]
     }
   ]
 };
