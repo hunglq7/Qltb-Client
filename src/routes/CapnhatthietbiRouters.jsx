@@ -31,6 +31,7 @@ const ThongsoQuatgio = Loadable(lazy(() => import('views/quatgio/Thongsoquatgio'
 const TonghopQuatgio = Loadable(lazy(() => import('views/quatgio/Tonghopquatgio')));
 //Render - Giacot
 const DanhmucGiacot = Loadable(lazy(() => import('views/giacot/Danhmucgiacot')));
+const CapnhatGiacot = Loadable(lazy(() => import('views/giacot/Capnhatgiacot')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -135,6 +136,10 @@ const CapnhatthietbiRouters = {
             {
               path: 'danhmucgiacot',
               element: <DanhmucGiacot />
+            },
+            {
+              path: 'capnhatgiacot',
+              element: <CapnhatGiacot />
             }
           ]
         }

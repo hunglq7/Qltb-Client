@@ -1,24 +1,34 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber } from 'antd';
+import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber, Select, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { useCapnhatgiacotStore } from '../../stores/giacot/capnhatgiacotStore';
+import { useDonviStore } from '../../stores/donvi/donviStore';
 import { useDanhmucgiacotStore } from '../../stores/giacot/danhmucgiacotStore';
 import MainCard from '/src/components/MainCard';
 import * as XLSX from 'xlsx';
+import dayjs from 'dayjs';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
 // ================= EDIT ABLECELL =================
 
-const EditableCell = ({ editing, dataIndex, inputType, children, ...restProps }) => {
+const EditableCell = ({ editing, dataIndex, inputType, options = [], children, ...restProps }) => {
   let inputNode = <Input />;
 
-  if (inputType === 'boolean') inputNode = <Switch />;
-  if (inputType === 'year') inputNode = <DatePicker picker="year" />;
-  if (inputType === 'number') inputNode = <InputNumber />;
+  if (inputType === 'number') inputNode = <InputNumber style={{ width: '200' }} />;
+  if (inputType === 'date') inputNode = <DatePicker style={{ width: '100%' }} />;
+  if (inputType === 'select')
+    inputNode = <Select style={{ width: '100%' }} options={options} placeholder="Chọn đơn vị" showSearch optionLabelProp="label" />;
 
+  // ✅ CHỈ BẮT BUỘC CÁC FIELD QUAN TRỌNG
+  const requiredFields = ['donViId', 'loaiThietBiId'];
   return (
     <td {...restProps}>
       {editing ? (
-        <Form.Item name={dataIndex} valuePropName={inputType === 'boolean' ? 'checked' : 'value'} style={{ margin: 0 }}>
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={requiredFields.includes(dataIndex) ? [{ required: true, message: 'Không được bỏ trống' }] : []}
+        >
           {inputNode}
         </Form.Item>
       ) : (
@@ -27,36 +37,59 @@ const EditableCell = ({ editing, dataIndex, inputType, children, ...restProps })
     </td>
   );
 };
-const Danhmucgiacot = () => {
+const Capnhatgiacot = () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [localData, setLocalData] = useState([]);
+  const { dataDonvi, fetchDonvi } = useDonviStore();
+  const { dataDanhmucgiacot, fetchDanhmucgiacot } = useDanhmucgiacotStore();
   const {
-    dataDanhmucgiacot,
+    dataCapnhatgiacot,
     loading,
-    fetchDanhmucgiacot,
-    createDanhmucgiacot,
-    updateDanhmucgiacot,
-    deleteDanhmucgiacot,
-    deleteMultipleDanhmucgiacot
-  } = useDanhmucgiacotStore();
+    fetchCapnhatgiacot,
+    createCapnhatgiacot,
+    updateCapnhatgiacot,
+    deleteCapnhatgiacot,
+    deleteMultipleCapnhatgiacot
+  } = useCapnhatgiacotStore();
 
   // ================= LOAD DATA =================
   useEffect(() => {
+    fetchDonvi();
     fetchDanhmucgiacot();
+    fetchCapnhatgiacot();
   }, []);
+
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
     return [
       ...localData,
-      ...dataDanhmucgiacot.map((item) => ({
+      ...dataCapnhatgiacot.map((item) => ({
         ...item,
-        key: item.loaiThietBiId
+        key: item.capNhatId
       }))
     ];
-  }, [dataDanhmucgiacot, localData]);
+  }, [dataCapnhatgiacot, localData]);
+
+  const donViOptions = useMemo(() => {
+    return (
+      dataDonvi?.map((dv) => ({
+        label: dv.tenPhong,
+        value: Number(dv.id) // 🔥 CỰC KỲ QUAN TRỌNG
+      })) || []
+    );
+  }, [dataDonvi]);
+
+  const danhmucOptions = useMemo(() => {
+    return (
+      dataDanhmucgiacot?.map((dv) => ({
+        label: dv.tenLoai,
+        value: Number(dv.loaiThietBiId) // 🔥 CỰC KỲ QUAN TRỌNG
+      })) || []
+    );
+  }, [dataDanhmucgiacot]);
 
   //=======================ADD===================================
   const handleOpenAdd = () => {
@@ -64,9 +97,14 @@ const Danhmucgiacot = () => {
     const key = `new_${Date.now()}`;
     const newRow = {
       key,
-      maLoai: '',
-      tenLoai: '',
-      moTa: ''
+      donViId: null,
+      loaiThietBiId: null,
+      soLuongDangQuanLy: 0,
+      soLuongHuyDong: 0,
+      soLuongHong: 0,
+      soLuongDuPhong: 0,
+      ngayCapNhat: dayjs(new Date()),
+      ghiChu: ''
     };
     setLocalData([newRow]);
     form.setFieldsValue(newRow);
@@ -77,9 +115,8 @@ const Danhmucgiacot = () => {
   const isEditing = (record) => record.key === editingKey;
   const edit = (record) => {
     form.setFieldsValue({
-      maLoai: record.maLoai,
-      tenLoai: record.tenLoai,
-      moTa: record.moTa
+      ...record,
+      ngayCapNhat: record.ngayCapNhat ? dayjs(record.ngayCapNhat) : null
     });
     setEditingKey(record.key);
   };
@@ -89,14 +126,13 @@ const Danhmucgiacot = () => {
     setLocalData([]);
     setEditingKey('');
   };
-
   //======================DELETE==================================
   const handleDelete = async (record) => {
     if (String(record.key).startsWith('new_')) {
       setLocalData([]);
     } else {
-      await deleteDanhmucgiacot(record.loaiThietBiId);
-      fetchDanhmucgiacot();
+      await deleteCapnhatgiacot(record.capNhatId);
+      fetchCapnhatgiacot();
     }
   };
 
@@ -117,9 +153,9 @@ const Danhmucgiacot = () => {
             message.warning('Không có bản ghi hợp lệ');
             return;
           }
-          await deleteMultipleDanhmucgiacot(validIds);
+          await deleteMultipleCapnhatgiacot(validIds);
           setSelectedRowKeys([]);
-          fetchDanhmucgiacot();
+          fetchCapnhatgiacot();
         } catch (error) {
           message.error('Xóa nhiều thất bại');
         }
@@ -131,42 +167,80 @@ const Danhmucgiacot = () => {
     try {
       const row = await form.validateFields();
       const record = dataSource.find((x) => x.key === key);
+
       const payload = {
-        loaiThietBiId: record.loaiThietBiId || 0,
-        maLoai: row.maLoai,
-        tenLoai: row.tenLoai,
-        moTa: row.moTa
+        capNhatId: record.capNhatId || 0,
+        donViId: Number(row.donViId),
+        loaiThietBiId: Number(row.loaiThietBiId),
+        viTriSuDung: row.viTriSuDung,
+        soLuongDangQuanLy: row.soLuongDangQuanLy,
+        soLuongHuyDong: row.soLuongHuyDong,
+        soLuongHong: row.soLuongHong,
+        soLuongDuPhong: row.soLuongDuPhong,
+        ngayCapNhat: row.ngayCapNhat ? dayjs(row.ngayCapNhat).format('YYYY-MM-DD') : null,
+        ghiChu: row.ghiChu
       };
 
       if (String(key).startsWith('new_')) {
-        await createDanhmucgiacot(payload);
+        await createCapnhatgiacot(payload);
         message.success('Thêm mới thành công');
       } else {
-        await updateDanhmucgiacot(payload);
+        await updateCapnhatgiacot(payload);
         message.success('Cập nhật thành công');
       }
-      fetchDanhmucgiacot();
+
+      fetchCapnhatgiacot();
       setEditingKey('');
       setLocalData([]);
-    } catch {
+    } catch (error) {
+      console.error(error);
       message.error('Lỗi lưu dữ liệu');
     }
   };
-
-  // ====================== Tìm kiếm ==========================
+  // ================= SEARCH =================
   const filteredData = useMemo(() => {
     if (!searchText) return dataSource;
-    const keyword = searchText.toLowerCase();
+
     return dataSource.filter((item) =>
-      [item.maLoai, item.tenLoai, item.chieuCao, item.moTa].filter(Boolean).some((val) => String(val).toLowerCase().includes(keyword))
+      Object.values(item)
+        .filter((v) => v !== null && v !== undefined)
+        .join(' ')
+        .toLowerCase()
+        .includes(searchText.toLowerCase())
     );
   }, [dataSource, searchText]);
 
   /* ================= Columns ================= */
   const columns = [
-    { title: 'Mã thiết bị', dataIndex: 'maLoai', editable: true },
-    { title: 'Tên thiết bị', dataIndex: 'tenLoai', editable: true },
-    { title: 'Mô tả', dataIndex: 'moTa', editable: true },
+    {
+      title: 'Đơn vị',
+      dataIndex: 'donViId',
+      editable: true,
+      inputType: 'select',
+      options: donViOptions,
+      render: (_, record) => record.tenDonVi || record.TenDonVi
+    },
+    {
+      title: 'Thiết bị',
+      dataIndex: 'loaiThietBiId',
+      editable: true,
+      inputType: 'select',
+      options: danhmucOptions,
+      render: (value) => dataDanhmucgiacot?.find((d) => d.loaiThietBiId === value)?.tenLoai || ''
+    },
+    { title: 'Vị trí sử dụng', dataIndex: 'viTriSuDung', editable: true },
+    { title: 'SL quản lý', dataIndex: 'soLuongDangQuanLy', editable: true, inputType: 'number' },
+    { title: 'SL huy động', dataIndex: 'soLuongHuyDong', editable: true, inputType: 'number' },
+    { title: 'SL hỏng', dataIndex: 'soLuongHong', editable: true, inputType: 'number' },
+    { title: 'SL dự phòng', dataIndex: 'soLuongDuPhong', editable: true, inputType: 'number' },
+    {
+      title: 'Ngày cập nhật',
+      dataIndex: 'ngayCapNhat',
+      editable: true,
+      inputType: 'date',
+      render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '')
+    },
+    { title: 'Ghi chú', dataIndex: 'ghiChu ', editable: true },
     {
       title: 'Hành động',
       render: (_, record) => {
@@ -187,7 +261,6 @@ const Danhmucgiacot = () => {
       }
     }
   ];
-
   const mergedColumns = columns.map((col) =>
     col.editable
       ? {
@@ -196,11 +269,13 @@ const Danhmucgiacot = () => {
             record,
             inputType: col.inputType,
             dataIndex: col.dataIndex,
+            options: col.options,
             editing: isEditing(record)
           })
         }
       : col
   );
+
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
     // Map dữ liệu theo cột và tiêu đề tiếng Việt
@@ -259,4 +334,4 @@ const Danhmucgiacot = () => {
   );
 };
 
-export default Danhmucgiacot;
+export default Capnhatgiacot;
