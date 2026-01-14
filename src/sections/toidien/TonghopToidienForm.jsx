@@ -1,4 +1,5 @@
 import React from 'react';
+import { memo } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { Select, Input, Form, DatePicker, Space, Button, Switch } from 'antd';
 const { TextArea } = Input;
@@ -84,4 +85,4 @@ function TonghopToidienForm({ handleSubmit, form, toiTrucList = [], donViList = 
   );
 }
 
-export default TonghopToidienForm;
+export default memo(TonghopToidienForm);

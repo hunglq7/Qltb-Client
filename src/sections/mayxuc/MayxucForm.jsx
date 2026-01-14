@@ -1,7 +1,6 @@
-import React from 'react';
 import { SaveOutlined } from '@ant-design/icons';
-
 import { Select, Input, Form, DatePicker, Space, Button, Switch } from 'antd';
+import { memo } from 'react';
 const { TextArea } = Input;
 function MayxucForm({ handleSubmit, form, mayXucList = [], donViList = [], onCancel, loaiThietBiList = [] }) {
   const formItemLayout = {
@@ -22,7 +21,6 @@ function MayxucForm({ handleSubmit, form, mayXucList = [], donViList = [], onCan
       </Form.Item>
       <Form.Item name="mayxucId" label="Thiết bị" rules={[{ required: true, message: 'Vui lòng chọn thiết bị' }]}>
         <Select placeholder="Chọn tời điện">
-
           {mayXucList.map((item) => (
             <Select.Option key={item.id} value={item.id}>
               {item.tenThietBi}
@@ -41,7 +39,6 @@ function MayxucForm({ handleSubmit, form, mayXucList = [], donViList = [], onCan
       </Form.Item>
 
       <Form.Item name="loaiThietBiId" label="Loại thiết bị" rules={[{ required: true, message: 'Vui lòng chọn đơn vị' }]}>
-
         <Select placeholder="Chọn loại thiết bị">
           {loaiThietBiList.map((item) => (
             <Select.Option key={item.id} value={item.id}>
@@ -89,10 +86,9 @@ function MayxucForm({ handleSubmit, form, mayXucList = [], donViList = [], onCan
             Hủy
           </Button>
         </Space>
-
       </Form.Item>
     </Form>
   );
 }
 
-export default MayxucForm;
+export default memo(MayxucForm);

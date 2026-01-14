@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { Table, Spin } from 'antd';
 import { useThongsomayxucStore } from '../../stores/mayxuc/thongsomayxucStore';
 
@@ -41,4 +41,4 @@ function ThongsoMayXucTable({ thongsomayxuc }) {
   );
 }
 
-export default ThongsoMayXucTable;
+export default memo(ThongsoMayXucTable);

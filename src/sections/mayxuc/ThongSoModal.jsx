@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { Modal, Form, Select, Input } from 'antd';
 function ThongSoModal({ open, form, onCancel, onSubmit, initialValues, mayXucList }) {
   const formItemLayout = {
@@ -46,4 +46,4 @@ function ThongSoModal({ open, form, onCancel, onSubmit, initialValues, mayXucLis
   );
 }
 
-export default ThongSoModal;
+export default memo(ThongSoModal);

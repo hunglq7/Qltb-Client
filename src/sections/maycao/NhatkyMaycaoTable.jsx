@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, memo } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Tag, Switch, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { nhatkymaycaoService } from '../../services/maycao/nhatkymaycaoService';
@@ -337,4 +337,4 @@ function NhatkyMaycaoTable({ nhatkymaycao }) {
   );
 }
 
-export default NhatkyMaycaoTable;
+export default memo(NhatkyMaycaoTable);

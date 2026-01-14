@@ -1,5 +1,6 @@
 import { Select, Input, Form, Space, Button, Flex } from 'antd';
 import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
+import { memo } from 'react';
 function ThongSoMayCaoForm({ form, mayCaoList, handleSubmit, onCancel }) {
   return (
     <Form form={form} onFinish={handleSubmit} layout="vertical">
@@ -49,4 +50,4 @@ function ThongSoMayCaoForm({ form, mayCaoList, handleSubmit, onCancel }) {
   );
 }
 
-export default ThongSoMayCaoForm;
+export default memo(ThongSoMayCaoForm);

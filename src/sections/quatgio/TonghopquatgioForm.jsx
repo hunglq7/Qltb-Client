@@ -1,4 +1,5 @@
 import React from 'react';
+import { memo } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { Select, Input, Form, DatePicker, Space, Button, Switch } from 'antd';
 const { TextArea } = Input;
@@ -80,4 +81,4 @@ const TonghopquatgioForm = ({ handleSubmit, form, quatGioList = [], donViList = 
   );
 };
 
-export default TonghopquatgioForm;
+export default memo(TonghopquatgioForm);

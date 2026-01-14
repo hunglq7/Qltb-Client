@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { Table, Spin } from 'antd';
 import { useThongsobomnuocStore } from '../../stores/bomnuoc/thongsobomnuocStore';
 const ThongsobomnuocTable = ({ tonghopbomnuoc }) => {
@@ -37,4 +37,4 @@ const ThongsobomnuocTable = ({ tonghopbomnuoc }) => {
   );
 };
 
-export default ThongsobomnuocTable;
+export default memo(ThongsobomnuocTable);

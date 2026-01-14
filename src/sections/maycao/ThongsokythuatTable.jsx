@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { Table } from 'antd';
 import { thongsomaycaoService } from '../../services/maycao/thongsomaycaoService';
 
@@ -28,4 +28,4 @@ function ThongsokythuatTable({ thongsomaycao }) {
   return <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />;
 }
 
-export default ThongsokythuatTable;
+export default memo(ThongsokythuatTable);

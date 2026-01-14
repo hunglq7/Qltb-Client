@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { Table, Spin } from 'antd';
 import { useThongsotoidienStore } from '../../stores/toidien/thongsotoidienStore';
 function ThongsotoidienTable({ tonghoptoidien }) {
@@ -31,4 +31,4 @@ function ThongsotoidienTable({ tonghoptoidien }) {
   );
 }
 
-export default ThongsotoidienTable;
+export default memo(ThongsotoidienTable);

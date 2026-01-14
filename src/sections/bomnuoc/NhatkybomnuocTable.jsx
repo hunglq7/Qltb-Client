@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, memo } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Tag, Switch, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { useNhatkybomnuocStore } from '../../stores/bomnuoc/nhatkybomnuocStore';
@@ -251,4 +251,4 @@ const NhatkybomnuocTable = ({ tonghopbomnuoc }) => {
   );
 };
 
-export default NhatkybomnuocTable;
+export default memo(NhatkybomnuocTable);

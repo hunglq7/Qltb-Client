@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { Table, Spin } from 'antd';
 import { useThongsoquatgioStore } from '../../stores/quatgio/thongsoquatgioStore';
 const ThongsoquatgioTable = ({ tonghopquatgio }) => {
@@ -37,4 +37,4 @@ const ThongsoquatgioTable = ({ tonghopquatgio }) => {
   );
 };
 
-export default ThongsoquatgioTable;
+export default memo(ThongsoquatgioTable);

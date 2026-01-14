@@ -1,6 +1,6 @@
-import React from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { Select, Input, Form, DatePicker, Flex, Space, Button, Switch } from 'antd';
+import { memo } from 'react';
 const { TextArea } = Input;
 
 function MaycaoForm({ handleSubmit, form, mayCaoList = [], donViList = [], onCancel }) {
@@ -91,4 +91,4 @@ function MaycaoForm({ handleSubmit, form, mayCaoList = [], donViList = [], onCan
   );
 }
 
-export default MaycaoForm;
+export default memo(MaycaoForm);
