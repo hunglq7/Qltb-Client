@@ -100,9 +100,6 @@ const Capnhatgiacot = () => {
       donViId: null,
       loaiThietBiId: null,
       soLuongDangQuanLy: 0,
-      soLuongHuyDong: 0,
-      soLuongHong: 0,
-      soLuongDuPhong: 0,
       ngayCapNhat: dayjs(new Date()),
       ghiChu: ''
     };
@@ -174,9 +171,6 @@ const Capnhatgiacot = () => {
         loaiThietBiId: Number(row.loaiThietBiId),
         viTriSuDung: row.viTriSuDung,
         soLuongDangQuanLy: row.soLuongDangQuanLy,
-        soLuongHuyDong: row.soLuongHuyDong,
-        soLuongHong: row.soLuongHong,
-        soLuongDuPhong: row.soLuongDuPhong,
         ngayCapNhat: row.ngayCapNhat ? dayjs(row.ngayCapNhat).format('YYYY-MM-DD') : null,
         ghiChu: row.ghiChu
       };
@@ -229,10 +223,7 @@ const Capnhatgiacot = () => {
       render: (value) => dataDanhmucgiacot?.find((d) => d.loaiThietBiId === value)?.tenLoai || ''
     },
     { title: 'Vị trí sử dụng', dataIndex: 'viTriSuDung', editable: true },
-    { title: 'SL quản lý', dataIndex: 'soLuongDangQuanLy', editable: true, inputType: 'number' },
-    { title: 'SL huy động', dataIndex: 'soLuongHuyDong', editable: true, inputType: 'number' },
-    { title: 'SL hỏng', dataIndex: 'soLuongHong', editable: true, inputType: 'number' },
-    { title: 'SL dự phòng', dataIndex: 'soLuongDuPhong', editable: true, inputType: 'number' },
+    { title: 'Số lượng', dataIndex: 'soLuongDangQuanLy', editable: true, inputType: 'number' },
     {
       title: 'Ngày cập nhật',
       dataIndex: 'ngayCapNhat',
@@ -248,7 +239,7 @@ const Capnhatgiacot = () => {
         return editing ? (
           <Space>
             <Button icon={<SaveOutlined />} type="primary" onClick={() => save(record.key)} />
-            <Button icon={<CloseOutlined />} onClick={cancel} />
+            <Button danger icon={<CloseOutlined />} onClick={cancel} />
           </Space>
         ) : (
           <Space>
@@ -326,7 +317,7 @@ const Capnhatgiacot = () => {
           columns={mergedColumns}
           selectedRowKeys={selectedRowKeys}
           disabledDelete={selectedRowKeys.length === 0}
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           rowKey={(record) => record.id ?? record.key}
         />
       </Form>

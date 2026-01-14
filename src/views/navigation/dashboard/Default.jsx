@@ -12,6 +12,7 @@ import MaycaoChart from '../../../sections/charts/apex-charts/MaycaoChart';
 import MayxucChart from '../../../sections/charts/apex-charts/MayxucChart';
 import ToidienChart from '../../../sections/charts/apex-charts/ToidienChart';
 import QuatgioChart from '../../../sections/charts/apex-charts/QuatgioChart';
+import GiacotChart from '../../../sections/charts/apex-charts/GiacotChart';
 import MainCard from '../../../components/MainCard';
 export default function DefaultPage() {
   const { dataTonghop, fetchTonghoptoidien } = useTonghoptoidienStore();
@@ -74,6 +75,11 @@ export default function DefaultPage() {
       <Col sm={24}>
         <MainCard title="Biểu đồ thiết bị quạt gió">
           <QuatgioChart />
+        </MainCard>
+      </Col>
+      <Col sm={24}>
+        <MainCard title="Biểu đồ giá cột">
+          <GiacotChart />
         </MainCard>
       </Col>
     </Row>

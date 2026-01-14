@@ -251,7 +251,7 @@ const Danhmucgiacot = () => {
           columns={mergedColumns}
           selectedRowKeys={selectedRowKeys}
           disabledDelete={selectedRowKeys.length === 0}
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           rowKey={(record) => record.id ?? record.key}
         />
       </Form>
