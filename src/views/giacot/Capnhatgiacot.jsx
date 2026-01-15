@@ -266,26 +266,29 @@ const Capnhatgiacot = () => {
         }
       : col
   );
-
+  console.log(filteredData);
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
     // Map dữ liệu theo cột và tiêu đề tiếng Việt
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
-      'Tên thiết bị': item.tenThietBi,
-      'Loại thiết bị': item.loaiThietBi
+      'Đơn vị': item.tenDonVi,
+      'Thiết bị': item.tenloaiThietBi,
+      'Vị trí sử dụng': item.viTriSuDung,
+      'Ngày cập nhật': item.ngayCapNhat,
+      'Số lượng': item.soLuongDangQuanLy
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData, {
-      header: ['STT', 'Tên thiết bị', 'Loại thiết bị']
+      header: ['STT', 'Đơn vị', 'Thiết bị', 'Vị trí sử dụng', 'Ngày cập nhật', 'Số lượng']
     });
 
     // Set độ rộng cột
-    worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }, { wch: 25 }];
+    worksheet['!cols'] = [{ wch: 5 }, { wch: 15 }, { wch: 25 }, { wch: 20 }, { wch: 15 }, { wch: 10 }];
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucquatgio');
-    XLSX.writeFile(workbook, 'Danh_muc_quat-gio.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Capnhatgiacot');
+    XLSX.writeFile(workbook, 'Cap-nhat-gia-cot.xlsx');
   };
 
   return (
