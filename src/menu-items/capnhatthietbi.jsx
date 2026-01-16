@@ -155,6 +155,20 @@ const capNhatThiebi = {
           url: '/giacot/capnhatgiacot'
         }
       ]
+    },
+    {
+      id: 'danhmuc',
+      title: 'Danh mục',
+      type: 'collapse',
+      icon: <i className="ph ph-aperture " />,
+      children: [
+        {
+          id: 'danhmucdonvi',
+          title: 'Danh mục đơn vị',
+          type: 'item',
+          url: '/danhmuc/danhmucdonvi'
+        }
+      ]
     }
   ]
 };
