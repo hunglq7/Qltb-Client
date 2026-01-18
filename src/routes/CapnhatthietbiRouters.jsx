@@ -4,7 +4,7 @@ import { lazy } from 'react';
 import DashboardLayout from 'layout/Dashboard';
 import Loadable from 'components/Loadable';
 import ProtectRouter from './ProtectRouter';
-import Tonghopquatgio from '../views/quatgio/Tonghopquatgio';
+
 // render - máy cào
 const DanhmucMaycao = Loadable(lazy(() => import('views/maycao/DanhmucMaycao')));
 const ThongsoMaycao = Loadable(lazy(() => import('views/maycao/Capnhatthongsomaycao')));
@@ -126,7 +126,7 @@ const CapnhatthietbiRouters = {
             },
             {
               path: 'tonghopquatgio',
-              element: <Tonghopquatgio />
+              element: <TonghopQuatgio />
             }
           ]
         },

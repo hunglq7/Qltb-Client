@@ -7,11 +7,11 @@ import other from './other';
 import pages from './pages';
 import tableComponents from './tables';
 import uiComponents from './ui-components';
-
+import danhmuc from './danhmuc';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [navigation, capNhatThiebi, pages]
+  items: [navigation, capNhatThiebi, danhmuc, pages]
 };
 
 export default menuItems;

@@ -8,11 +8,22 @@ import FormsRoutes from './FormsRoutes';
 import TablesRoutes from './TablesRoutes';
 import ChartMapRoutes from './ChartMapRoutes';
 import OtherRoutes from './OtherRoutes';
-import CapnhatthietbiRouters from './capnhatthietbiRouters';
+import CapnhatthietbiRouters from './CapnhatthietbiRouters';
+import DanhmucRouters from './DandmucRouters';
 // ==============================|| ROUTING RENDER ||============================== //
 
 const router = createBrowserRouter(
-  [NavigationRoutes, ComponentsRoutes, FormsRoutes, TablesRoutes, ChartMapRoutes, PagesRoutes, OtherRoutes, CapnhatthietbiRouters],
+  [
+    NavigationRoutes,
+    ComponentsRoutes,
+    FormsRoutes,
+    TablesRoutes,
+    ChartMapRoutes,
+    PagesRoutes,
+    OtherRoutes,
+    CapnhatthietbiRouters,
+    DanhmucRouters
+  ],
   {
     basename: import.meta.env.VITE_APP_BASE_NAME
   }

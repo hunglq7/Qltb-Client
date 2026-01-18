@@ -6,7 +6,7 @@ const getDonvi = async () => {
     });
 };
 const addDonvi = async (data) => {
-    return await api.post('Phongban', data).then(response => {
+    return await api.post('Phongban/Add', data).then(response => {
         return response
     })
 }
@@ -18,12 +18,12 @@ const deleteDonvi = async (id) => {
 }
 
 const deleteDonvis = async (data) => {
-    return await api.post(`Phongban/DeleteMultipale`, data).then(response => {
+    return await api.post(`Phongban/DeleteSelect`, data).then(response => {
         return response
     })
 }
 const updateDonvi = async (data) => {
-    return await api.put('Phongban/update', data).then(response => {
+    return await api.put('Phongban/Update', data).then(response => {
         return response
     })
 }

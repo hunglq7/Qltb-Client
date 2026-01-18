@@ -1,6 +1,5 @@
 // ==============================|| MENU ITEMS - CHARTS & MAPS ||============================== //
-import { SearchOutlined } from '@ant-design/icons';
-import { icons } from 'antd/es/image/PreviewGroup';
+
 const capNhatThiebi = {
   id: 'capnhatthietbi',
   title: 'Cập nhật thiết bị',
@@ -153,20 +152,6 @@ const capNhatThiebi = {
           title: 'Cập nhật giá cột',
           type: 'item',
           url: '/giacot/capnhatgiacot'
-        }
-      ]
-    },
-    {
-      id: 'danhmuc',
-      title: 'Danh mục',
-      type: 'collapse',
-      icon: <i className="ph ph-aperture " />,
-      children: [
-        {
-          id: 'danhmucdonvi',
-          title: 'Danh mục đơn vị',
-          type: 'item',
-          url: '/danhmuc/danhmucdonvi'
         }
       ]
     }

@@ -1,19 +1,20 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal } from 'antd';
+import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, Tag, Switch } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { useDanhmucbomnuocStore } from '../../stores/bomnuoc/danhmucbomnuocStore';
+import { useDonviStore } from '/src/stores/donvi/donviStore';
 import MainCard from '/src/components/MainCard';
 import * as XLSX from 'xlsx';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
-
-// ================= EDIT ABLECELL =================
-const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
+/* ================= Editable Cell ================= */
+const EditableCell = ({ editing, dataIndex, inputType, children, ...restProps }) => {
+  let inputNode = <Input />;
+  if (inputType === 'boolean') inputNode = <Switch />;
   return (
     <td {...restProps}>
       {editing ? (
-        <Form.Item name={dataIndex} style={{ margin: 0 }}>
-          <Input />
+        <Form.Item name={dataIndex} valuePropName={inputType === 'boolean' ? 'checked' : 'value'} style={{ margin: 0 }}>
+          {inputNode}
         </Form.Item>
       ) : (
         children
@@ -21,54 +22,81 @@ const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
     </td>
   );
 };
-const Danhmucbomnuoc = () => {
+
+const Danhmucdonvi = () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [localData, setLocalData] = useState([]);
-  const {
-    dataDanhmucbomnuoc,
-    loading,
-    fetchDanhmucbomnuoc,
-    createDanhmucbomnuoc,
-    updateDanhmucbomnuoc,
-    deleteDanhmucbomnuoc,
-    deleteMultipleDanhmucbomnuoc
-  } = useDanhmucbomnuocStore();
+  const { dataDonvi, loading, fetchDonvi, createDonvi, updateDonvi, deleteDonvi, deleteMultiple } = useDonviStore();
 
   // ================= LOAD DATA =================
   useEffect(() => {
-    fetchDanhmucbomnuoc();
+    fetchDonvi();
   }, []);
 
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
     return [
       ...localData,
-      ...dataDanhmucbomnuoc.map((item) => ({
+      ...dataDonvi.map((item) => ({
         ...item,
         key: item.id
       }))
     ];
-  }, [dataDanhmucbomnuoc, localData]);
+  }, [dataDonvi, localData]);
+
+  //=======================ADD===================================
+  const handleOpenAdd = () => {
+    if (editingKey) return message.warning('Hoàn thành dòng đang sửa');
+    const key = `new_${Date.now()}`;
+    const newRow = {
+      key,
+      tenPhong: '',
+      tinhTrang: true
+    };
+    setLocalData([newRow]);
+    form.setFieldsValue(newRow);
+    setEditingKey(key);
+  };
 
   // ================= EDIT =================
   const isEditing = (record) => record.key === editingKey;
 
   const edit = (record) => {
     form.setFieldsValue({
-      tenThietBi: record.tenThietBi,
-      loaiThietBi: record.loaiThietBi
+      ...record
     });
     setEditingKey(record.key);
   };
 
-  // ================= CANCEL =================
-  //=====================  Actions CANCEL ==========================
-  const cancel = () => {
-    setLocalData([]);
-    setEditingKey('');
+  //======================DELETE ONE==================================
+  const handleDelete = async (record) => {
+    if (String(record.key).startsWith('new_')) {
+      setLocalData([]);
+    } else {
+      await deleteDonvi(record.id);
+      fetchDonvi();
+    }
+  };
+
+  /* ================= Delete Multiple ================= */
+  const handleDeleteMultiple = () => {
+    Modal.confirm({
+      title: `Xóa ${selectedRowKeys.length} bản ghi?`,
+      onOk: async () => {
+        // Chỉ lấy những ID là kiểu số (đã tồn tại trong DB)
+        const validIds = selectedRowKeys.filter((key) => typeof key === 'number' && !isNaN(key));
+        if (validIds.length === 0) {
+          message.warning('Không có bản ghi hợp lệ để xóa trên server');
+          return;
+        }
+        await deleteMultiple(validIds);
+        setSelectedRowKeys([]);
+        fetchDonvi();
+      }
+    });
   };
 
   //====================== Actions SAVE =========================
@@ -78,19 +106,18 @@ const Danhmucbomnuoc = () => {
       const record = dataSource.find((x) => x.key === key);
       const payload = {
         id: record.id || 0,
-        tenThietBi: row.tenThietBi,
-        loaiThietBi: row.loaiThietBi
+        tenPhong: row.tenPhong,
+        tinhTrang: row.tinhTrang
       };
 
       if (String(key).startsWith('new_')) {
-        await createDanhmucbomnuoc(payload);
+        await createDonvi(payload);
         message.success('Thêm mới thành công');
       } else {
-        await updateDanhmucbomnuoc(payload);
+        await updateDonvi(payload);
         message.success('Cập nhật thành công');
       }
-
-      fetchDanhmucbomnuoc();
+      fetchDonvi();
       setEditingKey('');
       setLocalData([]);
     } catch {
@@ -98,44 +125,28 @@ const Danhmucbomnuoc = () => {
     }
   };
 
-  //======================DELETE==================================
-  const handleDelete = async (record) => {
-    if (String(record.key).startsWith('new_')) {
-      setLocalData([]);
-    } else {
-      await deleteDanhmucbomnuoc(record.id);
-      fetchDanhmucbomnuoc();
-    }
+  //=====================  Actions CANCEL ==========================
+  const cancel = () => {
+    setLocalData([]);
+    setEditingKey('');
   };
 
-  //=======================ADD===================================
-  const handleOpenAdd = () => {
-    if (editingKey) return message.warning('Hoàn thành dòng đang sửa');
-
-    const key = `new_${Date.now()}`;
-    const newRow = {
-      key,
-      tenThietBi: '',
-      loaiThietBi: ''
-    };
-    setLocalData([newRow]);
-    form.setFieldsValue(newRow);
-    setEditingKey(key);
-  };
-
-  // ====================== Tìm kiếm ==========================
+  // ================= SEARCH =================
   const filteredData = useMemo(() => {
     if (!searchText) return dataSource;
-    const keyword = searchText.toLowerCase();
-    return dataSource.filter((item) =>
-      [item.tenThietBi, item.loaiThietBi].filter(Boolean).some((val) => String(val).toLowerCase().includes(keyword))
-    );
+    return dataSource.filter((item) => Object.values(item).join(' ').toLowerCase().includes(searchText.toLowerCase()));
   }, [dataSource, searchText]);
 
   /* ================= Columns ================= */
   const columns = [
-    { title: 'Tên thiết bị', dataIndex: 'tenThietBi', editable: true },
-    { title: 'Loại thiết bị', dataIndex: 'loaiThietBi', editable: true },
+    { title: 'Đơn vị', dataIndex: 'tenPhong', editable: true },
+    {
+      title: 'Tình trạng',
+      dataIndex: 'tinhTrang',
+      editable: true,
+      inputType: 'boolean',
+      render: (v) => <Tag color={v ? 'green' : 'red'}>{v ? 'Hoạt  động' : 'Ngừng hoạt động'}</Tag>
+    },
     {
       title: 'Hành động',
       render: (_, record) => {
@@ -170,55 +181,25 @@ const Danhmucbomnuoc = () => {
         }
       : col
   );
-
-  /* ================= Delete Multiple ================= */
-
-  const handleDeleteMultiple = () => {
-    if (!selectedRowKeys.length) return;
-
-    Modal.confirm({
-      title: `Xóa ${selectedRowKeys.length} bản ghi đã chọn?`,
-      okText: 'Xóa',
-      cancelText: 'Hủy',
-      onOk: async () => {
-        try {
-          // chỉ lấy ID số (bỏ new_xxx)
-          const validIds = selectedRowKeys.filter((id) => typeof id === 'number');
-
-          if (!validIds.length) {
-            message.warning('Không có bản ghi hợp lệ');
-            return;
-          }
-
-          await deleteMultipleDanhmucbomnuoc(validIds);
-          setSelectedRowKeys([]);
-          fetchDanhmucbomnuoc();
-        } catch (error) {
-          message.error('Xóa nhiều thất bại');
-        }
-      }
-    });
-  };
-
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
     // Map dữ liệu theo cột và tiêu đề tiếng Việt
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
-      'Tên thiết bị': item.tenThietBi,
-      'Loại thiết bị': item.loaiThietBi
+      'Đơn vị': item.tenPhong,
+      'Tình trạng': item.tinhTrang ? 'Hoạt động' : 'Ngừng hoạt động'
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData, {
-      header: ['STT', 'Tên thiết bị', 'Loại thiết bị']
+      header: ['STT', 'Đơn vị', 'Tình trạng']
     });
 
     // Set độ rộng cột
     worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }, { wch: 25 }];
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucbomnuoc');
-    XLSX.writeFile(workbook, 'Danh_muc_bom-nuoc.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucdonvi');
+    XLSX.writeFile(workbook, 'Danh_muc_don-vi.xlsx');
   };
 
   return (
@@ -250,7 +231,7 @@ const Danhmucbomnuoc = () => {
           columns={mergedColumns}
           selectedRowKeys={selectedRowKeys}
           disabledDelete={selectedRowKeys.length === 0}
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           rowKey={(record) => record.id ?? record.key}
         />
       </Form>
@@ -258,4 +239,4 @@ const Danhmucbomnuoc = () => {
   );
 };
 
-export default Danhmucbomnuoc;
+export default Danhmucdonvi;
