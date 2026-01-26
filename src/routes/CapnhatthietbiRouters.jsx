@@ -34,6 +34,7 @@ const DanhmucGiacot = Loadable(lazy(() => import('views/giacot/Danhmucgiacot')))
 const CapnhatGiacot = Loadable(lazy(() => import('views/giacot/Capnhatgiacot')));
 //Render-Role
 const Danhmucrole = Loadable(lazy(() => import('views/role/Danhmucrole')));
+const Capnhatrole = Loadable(lazy(() => import('views/role/Tonghoprole')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -151,6 +152,10 @@ const CapnhatthietbiRouters = {
             {
               path: 'danhmucrole',
               element: <Danhmucrole />
+            },
+            {
+              path: 'capnhatrole',
+              element: <Capnhatrole />
             }
           ]
         }
