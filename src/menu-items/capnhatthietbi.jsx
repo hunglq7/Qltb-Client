@@ -154,6 +154,26 @@ const capNhatThiebi = {
           url: '/giacot/capnhatgiacot'
         }
       ]
+    },
+    {
+      id: 'role',
+      title: 'Role',
+      type: 'collapse',
+      icon: <i className="ph ph-aperture " />,
+      children: [
+        {
+          id: 'danhmucrole',
+          title: 'Danh mục role',
+          type: 'item',
+          url: '/role/danhmucrole'
+        },
+        {
+          id: 'capnhatrole',
+          title: 'Cập nhật role',
+          type: 'item',
+          url: '/role/capnhatrole'
+        }
+      ]
     }
   ]
 };
