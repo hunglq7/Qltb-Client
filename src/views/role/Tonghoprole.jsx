@@ -105,7 +105,7 @@ const Tonghoprole = () => {
       phongBanId: null,
       viTriLapDat: '',
       ngayLap: dayjs(new Date()),
-      soLuong: 0,
+      soLuong: 1,
       tinhTrangThietBi: '',
       duPhong: false,
       ghiChu: ''
@@ -183,7 +183,7 @@ const Tonghoprole = () => {
         duPhong: row.duPhong,
         ghiChu: row.ghiChu
       };
-
+      console.log('Payload to save:', payload);
       if (String(key).startsWith('new_')) {
         await createTonghopRole(payload);
         message.success('Thêm mới thành công');
