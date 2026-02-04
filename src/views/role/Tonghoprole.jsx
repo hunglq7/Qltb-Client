@@ -14,10 +14,10 @@ import ActionBar from '/src/components/ActionBar';
 const EditableCell = ({ editing, dataIndex, inputType, options = [], children, ...restProps }) => {
   let inputNode = <Input />;
 
-  if (inputType === 'number') inputNode = <InputNumber style={{ width: '100%' }} />;
+  if (inputType === 'number') inputNode = <InputNumber style={{ width: 64 }} />;
   if (inputType === 'date') inputNode = <DatePicker style={{ width: '100%' }} showTime />;
   if (inputType === 'select')
-    inputNode = <Select style={{ width: '100%' }} options={options} placeholder="Chọn" showSearch optionLabelProp="label" />;
+    inputNode = <Select style={{ width: 128 }} options={options} placeholder="Chọn" showSearch optionLabelProp="label" />;
   if (inputType === 'boolean')
     inputNode = (
       <Select
@@ -30,7 +30,7 @@ const EditableCell = ({ editing, dataIndex, inputType, options = [], children, .
     );
 
   // Required fields
-  const requiredFields = ['roleId', 'phongBanId'];
+  const requiredFields = ['roleId', 'phongBanId', 'ngayLap'];
   return (
     <td {...restProps}>
       {editing ? (
@@ -177,7 +177,7 @@ const Tonghoprole = () => {
         roleId: Number(row.roleId),
         phongBanId: Number(row.phongBanId),
         viTriLapDat: row.viTriLapDat,
-        ngayLap: row.ngayLap ? dayjs(row.ngayLap).format('YYYY-MM-DD HH:mm:ss') : null,
+        ngayLap: row.ngayLap ? dayjs(row.ngayLap).toISOString() : null,
         soLuong: row.soLuong,
         tinhTrangThietBi: row.tinhTrangThietBi,
         duPhong: row.duPhong,
@@ -290,10 +290,10 @@ const Tonghoprole = () => {
   const handleExportExcel = () => {
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
-      'Tên thiết bị': item.tenThietBi,
-      'Tên phòng': item.tenPhong,
+      'Tên thiết bị': dataDanhmucrole?.find((d) => d.id === item.roleId)?.tenThietBi || '',
+      'Tên phòng': dataDonvi?.find((p) => p.id === item.phongBanId)?.tenPhong || '',
       'Vị trí lắp đặt': item.viTriLapDat,
-      'Ngày lắp': item.ngayLap,
+      'Ngày lắp': item.ngayLap ? dayjs(item.ngayLap).format('DD/MM/YYYY') : '',
       'Số lượng': item.soLuong,
       'Tình trạng thiết bị': item.tinhTrangThietBi,
       'Dự phòng': item.duPhong ? 'Có' : 'Không',

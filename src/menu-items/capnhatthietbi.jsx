@@ -159,7 +159,7 @@ const capNhatThiebi = {
       id: 'role',
       title: 'Role',
       type: 'collapse',
-      icon: <i className="ph ph-aperture " />,
+      icon: <i className="ph ph-user-circle" />,
       children: [
         {
           id: 'danhmucrole',

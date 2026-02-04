@@ -3,7 +3,7 @@ import api from '../../Utils/Api';
 const getTonghopRole = () =>
   api.get(`TonghopRole`);
 
-const addTonghopRole = (data) =>
+const addTonghopRole = (data) =>   
   api.post(`TonghopRole/Add`, data);
 
 const updateTonghopRole = (data) =>
