@@ -35,6 +35,9 @@ const CapnhatGiacot = Loadable(lazy(() => import('views/giacot/Capnhatgiacot')))
 //Render-Role
 const Danhmucrole = Loadable(lazy(() => import('views/role/Danhmucrole')));
 const Capnhatrole = Loadable(lazy(() => import('views/role/Tonghoprole')));
+//Render - Biến áp
+const Danhmucbienap = Loadable(lazy(() => import('views/bienap/Danhmucbienap')));
+const Capnhatbienap = Loadable(lazy(() => import('views/bienap/Capnhatbienap')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -156,6 +159,19 @@ const CapnhatthietbiRouters = {
             {
               path: 'capnhatrole',
               element: <Capnhatrole />
+            }
+          ]
+        },
+        {
+          path: 'bienap',
+          children: [
+            {
+              path: 'danhmucbienap',
+              element: <Danhmucbienap />
+            },
+            {
+              path: 'capnhatbienap',
+              element: <Capnhatbienap />
             }
           ]
         }

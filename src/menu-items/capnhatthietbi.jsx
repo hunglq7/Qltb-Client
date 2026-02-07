@@ -174,6 +174,26 @@ const capNhatThiebi = {
           url: '/role/capnhatrole'
         }
       ]
+    },
+    {
+      id: 'bienap',
+      title: 'Biến áp',
+      type: 'collapse',
+      icon: <i className="ph ph-user-circle" />,
+      children: [
+        {
+          id: 'danhmucbienap',
+          title: 'Danh mục biến áp',
+          type: 'item',
+          url: '/bienap/danhmucbienap'
+        },
+        {
+          id: 'capnhatbienap',
+          title: 'Cập nhật biến áp',
+          type: 'item',
+          url: '/bienap/capnhatbienap'
+        }
+      ]
     }
   ]
 };

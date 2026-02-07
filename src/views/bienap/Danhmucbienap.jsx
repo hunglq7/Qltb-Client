@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { useDanhmucroleStore } from '../../stores/role/danhmucroleStore';
+import { useDanhmucBienapStore } from '../../stores/bienap/bienapStore';
 import MainCard from '/src/components/MainCard';
 import * as XLSX from 'xlsx';
 import SearchBar from '/src/components/SearchBar';
@@ -21,30 +21,37 @@ const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
     </td>
   );
 };
-const Danhmucrole = () => {
+
+const Danhmucbienap = () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [localData, setLocalData] = useState([]);
-  const { dataDanhmucrole, loading, fetchDanhmucrole, createDanhmucrole, updateDanhmucrole, deleteDanhmucrole, deleteMultipleDanhmucrole } =
-    useDanhmucroleStore();
-
+  const {
+    dataDanhmucBienap,
+    loading,
+    fetchDanhmucBienap,
+    createDanhmucBienap,
+    updateDanhmucBienap,
+    deleteDanhmucBienap,
+    deleteMultipleDanhmucBienap
+  } = useDanhmucBienapStore();
   // ================= LOAD DATA =================
   useEffect(() => {
-    fetchDanhmucrole();
+    fetchDanhmucBienap();
   }, []);
 
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
     return [
       ...localData,
-      ...dataDanhmucrole.map((item) => ({
+      ...dataDanhmucBienap.map((item) => ({
         ...item,
         key: item.id
       }))
     ];
-  }, [dataDanhmucrole, localData]);
+  }, [dataDanhmucBienap, localData]);
 
   // ================= EDIT =================
   const isEditing = (record) => record.key === editingKey;
@@ -57,13 +64,11 @@ const Danhmucrole = () => {
     });
     setEditingKey(record.key);
   };
-
   //=====================  Actions CANCEL ==========================
   const cancel = () => {
     setLocalData([]);
     setEditingKey('');
   };
-
   //====================== Actions SAVE =========================
   const save = async (key) => {
     try {
@@ -77,14 +82,14 @@ const Danhmucrole = () => {
       };
 
       if (String(key).startsWith('new_')) {
-        await createDanhmucrole(payload);
+        await createDanhmucBienap(payload);
         message.success('Thêm mới thành công');
       } else {
-        await updateDanhmucrole(payload);
+        await updateDanhmucBienap(payload);
         message.success('Cập nhật thành công');
       }
 
-      fetchDanhmucrole();
+      fetchDanhmucBienap();
       setEditingKey('');
       setLocalData([]);
     } catch {
@@ -97,8 +102,8 @@ const Danhmucrole = () => {
     if (String(record.key).startsWith('new_')) {
       setLocalData([]);
     } else {
-      await deleteDanhmucrole(record.id);
-      fetchDanhmucrole();
+      await deleteDanhmucBienap(record.id);
+      fetchDanhmucBienap();
     }
   };
 
@@ -123,7 +128,7 @@ const Danhmucrole = () => {
     if (!searchText) return dataSource;
     const keyword = searchText.toLowerCase();
     return dataSource.filter((item) =>
-      [item.tenRole, item.moTa].filter(Boolean).some((val) => String(val).toLowerCase().includes(keyword))
+      [item.tenThietBi, item.loaiThietBi, item.ghiChu].filter(Boolean).some((val) => String(val).toLowerCase().includes(keyword))
     );
   }, [dataSource, searchText]);
 
@@ -152,7 +157,6 @@ const Danhmucrole = () => {
       }
     }
   ];
-
   const mergedColumns = columns.map((col) =>
     col.editable
       ? {
@@ -166,7 +170,6 @@ const Danhmucrole = () => {
         }
       : col
   );
-
   /* ================= Delete Multiple ================= */
 
   const handleDeleteMultiple = () => {
@@ -186,9 +189,9 @@ const Danhmucrole = () => {
             return;
           }
 
-          await deleteMultipleDanhmucrole(validIds);
+          await deleteMultipleDanhmucBienap(validIds);
           setSelectedRowKeys([]);
-          fetchDanhmucrole();
+          fetchDanhmucBienap();
         } catch (error) {
           message.error('Xóa nhiều thất bại');
         }
@@ -217,7 +220,6 @@ const Danhmucrole = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucrole');
     XLSX.writeFile(workbook, 'Danh_muc_role.xlsx');
   };
-
   return (
     <MainCard>
       <Form form={form} component={false}>
@@ -255,4 +257,4 @@ const Danhmucrole = () => {
   );
 };
 
-export default Danhmucrole;
+export default Danhmucbienap;
