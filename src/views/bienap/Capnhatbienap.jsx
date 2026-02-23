@@ -72,13 +72,11 @@ const Capnhatbienap = () => {
   }, []);
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
-    return [
-      ...localData,
-      ...dataTonghopbienap.map((item) => ({
-        ...item,
-        key: item.id
-      }))
-    ];
+    const baseData = dataTonghopbienap.map((item) => ({
+      ...item,
+      key: item.id
+    }));
+    return [...localData, ...baseData];
   }, [dataTonghopbienap, localData]);
 
   const donviOptions = useMemo(() => {
@@ -136,7 +134,6 @@ const Capnhatbienap = () => {
       setLocalData([]);
     } else {
       await deleteTonghopbienap(record.id);
-      fetchTonghopbienap();
     }
   };
   /* ================= Delete Multiple ================= */
@@ -156,7 +153,6 @@ const Capnhatbienap = () => {
           }
           await deleteMultipleTonghopbienap(validIds);
           setSelectedRowKeys([]);
-          fetchTonghopbienap();
         } catch (error) {
           message.error('Xóa nhiều thất bại');
         }
@@ -182,18 +178,15 @@ const Capnhatbienap = () => {
       console.log('Payload to save:', payload);
       if (String(key).startsWith('new_')) {
         await createTonghopbienap(payload);
-        message.success('Thêm mới thành công');
       } else {
         await updateTonghopbienap(payload);
-        message.success('Cập nhật thành công');
       }
 
-      fetchTonghopbienap();
       setEditingKey('');
       setLocalData([]);
     } catch (error) {
-      console.error(error);
-      message.error('Lỗi lưu dữ liệu');
+      console.error('Save error:', error);
+      message.error('Lỗi lưu dữ liệu: ' + (error.message || 'Unknown error'));
     }
   };
   // ================= SEARCH =================

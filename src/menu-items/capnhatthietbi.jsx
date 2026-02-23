@@ -159,7 +159,7 @@ const capNhatThiebi = {
       id: 'role',
       title: 'Role',
       type: 'collapse',
-      icon: <i className="ph ph-user-circle" />,
+      icon: <i className="ph ph-image" />,
       children: [
         {
           id: 'danhmucrole',
@@ -179,7 +179,7 @@ const capNhatThiebi = {
       id: 'bienap',
       title: 'Biến áp',
       type: 'collapse',
-      icon: <i className="ph ph-user-circle" />,
+      icon: <i className="ph ph-package" />,
       children: [
         {
           id: 'danhmucbienap',
