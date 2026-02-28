@@ -167,26 +167,27 @@ const Capnhatbienap = () => {
       const record = dataSource.find((x) => x.key === key);
 
       const payload = {
-        id: record.id || 0,
-        bienapId: Number(row.bienapId),
-        phongbanId: Number(row.phongbanId),
-        viTriLapDat: row.viTriLapDat || '',
-        ngayLap: row.ngayLap ? dayjs(row.ngayLap).toISOString() : null,
-        duPhong: row.duPhong === undefined ? false : row.duPhong,
-        ghiChu: row.ghiChu || ''
+        // Backend dùng Id (viết hoa) cho class TonghopBienap
+        Id: record.id || record.Id || 0,
+        BienapId: Number(row.bienapId),
+        PhongbanId: Number(row.phongbanId),
+        ViTriLapDat: row.viTriLapDat || '',
+        NgayLap: row.ngayLap ? dayjs(row.ngayLap).toISOString() : null,
+        DuPhong: !!row.duPhong,
+        GhiChu: row.ghiChu || ''
       };
-      console.log('Payload to save:', payload);
+
       if (String(key).startsWith('new_')) {
+        delete payload.Id; // Xóa Id nếu là thêm mới để DB tự generate
         await createTonghopbienap(payload);
       } else {
         await updateTonghopbienap(payload);
       }
-
       setEditingKey('');
       setLocalData([]);
+      fetchTonghopbienap(); // Load lại dữ liệu để đồng bộ tên thiết bị/phòng ban
     } catch (error) {
       console.error('Save error:', error);
-      message.error('Lỗi lưu dữ liệu: ' + (error.message || 'Unknown error'));
     }
   };
   // ================= SEARCH =================
@@ -322,7 +323,7 @@ const Capnhatbienap = () => {
           dataSource={filteredData}
           columns={mergedColumns}
           pagination={{ pageSize: 10 }}
-          rowKey={(record) => record.id ?? record.key}
+          rowKey={(record) => record.Id || record.id || record.key}
         />
       </Form>
     </MainCard>
