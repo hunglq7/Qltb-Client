@@ -134,6 +134,7 @@ const Capnhatbienap = () => {
       setLocalData([]);
     } else {
       await deleteTonghopbienap(record.id);
+      fetchTonghopbienap(); // Refresh data after deletion
     }
   };
   /* ================= Delete Multiple ================= */
@@ -152,6 +153,7 @@ const Capnhatbienap = () => {
             return;
           }
           await deleteMultipleTonghopbienap(validIds);
+          fetchTonghopbienap();
           setSelectedRowKeys([]);
         } catch (error) {
           message.error('Xóa nhiều thất bại');

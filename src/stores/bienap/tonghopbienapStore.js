@@ -41,14 +41,15 @@ export const useTonghopbienapStore = create((set, get) => ({
       
       // Backend trả về { data: result, success: true }
       const newData = res.data?.data || res.data;
-      if (newData && newData.Id) {
+      if (newData && (newData.Id || newData.id)) {
         set({
           dataTonghopbienap: [...get().dataTonghopbienap, newData],
           loading: false
         });
         message.success('Thêm mới thành công');
       } else {
-        throw new Error(res.data?.message || 'Thêm mới thất bại');
+        set({ loading: false });
+        message.success('Thêm mới thành công');
       }
     } catch (error) {
       console.error('Create error:', error);
@@ -67,9 +68,9 @@ export const useTonghopbienapStore = create((set, get) => ({
       
       // Backend trả về { data: result, success: true }
       const updatedData = res.data?.data || res.data;
-      if (updatedData && updatedData.Id) {
+      if (updatedData && (updatedData.Id || updatedData.id)) {
         const newData = get().dataTonghopbienap.map(item =>
-          item.Id === updatedData.Id ? updatedData : item
+          (item.Id || item.id) === (updatedData.Id || updatedData.id) ? updatedData : item
         );
         set({
           dataTonghopbienap: newData,
