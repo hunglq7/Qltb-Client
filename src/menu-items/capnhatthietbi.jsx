@@ -194,6 +194,26 @@ const capNhatThiebi = {
           url: '/bienap/capnhatbienap'
         }
       ]
+    },
+    {
+      id: 'khoanbalang',
+      title: 'Khoan Ba Lang',
+      type: 'collapse',
+      icon: <i className="ph ph-package" />,
+      children: [
+        {
+          id: 'danhmuckhoanbalang',
+          title: 'Danh mục khoan ba lang',
+          type: 'item',
+          url: '/khoanbalang/danhmuckhoanbalang'
+        },
+        {
+          id: 'capnhatkhoanbalang',
+          title: 'Cập nhật khoan bằng lang',
+          type: 'item',
+          url: '/khoanbalang/capnhatkhoanbalang'
+        }
+      ]
     }
   ]
 };
