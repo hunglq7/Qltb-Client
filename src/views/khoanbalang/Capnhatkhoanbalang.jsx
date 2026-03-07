@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber, Select, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { useCapnhatgiacotStore } from '../../stores/giacot/capnhatgiacotStore';
+import { useTonghopKhoanBalangStore } from '../../stores/khoanbalang/TonghopKhoanBalangStore';
 import { useDonviStore } from '../../stores/donvi/donviStore';
-import { useDanhmucgiacotStore } from '../../stores/giacot/danhmucgiacotStore';
+import { useDanhmuckhoanbalangStore } from '../../stores/khoanbalang/danhmuckhoanbalangStore';
 import MainCard from '/src/components/MainCard';
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
@@ -20,7 +20,7 @@ const EditableCell = ({ editing, dataIndex, inputType, options = [], children, .
     inputNode = <Select style={{ width: '100%' }} options={options} placeholder="Chọn đơn vị" showSearch optionLabelProp="label" />;
 
   // ✅ CHỈ BẮT BUỘC CÁC FIELD QUAN TRỌNG
-  const requiredFields = ['donViId', 'loaiThietBiId'];
+  const requiredFields = ['donViId', 'khoanBalangId'];
   return (
     <td {...restProps}>
       {editing ? (
@@ -37,41 +37,39 @@ const EditableCell = ({ editing, dataIndex, inputType, options = [], children, .
     </td>
   );
 };
-const Capnhatgiacot = () => {
+const Capnhatkhoanbalang = () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [localData, setLocalData] = useState([]);
   const { dataDonvi, fetchDonvi } = useDonviStore();
-  const { dataDanhmucgiacot, fetchDanhmucgiacot } = useDanhmucgiacotStore();
+  const { dataDanhmuckhoanbalang, fetchDanhmuckhoanbalang } = useDanhmuckhoanbalangStore();
   const {
-    dataCapnhatgiacot,
+    dataTonghopKhoanBalang,
     loading,
-    fetchCapnhatgiacot,
-    createCapnhatgiacot,
-    updateCapnhatgiacot,
-    deleteCapnhatgiacot,
-    deleteMultipleCapnhatgiacot
-  } = useCapnhatgiacotStore();
+    fetchTonghopKhoanBalang,
+    createTonghopKhoanBalang,
+    updateTonghopKhoanBalang,
+    deleteTonghopKhoanBalang,
+    deleteTonghopKhoanBalangs
+  } = useTonghopKhoanBalangStore();
 
   // ================= LOAD DATA =================
   useEffect(() => {
     fetchDonvi();
-    fetchDanhmucgiacot();
-    fetchCapnhatgiacot();
+    fetchDanhmuckhoanbalang();
+    fetchTonghopKhoanBalang();
   }, []);
 
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
-    return [
-      ...localData,
-      ...dataCapnhatgiacot.map((item) => ({
-        ...item,
-        key: item.capNhatId
-      }))
-    ];
-  }, [dataCapnhatgiacot, localData]);
+    const apiData = dataTonghopKhoanBalang.map((item, index) => ({
+      ...item,
+      key: `api_${index}`
+    }));
+    return [...localData, ...apiData];
+  }, [dataTonghopKhoanBalang, localData]);
 
   const donViOptions = useMemo(() => {
     return (
@@ -84,13 +82,12 @@ const Capnhatgiacot = () => {
 
   const danhmucOptions = useMemo(() => {
     return (
-      dataDanhmucgiacot?.map((dv) => ({
-        label: dv.tenLoai,
-        value: Number(dv.loaiThietBiId) // 🔥 CỰC KỲ QUAN TRỌNG
+      dataDanhmuckhoanbalang?.map((dv) => ({
+        label: dv.tenThietBi,
+        value: Number(dv.id) // 🔥 CỰC KỲ QUAN TRỌNG
       })) || []
     );
-  }, [dataDanhmucgiacot]);
-
+  }, [dataDanhmuckhoanbalang]);
   //=======================ADD===================================
   const handleOpenAdd = () => {
     if (editingKey) return message.warning('Hoàn thành dòng đang sửa');
@@ -98,9 +95,13 @@ const Capnhatgiacot = () => {
     const newRow = {
       key,
       donViId: null,
-      loaiThietBiId: null,
-      soLuongDangQuanLy: 0,
-      ngayCapNhat: dayjs(new Date()),
+      khoanBalangId: null,
+      viTriLapDat: '',
+      soLuong: 0,
+      ngayLap: dayjs(new Date()),
+      tinhTrangKyThuat: '',
+      loaiThietBi: '',
+      duPhong: false,
       ghiChu: ''
     };
     setLocalData([newRow]);
@@ -113,23 +114,24 @@ const Capnhatgiacot = () => {
   const edit = (record) => {
     form.setFieldsValue({
       ...record,
-      ngayCapNhat: record.ngayCapNhat ? dayjs(record.ngayCapNhat) : null
+      ngayLap: record.ngayLap ? dayjs(record.ngayLap) : null
     });
     setEditingKey(record.key);
   };
-  // ================= CANCEL =================
 
+  // ================= CANCEL =================
   const cancel = () => {
     setLocalData([]);
     setEditingKey('');
   };
+
   //======================DELETE==================================
   const handleDelete = async (record) => {
     if (String(record.key).startsWith('new_')) {
       setLocalData([]);
     } else {
-      await deleteCapnhatgiacot(record.capNhatId);
-      fetchCapnhatgiacot();
+      await deleteTonghopKhoanBalang(record.id);
+      fetchTonghopKhoanBalang();
     }
   };
 
@@ -150,15 +152,16 @@ const Capnhatgiacot = () => {
             message.warning('Không có bản ghi hợp lệ');
             return;
           }
-          await deleteMultipleCapnhatgiacot(validIds);
+          await deleteTonghopKhoanBalangs(validIds);
           setSelectedRowKeys([]);
-          fetchCapnhatgiacot();
+          fetchTonghopKhoanBalang();
         } catch (error) {
           message.error('Xóa nhiều thất bại');
         }
       }
     });
   };
+
   //====================== Actions SAVE =========================
   const save = async (key) => {
     try {
@@ -166,24 +169,25 @@ const Capnhatgiacot = () => {
       const record = dataSource.find((x) => x.key === key);
 
       const payload = {
-        capNhatId: record.capNhatId || 0,
+        id: record.id || 0,
         donViId: Number(row.donViId),
-        loaiThietBiId: Number(row.loaiThietBiId),
-        viTriSuDung: row.viTriSuDung,
-        soLuongDangQuanLy: row.soLuongDangQuanLy,
-        ngayCapNhat: row.ngayCapNhat ? dayjs(row.ngayCapNhat).format('YYYY-MM-DD') : null,
+        khoanBalangId: Number(row.khoanBalangId),
+        viTriLapDat: row.viTriLapDat,
+        soLuong: Number(row.soLuong),
+        tinhTrangKyThuat: row.tinhTrangKyThuat,
+        ngayLap: row.ngayLap ? dayjs(row.ngayLap).format('YYYY-MM-DD') : null,
+        loaiThietBi: row.loaiThietBi,
+        duPhong: row.duPhong || false,
         ghiChu: row.ghiChu
       };
 
       if (String(key).startsWith('new_')) {
-        await createCapnhatgiacot(payload);
-        message.success('Thêm mới thành công');
+        await createTonghopKhoanBalang(payload);
       } else {
-        await updateCapnhatgiacot(payload);
-        message.success('Cập nhật thành công');
+        await updateTonghopKhoanBalang(payload);
       }
 
-      fetchCapnhatgiacot();
+      fetchTonghopKhoanBalang();
       setEditingKey('');
       setLocalData([]);
     } catch (error) {
@@ -191,6 +195,7 @@ const Capnhatgiacot = () => {
       message.error('Lỗi lưu dữ liệu');
     }
   };
+
   // ================= SEARCH =================
   const filteredData = useMemo(() => {
     if (!searchText) return dataSource;
@@ -212,26 +217,49 @@ const Capnhatgiacot = () => {
       editable: true,
       inputType: 'select',
       options: donViOptions,
-      render: (_, record) => record.tenDonVi || record.TenDonVi
+      render: (_, record) => record.tenDonVi || record.TenDonVi || ''
     },
     {
       title: 'Thiết bị',
-      dataIndex: 'loaiThietBiId',
+      dataIndex: 'khoanBalangId',
       editable: true,
       inputType: 'select',
       options: danhmucOptions,
-      render: (value) => dataDanhmucgiacot?.find((d) => d.loaiThietBiId === value)?.tenLoai || ''
+      render: (value) => dataDanhmuckhoanbalang?.find((d) => d.khoanBalangId === value)?.tenThietBi || ''
     },
-    { title: 'Vị trí sử dụng', dataIndex: 'viTriSuDung', editable: true },
-    { title: 'Số lượng', dataIndex: 'soLuongDangQuanLy', editable: true, inputType: 'number' },
+    { title: 'Vị trí lắp đặt', dataIndex: 'viTriLapDat', editable: true, render: (value) => value || '' },
+    { title: 'Tình trạng kỹ thuật', dataIndex: 'tinhTrangKyThuat', editable: true, render: (value) => value || '' },
+    { title: 'Số lượng', dataIndex: 'soLuong', editable: true, inputType: 'number', render: (value) => (isNaN(value) ? 0 : value) },
     {
       title: 'Ngày cập nhật',
-      dataIndex: 'ngayCapNhat',
+      dataIndex: 'ngayLap',
       editable: true,
       inputType: 'date',
       render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '')
     },
-    { title: 'Ghi chú', dataIndex: 'ghiChu ', editable: true },
+    {
+      title: 'Loại thiết bị',
+      dataIndex: 'loaiThietBi',
+      editable: true,
+      inputType: 'select',
+      options: [
+        { label: 'Khoan', value: 'Khoan' },
+        { label: 'Ba lăng', value: 'Ba lăng' }
+      ],
+      render: (value) => value || ''
+    },
+    {
+      title: 'Dự phòng',
+      dataIndex: 'duPhong',
+      editable: true,
+      inputType: 'select',
+      options: [
+        { label: 'Có', value: true },
+        { label: 'Không', value: false }
+      ],
+      render: (value) => (value ? 'Có' : 'Không')
+    },
+    { title: 'Ghi chú', dataIndex: 'ghiChu', editable: true, render: (value) => value || '' },
     {
       title: 'Hành động',
       render: (_, record) => {
@@ -252,6 +280,7 @@ const Capnhatgiacot = () => {
       }
     }
   ];
+
   const mergedColumns = columns.map((col) =>
     col.editable
       ? {
@@ -266,31 +295,29 @@ const Capnhatgiacot = () => {
         }
       : col
   );
-  console.log(filteredData);
+
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
     // Map dữ liệu theo cột và tiêu đề tiếng Việt
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
-      'Đơn vị': item.tenDonVi,
-      'Thiết bị': item.tenloaiThietBi,
-      'Vị trí sử dụng': item.viTriSuDung,
-      'Ngày cập nhật': item.ngayCapNhat,
-      'Số lượng': item.soLuongDangQuanLy
+      'Đơn vị': item.tenDonVi || item.TenDonVi || '',
+      'Thiết bị': dataDanhmuckhoanbalang?.find((d) => d.khoanBalangId === item.khoanBalangId)?.tenThietBi || '',
+      'Vị trí lắp đặt': item.viTriLapDat || '',
+      'Ngày lắp đặt': item.ngayLap ? dayjs(item.ngayLap).format('DD/MM/YYYY') : '',
+      'Số lượng': item.soLuong || 0
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData, {
-      header: ['STT', 'Đơn vị', 'Thiết bị', 'Vị trí sử dụng', 'Ngày cập nhật', 'Số lượng']
+      header: ['STT', 'Đơn vị', 'Thiết bị', 'Vị trí lắp đặt', 'Ngày lắp đặt', 'Số lượng']
     });
 
     // Set độ rộng cột
     worksheet['!cols'] = [{ wch: 5 }, { wch: 15 }, { wch: 25 }, { wch: 20 }, { wch: 15 }, { wch: 10 }];
-
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Capnhatgiacot');
-    XLSX.writeFile(workbook, 'Cap-nhat-gia-cot.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'CapnhatKhoanBaLang');
+    XLSX.writeFile(workbook, 'Cap-nhat-khoan-ba-lang.xlsx');
   };
-
   return (
     <MainCard>
       <Form form={form} component={false}>
@@ -318,14 +345,12 @@ const Capnhatgiacot = () => {
           components={{ body: { cell: EditableCell } }}
           dataSource={filteredData}
           columns={mergedColumns}
-          selectedRowKeys={selectedRowKeys}
-          disabledDelete={selectedRowKeys.length === 0}
           pagination={{ pageSize: 10 }}
-          rowKey={(record) => record.id ?? record.key}
+          rowKey="key"
         />
       </Form>
     </MainCard>
   );
 };
 
-export default Capnhatgiacot;
+export default Capnhatkhoanbalang;

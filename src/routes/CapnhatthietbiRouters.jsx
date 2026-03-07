@@ -40,7 +40,7 @@ const Danhmucbienap = Loadable(lazy(() => import('views/bienap/Danhmucbienap')))
 const Capnhatbienap = Loadable(lazy(() => import('views/bienap/Capnhatbienap')));
 //Render - Khoan Ba Lang
 const Danhmuckhoanbalang = Loadable(lazy(() => import('views/khoanbalang/Danhmuckhoanbalang')));
-
+const Capnhatkhoanbalang = Loadable(lazy(() => import('views/khoanbalang/Capnhatkhoanbalang')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -184,6 +184,10 @@ const CapnhatthietbiRouters = {
             {
               path: 'danhmuckhoanbalang',
               element: <Danhmuckhoanbalang />
+            },
+            {
+              path: 'capnhatkhoanbalang',
+              element: <Capnhatkhoanbalang />
             }
           ]
         }

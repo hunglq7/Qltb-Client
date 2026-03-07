@@ -64,7 +64,6 @@ const Danhmucbomnuoc = () => {
     setEditingKey(record.key);
   };
 
-  // ================= CANCEL =================
   //=====================  Actions CANCEL ==========================
   const cancel = () => {
     setLocalData([]);
