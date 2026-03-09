@@ -12,11 +12,11 @@ export const useTonghopbienapStore = create((set, get) => ({
     try {
       const res = await tonghopbienapService.getTonghopbienap();
       console.log('Store fetchTonghopbienap response:', res);
-      
+
       // Backend trả về { data: [...], success: true }
       const data = res.data?.data && Array.isArray(res.data.data) ? res.data.data : [];
       console.log('Store fetchTonghopbienap final data:', data);
-      
+
       set({
         dataTonghopbienap: data,
         loading: false
@@ -25,9 +25,9 @@ export const useTonghopbienapStore = create((set, get) => ({
       console.error('Store fetchTonghopbienap error:', error);
       const errorMsg = error.response?.data?.message || error.message;
       message.error('Không thể tải tổng hợp biến áp: ' + errorMsg);
-      set({ 
+      set({
         dataTonghopbienap: [],
-        loading: false 
+        loading: false
       });
     }
   },
@@ -38,7 +38,7 @@ export const useTonghopbienapStore = create((set, get) => ({
     try {
       const res = await tonghopbienapService.addTonghopbienap(payload);
       console.log('Create response:', res);
-      
+
       // Backend trả về { data: result, success: true }
       const newData = res.data?.data || res.data;
       if (newData && (newData.Id || newData.id)) {
@@ -65,11 +65,11 @@ export const useTonghopbienapStore = create((set, get) => ({
     try {
       const res = await tonghopbienapService.updateTonghopbienap(payload);
       console.log('Update response:', res);
-      
+
       // Backend trả về { data: result, success: true }
       const updatedData = res.data?.data || res.data;
       if (updatedData && (updatedData.Id || updatedData.id)) {
-        const newData = get().dataTonghopbienap.map(item =>
+        const newData = get().dataTonghopbienap.map((item) =>
           (item.Id || item.id) === (updatedData.Id || updatedData.id) ? updatedData : item
         );
         set({
@@ -95,7 +95,7 @@ export const useTonghopbienapStore = create((set, get) => ({
       await tonghopbienapService.deleteTonghopbienap(id);
 
       set({
-        dataTonghopbienap: get().dataTonghopbienap.filter(item => item.Id !== id),
+        dataTonghopbienap: get().dataTonghopbienap.filter((item) => item.Id !== id),
         loading: false
       });
 
@@ -115,9 +115,7 @@ export const useTonghopbienapStore = create((set, get) => ({
       await tonghopbienapService.deleteTonghopbienaps(ids);
 
       set({
-        dataTonghopbienap: get().dataTonghopbienap.filter(
-          item => !ids.includes(item.Id)
-        ),
+        dataTonghopbienap: get().dataTonghopbienap.filter((item) => !ids.includes(item.Id)),
         loading: false
       });
 

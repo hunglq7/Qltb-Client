@@ -30,7 +30,6 @@ export const useCapnhatgiacotStore = create((set, get) => ({
         dataCapnhatgiacot: [...get().dataCapnhatgiacot, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -43,13 +42,11 @@ export const useCapnhatgiacotStore = create((set, get) => ({
     try {
       const res = await capnhatgiacotService.updateCapnhatgiacot(payload);
 
-      const newData = get().dataCapnhatgiacot.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataCapnhatgiacot.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataCapnhatgiacot: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -63,7 +60,7 @@ export const useCapnhatgiacotStore = create((set, get) => ({
       await capnhatgiacotService.deleteCapnhatgiacot(id);
 
       set({
-        dataCapnhatgiacot: get().dataCapnhatgiacot.filter(item => item.id !== id),
+        dataCapnhatgiacot: get().dataCapnhatgiacot.filter((item) => item.id !== id),
         loading: false
       });
 
@@ -81,9 +78,7 @@ export const useCapnhatgiacotStore = create((set, get) => ({
       await capnhatgiacotService.deleteCapnhatgiacots(ids);
 
       set({
-        dataCapnhatgiacot: get().dataCapnhatgiacot.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataCapnhatgiacot: get().dataCapnhatgiacot.filter((item) => !ids.includes(item.id)),
         loading: false
       });
 

@@ -11,8 +11,8 @@ export const useNhatkytoidienStore = create((set, get) => ({
   getNhatkyToidienById: async (tonghoptoidienId) => {
     try {
       set({ loading: true });
-      const res = await nhatkyTonghoptoitrucService.getNhatkyById(tonghoptoidienId);   
-      
+      const res = await nhatkyTonghoptoitrucService.getNhatkyById(tonghoptoidienId);
+
       set({ dataNhatkyToiDien: res.data.data || [] });
     } catch (err) {
       console.error(err);
@@ -23,13 +23,12 @@ export const useNhatkytoidienStore = create((set, get) => ({
   },
 
   // ================= ADD =================
-  createNhatkyToidien: async (payload) => {  
+  createNhatkyToidien: async (payload) => {
     try {
       set({ loading: true });
 
       // Validate frontend level
-      if (!payload.tonghoptoitrucId)
-        throw new Error('Thiếu tonghoptoidienId');
+      if (!payload.tonghoptoitrucId) throw new Error('Thiếu tonghoptoidienId');
       await nhatkyTonghoptoitrucService.addNhatkyTonghoptoitruc(payload);
     } catch (err) {
       console.error(err);
@@ -41,13 +40,13 @@ export const useNhatkytoidienStore = create((set, get) => ({
   },
 
   // ================= UPDATE =================
-  updateNhatkyToidien: async (id,payload) => {
+  updateNhatkyToidien: async (id, payload) => {
     try {
       set({ loading: true });
 
       if (!payload.id) throw new Error('Thiếu id cập nhật');
 
-      await nhatkyTonghoptoitrucService.updateNhatkyTonghoptoitruc(id,payload);
+      await nhatkyTonghoptoitrucService.updateNhatkyTonghoptoitruc(id, payload);
     } catch (err) {
       console.error(err);
       message.error('Cập nhật thất bại');
@@ -74,8 +73,7 @@ export const useNhatkytoidienStore = create((set, get) => ({
   // ================= DELETE MULTIPLE =================
   deleteMultiple: async (ids) => {
     try {
-      if (!ids || ids.length === 0)
-        throw new Error('Danh sách id rỗng');
+      if (!ids || ids.length === 0) throw new Error('Danh sách id rỗng');
 
       set({ loading: true });
       await nhatkyTonghoptoitrucService.deleteNhatkyTonghoptoitrucs(ids);

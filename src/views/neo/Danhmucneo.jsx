@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { useDanhmuckhoanbalangStore } from '../../stores/khoanbalang/danhmuckhoanbalangStore';
+import { useDanhmucneoStore } from '../../stores/neo/danhmucneoStore';
 import MainCard from '/src/components/MainCard';
 import * as XLSX from 'xlsx';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
+
 // ================= EDIT ABLECELL =================
-const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
+const EditableCell = ({ editing, dataIndex, inputType, children, ...restProps }) => {
   return (
     <td {...restProps}>
       {editing ? (
@@ -20,49 +21,38 @@ const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
     </td>
   );
 };
-const Danhmuckhoanbalang = () => {
+const Danhmucneo = () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [localData, setLocalData] = useState([]);
-  const {
-    dataDanhmuckhoanbalang,
-    loading,
-    fetchDanhmuckhoanbalang,
-    createDanhmuckhoanbalang,
-    updateDanhmuckhoanbalang,
-    deleteDanhmuckhoanbalang,
-    deleteDanhmuckhoanbalangs
-  } = useDanhmuckhoanbalangStore();
-
+  const { dataDanhmucneo, loading, fetchDanhmucneo, createDanhmucneo, updateDanhmucneo, deleteDanhmucneo, deleteDanhmucneos } =
+    useDanhmucneoStore();
   // ================= LOAD DATA =================
   useEffect(() => {
-    fetchDanhmuckhoanbalang();
+    fetchDanhmucneo();
   }, []);
 
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
     return [
       ...localData,
-      ...dataDanhmuckhoanbalang.map((item) => ({
+      ...dataDanhmucneo.map((item) => ({
         ...item,
         key: item.id
       }))
     ];
-  }, [dataDanhmuckhoanbalang, localData]);
-
+  }, [dataDanhmucneo, localData]);
   // ================= EDIT =================
   const isEditing = (record) => record.key === editingKey;
-
   const edit = (record) => {
     form.setFieldsValue({
       tenThietBi: record.tenThietBi,
-      ghiChu: record.ghiChu
+      loaiThietBi: record.loaiThietBi
     });
     setEditingKey(record.key);
   };
-
   //=====================  Actions CANCEL ==========================
   const cancel = () => {
     setLocalData([]);
@@ -76,30 +66,29 @@ const Danhmuckhoanbalang = () => {
       const payload = {
         id: record.id || 0,
         tenThietBi: row.tenThietBi,
-        ghiChu: row.ghiChu
+        loaiThietBi: row.loaiThietBi
       };
 
       if (String(key).startsWith('new_')) {
-        await createDanhmuckhoanbalang(payload);
+        await createDanhmucneo(payload);
       } else {
-        await updateDanhmuckhoanbalang(payload);
+        await updateDanhmucneo(payload);
       }
 
-      fetchDanhmuckhoanbalang();
+      fetchDanhmucneo();
       setEditingKey('');
       setLocalData([]);
     } catch {
       message.error('Lỗi lưu dữ liệu');
     }
   };
-
   //======================DELETE==================================
   const handleDelete = async (record) => {
     if (String(record.key).startsWith('new_')) {
       setLocalData([]);
     } else {
-      await deleteDanhmuckhoanbalang(record.id);
-      fetchDanhmuckhoanbalang();
+      await deleteDanhmucneo(record.id);
+      fetchDanhmucneo();
     }
   };
 
@@ -110,7 +99,7 @@ const Danhmuckhoanbalang = () => {
     const newRow = {
       key,
       tenThietBi: '',
-      ghiChu: ''
+      loaiThietBi: ''
     };
     setLocalData([newRow]);
     form.setFieldsValue(newRow);
@@ -122,14 +111,14 @@ const Danhmuckhoanbalang = () => {
     if (!searchText) return dataSource;
     const keyword = searchText.toLowerCase();
     return dataSource.filter((item) =>
-      [item.tenThietBi, item.ghiChu].filter(Boolean).some((val) => String(val).toLowerCase().includes(keyword))
+      [item.tenThietBi, item.loaiThietBi].filter(Boolean).some((val) => String(val).toLowerCase().includes(keyword))
     );
   }, [dataSource, searchText]);
 
   /* ================= Columns ================= */
   const columns = [
-    { title: 'Tên thiết bị', dataIndex: 'tenThietBi', editable: true },
-    { title: 'Ghi chú', dataIndex: 'ghiChu', editable: true },
+    { title: 'Tên thiết bị', dataIndex: 'tenThietBi', editable: true, inputType: 'text' },
+    { title: 'Loại thiết bị', dataIndex: 'loaiThietBi', editable: true, inputType: 'text' },
     {
       title: 'Hành động',
       render: (_, record) => {
@@ -183,9 +172,9 @@ const Danhmuckhoanbalang = () => {
             return;
           }
 
-          await deleteDanhmuckhoanbalangs(validIds);
+          await deleteDanhmucneos(validIds);
           setSelectedRowKeys([]);
-          fetchDanhmuckhoanbalang();
+          fetchDanhmucneo();
         } catch (error) {
           message.error('Xóa nhiều thất bại');
         }
@@ -199,20 +188,20 @@ const Danhmuckhoanbalang = () => {
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
       'Tên thiết bị': item.tenThietBi,
-      'Ghi chú': item.ghiChu
+      'Loại thiết bị': item.loaiThietBi
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData, {
-      header: ['STT', 'Tên thiết bị', 'Ghi chú']
+      header: ['STT', 'Tên thiết bị', 'Loại thiết bị']
     });
-
     // Set độ rộng cột
-    worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }, { wch: 25 }];
+    worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }, { wch: 25 }, { wch: 25 }];
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmuckhoanbalang');
-    XLSX.writeFile(workbook, 'Danh_muc_khoan-ba-lang.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucneo');
+    XLSX.writeFile(workbook, 'Danh_muc_neo.xlsx');
   };
+
   return (
     <MainCard>
       <Form form={form} component={false}>
@@ -250,4 +239,4 @@ const Danhmuckhoanbalang = () => {
   );
 };
 
-export default Danhmuckhoanbalang;
+export default Danhmucneo;

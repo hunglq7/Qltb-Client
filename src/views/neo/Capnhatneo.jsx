@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber, Select, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { useTonghopKhoanBalangStore } from '../../stores/khoanbalang/TonghopKhoanBalangStore';
+import { useTonghopneoStore } from '../../stores/neo/tonghopneoStors';
 import { useDonviStore } from '../../stores/donvi/donviStore';
-import { useDanhmuckhoanbalangStore } from '../../stores/khoanbalang/danhmuckhoanbalangStore';
+import { useDanhmucneoStore } from '../../stores/neo/danhmucneoStore';
 import MainCard from '/src/components/MainCard';
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
@@ -20,7 +20,7 @@ const EditableCell = ({ editing, dataIndex, inputType, options = [], children, .
     inputNode = <Select style={{ width: '100%' }} options={options} placeholder="Chọn đơn vị" showSearch optionLabelProp="label" />;
 
   // ✅ CHỈ BẮT BUỘC CÁC FIELD QUAN TRỌNG
-  const requiredFields = ['donViId', 'khoanBalangId'];
+  const requiredFields = ['donViId', 'neoId'];
   return (
     <td {...restProps}>
       {editing ? (
@@ -37,39 +37,31 @@ const EditableCell = ({ editing, dataIndex, inputType, options = [], children, .
     </td>
   );
 };
-const Capnhatkhoanbalang = () => {
+const Capnhatneo = () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [localData, setLocalData] = useState([]);
   const { dataDonvi, fetchDonvi } = useDonviStore();
-  const { dataDanhmuckhoanbalang, fetchDanhmuckhoanbalang } = useDanhmuckhoanbalangStore();
-  const {
-    dataTonghopKhoanBalang,
-    loading,
-    fetchTonghopKhoanBalang,
-    createTonghopKhoanBalang,
-    updateTonghopKhoanBalang,
-    deleteTonghopKhoanBalang,
-    deleteTonghopKhoanBalangs
-  } = useTonghopKhoanBalangStore();
-
+  const { dataDanhmucneo, fetchDanhmucneo } = useDanhmucneoStore();
+  const { dataTonghopneo, loading, fetchTonghopneo, createTonghopneo, updateTonghopneo, deleteTonghopneo, deleteTonghopneos } =
+    useTonghopneoStore();
   // ================= LOAD DATA =================
   useEffect(() => {
+    fetchTonghopneo();
     fetchDonvi();
-    fetchDanhmuckhoanbalang();
-    fetchTonghopKhoanBalang();
+    fetchDanhmucneo();
   }, []);
 
   /* ================= Data ================= */
   const dataSource = useMemo(() => {
-    const apiData = dataTonghopKhoanBalang.map((item, index) => ({
+    const apiData = dataTonghopneo.map((item, index) => ({
       ...item,
       key: `api_${index}`
     }));
     return [...localData, ...apiData];
-  }, [dataTonghopKhoanBalang, localData]);
+  }, [dataTonghopneo, localData]);
 
   const donViOptions = useMemo(() => {
     return (
@@ -82,12 +74,12 @@ const Capnhatkhoanbalang = () => {
 
   const danhmucOptions = useMemo(() => {
     return (
-      dataDanhmuckhoanbalang?.map((dv) => ({
+      dataDanhmucneo?.map((dv) => ({
         label: dv.tenThietBi,
         value: Number(dv.id) // 🔥 CỰC KỲ QUAN TRỌNG
       })) || []
     );
-  }, [dataDanhmuckhoanbalang]);
+  }, [dataDanhmucneo]);
 
   //=======================ADD===================================
   const handleOpenAdd = () => {
@@ -96,7 +88,8 @@ const Capnhatkhoanbalang = () => {
     const newRow = {
       key,
       donViId: null,
-      khoanBalangId: null,
+      neoId: null,
+      donViTinh: '',
       viTriLapDat: '',
       soLuong: 0,
       ngayLap: dayjs(new Date()),
@@ -131,8 +124,8 @@ const Capnhatkhoanbalang = () => {
     if (String(record.key).startsWith('new_')) {
       setLocalData([]);
     } else {
-      await deleteTonghopKhoanBalang(record.id);
-      fetchTonghopKhoanBalang();
+      await deleteTonghopneo(record.id);
+      fetchTonghopneo();
     }
   };
 
@@ -155,9 +148,9 @@ const Capnhatkhoanbalang = () => {
             message.warning('Không có bản ghi hợp lệ');
             return;
           }
-          await deleteTonghopKhoanBalangs(validIds);
+          await deleteTonghopneos(validIds);
           setSelectedRowKeys([]);
-          fetchTonghopKhoanBalang();
+          fetchTonghopneo();
         } catch (error) {
           message.error('Xóa nhiều thất bại');
         }
@@ -170,27 +163,24 @@ const Capnhatkhoanbalang = () => {
     try {
       const row = await form.validateFields();
       const record = dataSource.find((x) => x.key === key);
-
       const payload = {
         id: record.id || 0,
         donViId: Number(row.donViId),
-        khoanBalangId: Number(row.khoanBalangId),
+        neoId: Number(row.neoId),
         viTriLapDat: row.viTriLapDat,
         soLuong: Number(row.soLuong),
         tinhTrangKyThuat: row.tinhTrangKyThuat,
         ngayLap: row.ngayLap ? dayjs(row.ngayLap).format('YYYY-MM-DD') : null,
-        loaiThietBi: row.loaiThietBi,
         duPhong: row.duPhong || false,
         ghiChu: row.ghiChu
       };
 
       if (String(key).startsWith('new_')) {
-        await createTonghopKhoanBalang(payload);
+        await createTonghopneo(payload);
       } else {
-        await updateTonghopKhoanBalang(payload);
+        await updateTonghopneo(payload);
       }
-
-      fetchTonghopKhoanBalang();
+      fetchTonghopneo();
       setEditingKey('');
       setLocalData([]);
     } catch (error) {
@@ -224,12 +214,13 @@ const Capnhatkhoanbalang = () => {
     },
     {
       title: 'Thiết bị',
-      dataIndex: 'khoanBalangId',
+      dataIndex: 'neoId',
       editable: true,
       inputType: 'select',
       options: danhmucOptions,
       render: (_, record) => record.tenThietBi || record.TenThietBi || ''
     },
+    { title: 'Đơn vị tính', dataIndex: 'donViTinh', editable: true, render: (value) => value || '' },
     { title: 'Vị trí lắp đặt', dataIndex: 'viTriLapDat', editable: true, render: (value) => value || '' },
     { title: 'Tình trạng kỹ thuật', dataIndex: 'tinhTrangKyThuat', editable: true, render: (value) => value || '' },
     { title: 'Số lượng', dataIndex: 'soLuong', editable: true, inputType: 'number', render: (value) => (isNaN(value) ? 0 : value) },
@@ -239,17 +230,6 @@ const Capnhatkhoanbalang = () => {
       editable: true,
       inputType: 'date',
       render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '')
-    },
-    {
-      title: 'Loại thiết bị',
-      dataIndex: 'loaiThietBi',
-      editable: true,
-      inputType: 'select',
-      options: [
-        { label: 'Khoan', value: 'Khoan' },
-        { label: 'Ba lăng', value: 'Ba lăng' }
-      ],
-      render: (value) => value || ''
     },
     {
       title: 'Dự phòng',
@@ -283,7 +263,6 @@ const Capnhatkhoanbalang = () => {
       }
     }
   ];
-
   const mergedColumns = columns.map((col) =>
     col.editable
       ? {
@@ -309,7 +288,7 @@ const Capnhatkhoanbalang = () => {
       'Vị trí lắp đặt': item.viTriLapDat || '',
       'Ngày lắp đặt': item.ngayLap ? dayjs(item.ngayLap).format('DD/MM/YYYY') : '',
       'Tình trạng kỹ thuật': item.tinhTrangKyThuat || '',
-      'Loại thiết bị': item.loaiThietBi || '',
+      'Đơn vị tính': item.donViTinh || '',
       'Số lượng': item.soLuong || 0,
       'Ghi chú': item.ghiChu || ''
     }));
@@ -331,8 +310,8 @@ const Capnhatkhoanbalang = () => {
       { wch: 20 }
     ];
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'CapnhatKhoanBaLang');
-    XLSX.writeFile(workbook, 'Cap-nhat-khoan-ba-lang.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Capnhatneo');
+    XLSX.writeFile(workbook, 'Cap-nhat-neo-bom-phun-be-tong.xlsx');
   };
   return (
     <MainCard>
@@ -368,5 +347,4 @@ const Capnhatkhoanbalang = () => {
     </MainCard>
   );
 };
-
-export default Capnhatkhoanbalang;
+export default Capnhatneo;

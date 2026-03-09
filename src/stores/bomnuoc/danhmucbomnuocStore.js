@@ -31,7 +31,6 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
         dataDanhmucbomnuoc: [...get().dataDanhmucbomnuoc, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -44,13 +43,11 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
     try {
       const res = await danhmucbomnuocService.updateDanhmucbomnuoc(payload);
 
-      const newData = get().dataDanhmucbomnuoc.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataDanhmucbomnuoc.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataDanhmucbomnuoc: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -64,7 +61,7 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
       await danhmucbomnuocService.deleteDanhmucbomnuoc(id);
 
       set({
-        dataDanhmucbomnuoc: get().dataDanhmucbomnuoc.filter(item => item.id !== id),
+        dataDanhmucbomnuoc: get().dataDanhmucbomnuoc.filter((item) => item.id !== id),
         loading: false
       });
 
@@ -82,9 +79,7 @@ export const useDanhmucbomnuocStore = create((set, get) => ({
       await danhmucbomnuocService.deleteDanhmucbomnuocs(ids);
 
       set({
-        dataDanhmucbomnuoc: get().dataDanhmucbomnuoc.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataDanhmucbomnuoc: get().dataDanhmucbomnuoc.filter((item) => !ids.includes(item.id)),
         loading: false
       });
 

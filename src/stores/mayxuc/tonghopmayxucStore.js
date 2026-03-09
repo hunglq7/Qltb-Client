@@ -1,32 +1,32 @@
 import { create } from 'zustand';
 import { message } from 'antd';
 import { tonghopmayxucService } from '/src/services/mayxuc/tonghopmayxucService';
-export const useTonghopmayxucStore=create((set,get)=>({
-dataTonghopMayxuc:[],
-totalRecords:[],
-loading: false,
-fetchTonghopmayxuc:async()=>{
-    set({loading:true});
+export const useTonghopmayxucStore = create((set, get) => ({
+  dataTonghopMayxuc: [],
+  totalRecords: [],
+  loading: false,
+  fetchTonghopmayxuc: async () => {
+    set({ loading: true });
     try {
-        const data= await tonghopmayxucService.getMayxuc();
-        set({dataTonghopMayxuc:data.data,loading:false})
+      const data = await tonghopmayxucService.getMayxuc();
+      set({ dataTonghopMayxuc: data.data, loading: false });
     } catch (error) {
-       message.error('Failed to fetch Tonghopmayxuc');
-      set({ loading: false });  
+      message.error('Failed to fetch Tonghopmayxuc');
+      set({ loading: false });
     }
-},
+  },
 
-getTonghopmayxucPaging:async(req)=>{
-  set({loading:true});
-  try {  
-    const data=await tonghopmayxucService.getTonghopmayxucPaging(req);     
-    set({dataTonghopMayxuc:data.data.items,totalRecords:data.data.totalRecords,loading:false})
-  } catch (error) {
-     message.error('Failed to get TonghoptoidienPaging');
-      set({ loading: false }); 
-  }
-},
-createTonghopmayxuc: async (items) => {
+  getTonghopmayxucPaging: async (req) => {
+    set({ loading: true });
+    try {
+      const data = await tonghopmayxucService.getTonghopmayxucPaging(req);
+      set({ dataTonghopMayxuc: data.data.items, totalRecords: data.data.totalRecords, loading: false });
+    } catch (error) {
+      message.error('Failed to get TonghoptoidienPaging');
+      set({ loading: false });
+    }
+  },
+  createTonghopmayxuc: async (items) => {
     set({ loading: true });
     try {
       const data = await tonghopmayxucService.addTonghopmayxuc(items);
@@ -36,15 +36,15 @@ createTonghopmayxuc: async (items) => {
       set({ loading: false });
     }
   },
- updateTonghopmayxuc: async (id,items) => {
+  updateTonghopmayxuc: async (id, items) => {
     set({ loading: true });
     try {
-      const mayxucs={
-        id:id,
+      const mayxucs = {
+        id: id,
         ...items
-      }
+      };
       const data = await tonghopmayxucService.updateTonghopmayxuc(mayxucs);
-      const updatedTonghopmayxuc= get().dataTonghopMayxuc.map((dv) => (dv.id === id ? data : dv));
+      const updatedTonghopmayxuc = get().dataTonghopMayxuc.map((dv) => (dv.id === id ? data : dv));
       set({ dataTonghopMayxuc: updatedTonghopmayxuc, loading: false });
     } catch (error) {
       message.error('Failed to update Tonghopmayxuc');
@@ -55,9 +55,9 @@ createTonghopmayxuc: async (items) => {
     set({ loading: true });
     try {
       await tonghopmayxucService.deleteMayxuc(id);
-      set({ 
-        dataTonghopMayxuc: get().dataTonghopMayxuc.filter((item) => item._id !== id), 
-        loading: false 
+      set({
+        dataTonghopMayxuc: get().dataTonghopMayxuc.filter((item) => item._id !== id),
+        loading: false
       });
       message.success('Xóa thành công');
     } catch (error) {
@@ -66,21 +66,21 @@ createTonghopmayxuc: async (items) => {
     }
   },
   // Thêm vào useThongsomayxucStore
-deleteMultiple: async (selectedIds) => {
+  deleteMultiple: async (selectedIds) => {
     set({ loading: true });
     try {
-        // selectedIds phải là mảng phẳng [1, 2, 3]
-        await tonghopmayxucService.deleteMayxucs(selectedIds);        
-        
-        const currentData = get(). dataTonghopMayxuc;
-        // Sử dụng item.id để khớp với rowKey="id" trong Table
-        const newData = currentData.filter(item => !selectedIds.includes(item.id));        
-        
-        set({  dataTonghopMayxuc: newData, loading: false });
+      // selectedIds phải là mảng phẳng [1, 2, 3]
+      await tonghopmayxucService.deleteMayxucs(selectedIds);
+
+      const currentData = get().dataTonghopMayxuc;
+      // Sử dụng item.id để khớp với rowKey="id" trong Table
+      const newData = currentData.filter((item) => !selectedIds.includes(item.id));
+
+      set({ dataTonghopMayxuc: newData, loading: false });
     } catch (error) {
-        message.error('Lỗi khi xóa nhiều bản ghi');
-        set({ loading: false });
-        throw error; // Quăng lỗi để Component bắt được
+      message.error('Lỗi khi xóa nhiều bản ghi');
+      set({ loading: false });
+      throw error; // Quăng lỗi để Component bắt được
     }
-}
+  }
 }));

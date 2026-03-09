@@ -4,7 +4,7 @@ import { tonghopbomnuocService } from '../../services/bomnuoc/tonghopbomnuocServ
 export const useTonghopbomnuocStore = create((set, get) => ({
   dataTonghopbomnuoc: [],
   loading: false,
-totalRecords:[],
+  totalRecords: [],
   // ================= FETCH =================
   fetchTonghopbomnuoc: async () => {
     set({ loading: true });
@@ -19,31 +19,29 @@ totalRecords:[],
       set({ loading: false });
     }
   },
-getTonghopbomnuocPaging:async(req)=>{
-  set({loading:true});
-  try {  
-    const data=await tonghopbomnuocService.getTonghopbomnuocPaging(req);     
-    set({dataTonghopbomnuoc:data.data.items,totalRecords:data.data.totalRecords,loading:false})
-  } catch (error) {
-     message.error('Failed to get TonghopbomnuocPaging');
-      set({ loading: false }); 
-  }
-},
+  getTonghopbomnuocPaging: async (req) => {
+    set({ loading: true });
+    try {
+      const data = await tonghopbomnuocService.getTonghopbomnuocPaging(req);
+      set({ dataTonghopbomnuoc: data.data.items, totalRecords: data.data.totalRecords, loading: false });
+    } catch (error) {
+      message.error('Failed to get TonghopbomnuocPaging');
+      set({ loading: false });
+    }
+  },
   getTonghopbomnuocById: async (id) => {
-  set({ loading: true });
-  try {
-    const res = await tonghopbomnuocService.getTonghopbomnuocDetaiById(id);
-    const list = Array.isArray(res.data)
-      ? res.data
-      : res.data?.data || [];
-    set({
-      dataTonghopbomnuoc: list,
-      loading: false
-    });
-  } catch {
-    set({ dataTonghopbomnuoc: [], loading: false });
-  }
-},
+    set({ loading: true });
+    try {
+      const res = await tonghopbomnuocService.getTonghopbomnuocDetaiById(id);
+      const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      set({
+        dataTonghopbomnuoc: list,
+        loading: false
+      });
+    } catch {
+      set({ dataTonghopbomnuoc: [], loading: false });
+    }
+  },
 
   // ================= CREATE =================
   createTonghopbomnuoc: async (payload) => {
@@ -55,7 +53,6 @@ getTonghopbomnuocPaging:async(req)=>{
         dataTonghopbomnuoc: [...get().dataTonghopbomnuoc, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -63,20 +60,19 @@ getTonghopbomnuocPaging:async(req)=>{
   },
 
   // ================= UPDATE =================
-  updateTonghopbomnuoc: async (id,payload) => {
-    const items={
-      id,...payload
-    }
+  updateTonghopbomnuoc: async (id, payload) => {
+    const items = {
+      id,
+      ...payload
+    };
     set({ loading: true });
     try {
       const res = await tonghopbomnuocService.updateTonghopbomnuoc(items);
-      const newData = get().dataTonghopbomnuoc.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataTonghopbomnuoc.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataTonghopbomnuoc: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -90,10 +86,9 @@ getTonghopbomnuocPaging:async(req)=>{
       await tonghopbomnuocService.deleteTonghopbomnuoc(id);
 
       set({
-        dataTonghopbomnuoc: get().dataTonghopbomnuoc.filter(item => item.id !== id),
+        dataTonghopbomnuoc: get().dataTonghopbomnuoc.filter((item) => item.id !== id),
         loading: false
       });
-    
     } catch (error) {
       message.error('Xóa thất bại');
       set({ loading: false });
@@ -106,12 +101,9 @@ getTonghopbomnuocPaging:async(req)=>{
     try {
       await tonghopbomnuocService.deleteTonghopbomnuocs(ids);
       set({
-        dataTonghopbomnuoc: get().dataTonghopbomnuoc.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataTonghopbomnuoc: get().dataTonghopbomnuoc.filter((item) => !ids.includes(item.id)),
         loading: false
       });
-     
     } catch (error) {
       message.error('Lỗi khi xóa nhiều bản ghi');
       set({ loading: false });

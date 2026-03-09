@@ -19,21 +19,19 @@ export const useThongsoquatgioStore = create((set, get) => ({
       set({ loading: false });
     }
   },
-getThongsoquatgioById: async (id) => {
-  set({ loading: true });
-  try {
-    const res = await thongsoquatgioService.getThongsoquatgioDetaiById(id);
-    const list = Array.isArray(res.data)
-      ? res.data
-      : res.data?.data || [];
-    set({
-      dataThongsoquatgio: list,
-      loading: false
-    });
-  } catch {
-    set({ dataThongsoquatgio: [], loading: false });
-  }
-},
+  getThongsoquatgioById: async (id) => {
+    set({ loading: true });
+    try {
+      const res = await thongsoquatgioService.getThongsoquatgioDetaiById(id);
+      const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      set({
+        dataThongsoquatgio: list,
+        loading: false
+      });
+    } catch {
+      set({ dataThongsoquatgio: [], loading: false });
+    }
+  },
   // ================= CREATE =================
   createThongsoquatgio: async (payload) => {
     set({ loading: true });
@@ -44,7 +42,6 @@ getThongsoquatgioById: async (id) => {
         dataThongsoquatgio: [...get().dataThongsoquatgio, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -52,18 +49,16 @@ getThongsoquatgioById: async (id) => {
   },
 
   // ================= UPDATE =================
-  updateThongsoquatgio: async (id,payload) => {
-  const items={id,...payload};
+  updateThongsoquatgio: async (id, payload) => {
+    const items = { id, ...payload };
     set({ loading: true });
     try {
       const res = await thongsoquatgioService.updateThongsoquatgio(items);
-      const newData = get().dataThongsoquatgio.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataThongsoquatgio.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataThongsoquatgio: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -77,7 +72,7 @@ getThongsoquatgioById: async (id) => {
       await thongsoquatgioService.deleteThongsoquatgio(id);
 
       set({
-        dataThongsoquatgio: get().dataThongsoquatgio.filter(item => item.id !== id),
+        dataThongsoquatgio: get().dataThongsoquatgio.filter((item) => item.id !== id),
         loading: false
       });
 
@@ -95,9 +90,7 @@ getThongsoquatgioById: async (id) => {
       await thongsoquatgioService.deleteThongsoquatgios(ids);
 
       set({
-        dataThongsoquatgio: get().dataThongsoquatgio.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataThongsoquatgio: get().dataThongsoquatgio.filter((item) => !ids.includes(item.id)),
         loading: false
       });
 

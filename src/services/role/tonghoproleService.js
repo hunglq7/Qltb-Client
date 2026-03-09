@@ -1,19 +1,14 @@
 import api from '../../Utils/Api';
 
-const getTonghopRole = () =>
-  api.get(`TonghopRole`);
+const getTonghopRole = () => api.get(`TonghopRole`);
 
-const addTonghopRole = (data) =>   
-  api.post(`TonghopRole/Add`, data);
+const addTonghopRole = (data) => api.post(`TonghopRole/Add`, data);
 
-const updateTonghopRole = (data) =>
-  api.put('TonghopRole/Update', data);
+const updateTonghopRole = (data) => api.put('TonghopRole/Update', data);
 
-const deleteTonghopRole = (id) =>
-  api.delete(`TonghopRole/${id}`);
+const deleteTonghopRole = (id) => api.delete(`TonghopRole/${id}`);
 
-const deleteTonghopRoles = (ids) =>
-  api.post(`TonghopRole/DeleteSelect`, ids);
+const deleteTonghopRoles = (ids) => api.post(`TonghopRole/DeleteSelect`, ids);
 
 export const TonghopRoleService = {
   getTonghopRole,

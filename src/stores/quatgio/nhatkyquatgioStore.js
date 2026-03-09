@@ -10,8 +10,8 @@ export const useNhatkyquatgioStore = create((set, get) => ({
   getNhatkyquatgioById: async (tonghopquatgioId) => {
     try {
       set({ loading: true });
-      const res = await nhatkyquatgioService.getNhatkyById(tonghopquatgioId);  
-      
+      const res = await nhatkyquatgioService.getNhatkyById(tonghopquatgioId);
+
       set({ dataNhatkyquatgio: res.data.data || [] });
     } catch (err) {
       console.error(err);
@@ -27,8 +27,7 @@ export const useNhatkyquatgioStore = create((set, get) => ({
       set({ loading: true });
 
       // Validate frontend level
-      if (!payload.tonghopquatgioId)
-        throw new Error('Thiếu tonghopquatgioId');
+      if (!payload.tonghopquatgioId) throw new Error('Thiếu tonghopquatgioId');
       await nhatkyquatgioService.addNhatkyquatgio(payload);
     } catch (err) {
       console.error(err);
@@ -40,9 +39,9 @@ export const useNhatkyquatgioStore = create((set, get) => ({
   },
 
   // ================= UPDATE =================
-  updateNhatkyquatgio: async (id,payload) => {
+  updateNhatkyquatgio: async (id, payload) => {
     try {
-        const items={id,...payload};
+      const items = { id, ...payload };
       set({ loading: true });
       if (!payload.id) throw new Error('Thiếu id cập nhật');
       await nhatkyquatgioService.updateNhatkyquatgio(items);
@@ -72,8 +71,7 @@ export const useNhatkyquatgioStore = create((set, get) => ({
   // ================= DELETE MULTIPLE =================
   deleteMultiple: async (ids) => {
     try {
-      if (!ids || ids.length === 0)
-        throw new Error('Danh sách id rỗng');
+      if (!ids || ids.length === 0) throw new Error('Danh sách id rỗng');
 
       set({ loading: true });
       await nhatkyquatgioService.deleteNhatkyquatgios(ids);

@@ -21,7 +21,7 @@ export const useTonghopRoleStore = create((set, get) => ({
   },
 
   // ================= CREATE =================
-  createTonghopRole: async (payload) => {   
+  createTonghopRole: async (payload) => {
     set({ loading: true });
     try {
       const res = await TonghopRoleService.addTonghopRole(payload);
@@ -30,7 +30,6 @@ export const useTonghopRoleStore = create((set, get) => ({
         dataTonghopRole: [...get().dataTonghopRole, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -43,13 +42,11 @@ export const useTonghopRoleStore = create((set, get) => ({
     try {
       const res = await TonghopRoleService.updateTonghopRole(payload);
 
-      const newData = get().dataTonghopRole.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataTonghopRole.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataTonghopRole: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -63,7 +60,7 @@ export const useTonghopRoleStore = create((set, get) => ({
       await TonghopRoleService.deleteTonghopRole(id);
 
       set({
-        dataTonghopRole: get().dataTonghopRole.filter(item => item.id !== id),
+        dataTonghopRole: get().dataTonghopRole.filter((item) => item.id !== id),
         loading: false
       });
 
@@ -81,9 +78,7 @@ export const useTonghopRoleStore = create((set, get) => ({
       await TonghopRoleService.deleteTonghopRoles(ids);
 
       set({
-        dataTonghopRole: get().dataTonghopRole.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataTonghopRole: get().dataTonghopRole.filter((item) => !ids.includes(item.id)),
         loading: false
       });
 

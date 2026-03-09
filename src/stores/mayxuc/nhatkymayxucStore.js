@@ -11,8 +11,8 @@ export const useNhatkymayxucStore = create((set, get) => ({
   getNhatkymayxucById: async (tonghopmayxucId) => {
     try {
       set({ loading: true });
-      const res = await nhatkymayxucService.getNhatkyById(tonghopmayxucId);   
-      
+      const res = await nhatkymayxucService.getNhatkyById(tonghopmayxucId);
+
       set({ dataNhatkyMayxuc: res.data.data || [] });
     } catch (err) {
       console.error(err);
@@ -28,8 +28,7 @@ export const useNhatkymayxucStore = create((set, get) => ({
       set({ loading: true });
 
       // Validate frontend level
-      if (!payload.tonghopmayxucId)
-        throw new Error('Thiếu tonghopmayxucId');
+      if (!payload.tonghopmayxucId) throw new Error('Thiếu tonghopmayxucId');
       await nhatkymayxucService.addNhatkymayxuc(payload);
     } catch (err) {
       console.error(err);
@@ -41,13 +40,13 @@ export const useNhatkymayxucStore = create((set, get) => ({
   },
 
   // ================= UPDATE =================
-  updateNhatkymayxuc: async (id,payload) => {
+  updateNhatkymayxuc: async (id, payload) => {
     try {
       set({ loading: true });
 
       if (!payload.id) throw new Error('Thiếu id cập nhật');
 
-      await nhatkymayxucService.updateNhatkymayxuc(id,payload);
+      await nhatkymayxucService.updateNhatkymayxuc(id, payload);
     } catch (err) {
       console.error(err);
       message.error('Cập nhật thất bại');
@@ -74,8 +73,7 @@ export const useNhatkymayxucStore = create((set, get) => ({
   // ================= DELETE MULTIPLE =================
   deleteMultiple: async (ids) => {
     try {
-      if (!ids || ids.length === 0)
-        throw new Error('Danh sách id rỗng');
+      if (!ids || ids.length === 0) throw new Error('Danh sách id rỗng');
 
       set({ loading: true });
       await nhatkymayxucService.deleteNhatkyMayxucs(ids);

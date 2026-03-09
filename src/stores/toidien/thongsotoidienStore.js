@@ -1,38 +1,36 @@
 import { create } from 'zustand';
 import { message } from 'antd';
 import { thongsokythuattoidienService } from '/src/services/toidien/thongsotoidienService';
-export const useThongsotoidienStore=create((set,get)=>({
-dataThongso:[],
-loading: false,
-fetchThongsotoidien:async()=>{
-    set({loading:true});
+export const useThongsotoidienStore = create((set, get) => ({
+  dataThongso: [],
+  loading: false,
+  fetchThongsotoidien: async () => {
+    set({ loading: true });
     try {
-        const data= await thongsokythuattoidienService.getThongsokythuattoidien();
-        set({dataThongso:data.data,loading:false})
+      const data = await thongsokythuattoidienService.getThongsokythuattoidien();
+      set({ dataThongso: data.data, loading: false });
     } catch (error) {
-       message.error('Failed to fetch Thongsotoidien');
-      set({ loading: false });  
+      message.error('Failed to fetch Thongsotoidien');
+      set({ loading: false });
     }
-},
+  },
 
-getThongsotoidienById: async (id) => {
-  set({ loading: true });
-  try {
-    const res = await thongsokythuattoidienService.getThongsotoidienDetailById(id);
+  getThongsotoidienById: async (id) => {
+    set({ loading: true });
+    try {
+      const res = await thongsokythuattoidienService.getThongsotoidienDetailById(id);
 
-    const list = Array.isArray(res.data)
-      ? res.data
-      : res.data?.data || [];
+      const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
 
-    set({
-      dataThongso: list,
-      loading: false
-    });
-  } catch {
-    set({ dataThongso: [], loading: false });
-  }
-},
-createThongsotoidien: async (Thongso) => {
+      set({
+        dataThongso: list,
+        loading: false
+      });
+    } catch {
+      set({ dataThongso: [], loading: false });
+    }
+  },
+  createThongsotoidien: async (Thongso) => {
     set({ loading: true });
     try {
       const data = await thongsokythuattoidienService.createThongsokythuattoidien(Thongso);
@@ -42,7 +40,7 @@ createThongsotoidien: async (Thongso) => {
       set({ loading: false });
     }
   },
- updateThongsotoidien: async (id, Thongso) => {
+  updateThongsotoidien: async (id, Thongso) => {
     set({ loading: true });
     try {
       const data = await thongsokythuattoidienService.updateThongsokythuattoidien(id, Thongso);
@@ -57,9 +55,9 @@ createThongsotoidien: async (Thongso) => {
     set({ loading: true });
     try {
       await thongsokythuattoidienService.deleteThongsokythuattoidien(id);
-      set({ 
-        dataThongso: get().dataThongso.filter((item) => item._id !== id), 
-        loading: false 
+      set({
+        dataThongso: get().dataThongso.filter((item) => item._id !== id),
+        loading: false
       });
       message.success('Xóa thành công');
     } catch (error) {
@@ -68,21 +66,21 @@ createThongsotoidien: async (Thongso) => {
     }
   },
   // Thêm vào useThongsotoidienStore
-deleteMultiple: async (selectedIds) => {
+  deleteMultiple: async (selectedIds) => {
     set({ loading: true });
     try {
-        // selectedIds phải là mảng phẳng [1, 2, 3]
-        await thongsokythuattoidienService.deleteMultipleThongsokythuattoidien(selectedIds);        
-        
-        const currentData = get().dataThongso;
-        // Sử dụng item.id để khớp với rowKey="id" trong Table
-        const newData = currentData.filter(item => !selectedIds.includes(item.id));        
-        
-        set({ dataThongso: newData, loading: false });
+      // selectedIds phải là mảng phẳng [1, 2, 3]
+      await thongsokythuattoidienService.deleteMultipleThongsokythuattoidien(selectedIds);
+
+      const currentData = get().dataThongso;
+      // Sử dụng item.id để khớp với rowKey="id" trong Table
+      const newData = currentData.filter((item) => !selectedIds.includes(item.id));
+
+      set({ dataThongso: newData, loading: false });
     } catch (error) {
-        message.error('Lỗi khi xóa nhiều bản ghi');
-        set({ loading: false });
-        throw error; // Quăng lỗi để Component bắt được
+      message.error('Lỗi khi xóa nhiều bản ghi');
+      set({ loading: false });
+      throw error; // Quăng lỗi để Component bắt được
     }
-}
+  }
 }));

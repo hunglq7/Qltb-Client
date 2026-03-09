@@ -29,7 +29,6 @@ export const useDanhmucBienapStore = create((set, get) => ({
         dataDanhmucBienap: [...get().dataDanhmucBienap, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -42,13 +41,11 @@ export const useDanhmucBienapStore = create((set, get) => ({
     try {
       const res = await danhmucBienapService.updateDanhmucBienap(payload);
 
-      const newData = get().dataDanhmucBienap.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataDanhmucBienap.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataDanhmucBienap: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -62,7 +59,7 @@ export const useDanhmucBienapStore = create((set, get) => ({
       await danhmucBienapService.deleteDanhmucBienap(id);
 
       set({
-        dataDanhmucBienap: get().dataDanhmucBienap.filter(item => item.id !== id),
+        dataDanhmucBienap: get().dataDanhmucBienap.filter((item) => item.id !== id),
         loading: false
       });
 
@@ -80,9 +77,7 @@ export const useDanhmucBienapStore = create((set, get) => ({
       await danhmucBienapService.deleteDanhmucBienaps(ids);
 
       set({
-        dataDanhmucBienap: get().dataDanhmucBienap.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataDanhmucBienap: get().dataDanhmucBienap.filter((item) => !ids.includes(item.id)),
         loading: false
       });
 

@@ -10,7 +10,7 @@ export const useNhatkybomnuocStore = create((set, get) => ({
   getNhatkybomnuocById: async (tonghopbomnuocId) => {
     try {
       set({ loading: true });
-      const res = await nhatkybomnuocService.getNhatkyById(tonghopbomnuocId);  
+      const res = await nhatkybomnuocService.getNhatkyById(tonghopbomnuocId);
       set({ dataNhatkybomnuoc: res.data || [] });
     } catch (err) {
       console.error(err);
@@ -26,8 +26,7 @@ export const useNhatkybomnuocStore = create((set, get) => ({
       set({ loading: true });
 
       // Validate frontend level
-      if (!payload.tonghopbomnuocId)
-        throw new Error('Thiếu tonghopbomnuocId');
+      if (!payload.tonghopbomnuocId) throw new Error('Thiếu tonghopbomnuocId');
       await nhatkybomnuocService.addNhatkybomnuoc(payload);
     } catch (err) {
       console.error(err);
@@ -39,9 +38,9 @@ export const useNhatkybomnuocStore = create((set, get) => ({
   },
 
   // ================= UPDATE =================
-  updateNhatkybomnuoc: async (id,payload) => {
+  updateNhatkybomnuoc: async (id, payload) => {
     try {
-        const items={id,...payload};
+      const items = { id, ...payload };
       set({ loading: true });
       if (!payload.id) throw new Error('Thiếu id cập nhật');
       await nhatkybomnuocService.updateNhatkybomnuoc(items);
@@ -71,8 +70,7 @@ export const useNhatkybomnuocStore = create((set, get) => ({
   // ================= DELETE MULTIPLE =================
   deleteMultiple: async (ids) => {
     try {
-      if (!ids || ids.length === 0)
-        throw new Error('Danh sách id rỗng');
+      if (!ids || ids.length === 0) throw new Error('Danh sách id rỗng');
 
       set({ loading: true });
       await nhatkybomnuocService.deleteNhatkybomnuocs(ids);

@@ -21,20 +21,18 @@ export const useThongsobomnuocStore = create((set, get) => ({
   },
 
   getThongsobomnuocById: async (id) => {
-  set({ loading: true });
-  try {
-    const res = await thongsobomnuocService.getThongsobomnuocDetaiById(id);
-    const list = Array.isArray(res.data)
-      ? res.data
-      : res.data?.data || [];
-    set({
-      dataThongsobomnuoc: list,
-      loading: false
-    });
-  } catch {
-    set({ dataThongsobomnuoc: [], loading: false });
-  }
-},
+    set({ loading: true });
+    try {
+      const res = await thongsobomnuocService.getThongsobomnuocDetaiById(id);
+      const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      set({
+        dataThongsobomnuoc: list,
+        loading: false
+      });
+    } catch {
+      set({ dataThongsobomnuoc: [], loading: false });
+    }
+  },
 
   // ================= CREATE =================
   createThongsobomnuoc: async (payload) => {
@@ -46,7 +44,6 @@ export const useThongsobomnuocStore = create((set, get) => ({
         dataThongsobomnuoc: [...get().dataThongsobomnuoc, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -58,13 +55,11 @@ export const useThongsobomnuocStore = create((set, get) => ({
     set({ loading: true });
     try {
       const res = await thongsobomnuocService.updateThongsobomnuoc(payload);
-      const newData = get().dataThongsobomnuoc.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataThongsobomnuoc.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataThongsobomnuoc: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -78,10 +73,9 @@ export const useThongsobomnuocStore = create((set, get) => ({
       await thongsobomnuocService.deleteThongsobomnuoc(id);
 
       set({
-        dataThongsobomnuoc: get().dataThongsobomnuoc.filter(item => item.id !== id),
+        dataThongsobomnuoc: get().dataThongsobomnuoc.filter((item) => item.id !== id),
         loading: false
       });
-    
     } catch (error) {
       message.error('Xóa thất bại');
       set({ loading: false });
@@ -94,12 +88,9 @@ export const useThongsobomnuocStore = create((set, get) => ({
     try {
       await thongsobomnuocService.deleteThongsobomnuocs(ids);
       set({
-        dataThongsobomnuoc: get().dataThongsobomnuoc.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataThongsobomnuoc: get().dataThongsobomnuoc.filter((item) => !ids.includes(item.id)),
         loading: false
       });
-     
     } catch (error) {
       message.error('Lỗi khi xóa nhiều bản ghi');
       set({ loading: false });

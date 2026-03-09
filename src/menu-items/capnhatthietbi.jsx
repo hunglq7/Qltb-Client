@@ -199,7 +199,7 @@ const capNhatThiebi = {
       id: 'khoanbalang',
       title: 'Khoan Ba Lang',
       type: 'collapse',
-      icon: <i className="ph ph-package" />,
+      icon: <i className="ph ph-folders" />,
       children: [
         {
           id: 'danhmuckhoanbalang',
@@ -212,6 +212,26 @@ const capNhatThiebi = {
           title: 'Cập nhật khoan bằng lang',
           type: 'item',
           url: '/khoanbalang/capnhatkhoanbalang'
+        }
+      ]
+    },
+    {
+      id: 'neo',
+      title: 'Neo, Bơm, Phun Bê Tông',
+      type: 'collapse',
+      icon: <i className="ph ph-folder-star" />,
+      children: [
+        {
+          id: 'danhmucneo',
+          title: 'Danh mục neo, bơm, phun bê tông',
+          type: 'item',
+          url: '/neo/danhmucneo'
+        },
+        {
+          id: 'capnhatneo',
+          title: 'Cập nhật neo, bơm, phun bê tông',
+          type: 'item',
+          url: '/neo/capnhatneo'
         }
       ]
     }

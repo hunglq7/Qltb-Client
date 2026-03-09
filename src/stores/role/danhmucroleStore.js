@@ -30,7 +30,6 @@ export const useDanhmucroleStore = create((set, get) => ({
         dataDanhmucrole: [...get().dataDanhmucrole, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -43,13 +42,11 @@ export const useDanhmucroleStore = create((set, get) => ({
     try {
       const res = await danhmucroleService.updateDanhmucrole(payload);
 
-      const newData = get().dataDanhmucrole.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataDanhmucrole.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataDanhmucrole: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -63,7 +60,7 @@ export const useDanhmucroleStore = create((set, get) => ({
       await danhmucroleService.deleteDanhmucrole(id);
 
       set({
-        dataDanhmucrole: get().dataDanhmucrole.filter(item => item.id !== id),
+        dataDanhmucrole: get().dataDanhmucrole.filter((item) => item.id !== id),
         loading: false
       });
 
@@ -81,9 +78,7 @@ export const useDanhmucroleStore = create((set, get) => ({
       await danhmucroleService.deleteDanhmucroles(ids);
 
       set({
-        dataDanhmucrole: get().dataDanhmucrole.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataDanhmucrole: get().dataDanhmucrole.filter((item) => !ids.includes(item.id)),
         loading: false
       });
 

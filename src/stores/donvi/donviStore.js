@@ -1,20 +1,20 @@
 import { create } from 'zustand';
 import { message } from 'antd';
 import { donviService } from '/src/services/donvi/donviService';
-export const useDonviStore=create((set,get)=>({
-dataDonvi:[],
-loading: false,
-fetchDonvi:async()=>{
-    set({loading:true});
+export const useDonviStore = create((set, get) => ({
+  dataDonvi: [],
+  loading: false,
+  fetchDonvi: async () => {
+    set({ loading: true });
     try {
-        const data= await donviService.getDonvi();
-        set({dataDonvi:data.data,loading:false})
+      const data = await donviService.getDonvi();
+      set({ dataDonvi: data.data, loading: false });
     } catch (error) {
-       message.error('Failed to fetch Donvi');
-      set({ loading: false });  
+      message.error('Failed to fetch Donvi');
+      set({ loading: false });
     }
-},
-createDonvi: async (items) => {
+  },
+  createDonvi: async (items) => {
     set({ loading: true });
     try {
       const data = await donviService.addDonvi(items);
@@ -24,7 +24,7 @@ createDonvi: async (items) => {
       set({ loading: false });
     }
   },
- updateDonvi: async (items) => {
+  updateDonvi: async (items) => {
     set({ loading: true });
     try {
       const data = await donviService.updateDonvi(items);
@@ -39,9 +39,9 @@ createDonvi: async (items) => {
     set({ loading: true });
     try {
       await donviService.deleteDonvi(id);
-      set({ 
-        dataDonvi: get().dataDonvi.filter((item) => item._id !== id), 
-        loading: false 
+      set({
+        dataDonvi: get().dataDonvi.filter((item) => item._id !== id),
+        loading: false
       });
       message.success('Xóa thành công');
     } catch (error) {
@@ -50,19 +50,19 @@ createDonvi: async (items) => {
     }
   },
   // Thêm vào useDonviStore
-deleteMultiple: async (selectedIds) => {
+  deleteMultiple: async (selectedIds) => {
     set({ loading: true });
     try {
-        // Tạo danh sách object chứa Id để gửi lên Backend theo yêu cầu của C# 
-        await donviService.deleteDonvis(selectedIds);        
-        // Cập nhật lại danh sách local sau khi xóa thành công
-        const currentData = get().dataDonvi;
-        const newData = currentData.filter(item => !selectedIds.includes(item._id || item.id));        
-        set({ dataDonvi: newData, loading: false });
-        message.success('Xóa các bản ghi thành công');
+      // Tạo danh sách object chứa Id để gửi lên Backend theo yêu cầu của C#
+      await donviService.deleteDonvis(selectedIds);
+      // Cập nhật lại danh sách local sau khi xóa thành công
+      const currentData = get().dataDonvi;
+      const newData = currentData.filter((item) => !selectedIds.includes(item._id || item.id));
+      set({ dataDonvi: newData, loading: false });
+      message.success('Xóa các bản ghi thành công');
     } catch (error) {
-        message.error('Lỗi khi xóa nhiều bản ghi');
-        set({ loading: false });
+      message.error('Lỗi khi xóa nhiều bản ghi');
+      set({ loading: false });
     }
-}
+  }
 }));

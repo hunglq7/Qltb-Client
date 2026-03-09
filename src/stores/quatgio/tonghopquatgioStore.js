@@ -4,7 +4,7 @@ import { tonghopquatgioService } from '../../services/quatgio/tonghopquatgioServ
 export const useTonghopquatgioStore = create((set, get) => ({
   dataTonghopquatgio: [],
   loading: false,
-totalRecords:[],
+  totalRecords: [],
   // ================= FETCH =================
   fetchTonghopquatgio: async () => {
     set({ loading: true });
@@ -20,14 +20,14 @@ totalRecords:[],
     }
   },
 
-  getTonghopquatgioPaging:async(req)=>{
-    set({loading:true});
-    try {  
-      const data=await tonghopquatgioService.getTonghopquatgioPaging(req);     
-      set({dataTonghopquatgio:data.data.items,totalRecords:data.data.totalRecords,loading:false})
+  getTonghopquatgioPaging: async (req) => {
+    set({ loading: true });
+    try {
+      const data = await tonghopquatgioService.getTonghopquatgioPaging(req);
+      set({ dataTonghopquatgio: data.data.items, totalRecords: data.data.totalRecords, loading: false });
     } catch (error) {
-       message.error('Failed to get TonghopbomnuocPaging');
-        set({ loading: false }); 
+      message.error('Failed to get TonghopbomnuocPaging');
+      set({ loading: false });
     }
   },
 
@@ -40,7 +40,6 @@ totalRecords:[],
         dataTonghopquatgio: [...get().dataTonghopquatgio, res.data],
         loading: false
       });
-    
     } catch (error) {
       message.error('Thêm mới thất bại');
       set({ loading: false });
@@ -48,18 +47,16 @@ totalRecords:[],
   },
 
   // ================= UPDATE =================
-  updateTonghopquatgio: async (id,payload) => {
-  const items={id,...payload};
+  updateTonghopquatgio: async (id, payload) => {
+    const items = { id, ...payload };
     set({ loading: true });
     try {
       const res = await tonghopquatgioService.updateTonghopquatgio(items);
-      const newData = get().dataTonghopquatgio.map(item =>
-        item.id === res.data.id ? res.data : item
-      );
+      const newData = get().dataTonghopquatgio.map((item) => (item.id === res.data.id ? res.data : item));
       set({
         dataTonghopquatgio: newData,
         loading: false
-      });     
+      });
     } catch (error) {
       message.error('Cập nhật thất bại');
       set({ loading: false });
@@ -72,10 +69,9 @@ totalRecords:[],
     try {
       await tonghopquatgioService.deleteTonghopquatgio(id);
       set({
-        dataTonghopquatgio: get().dataTonghopquatgio.filter(item => item.id !== id),
+        dataTonghopquatgio: get().dataTonghopquatgio.filter((item) => item.id !== id),
         loading: false
       });
-    
     } catch (error) {
       message.error('Xóa thất bại');
       set({ loading: false });
@@ -88,12 +84,9 @@ totalRecords:[],
     try {
       await tonghopquatgioService.deleteTonghopquatgios(ids);
       set({
-        dataTonghopquatgio: get().dataTonghopquatgio.filter(
-          item => !ids.includes(item.id)
-        ),
+        dataTonghopquatgio: get().dataTonghopquatgio.filter((item) => !ids.includes(item.id)),
         loading: false
       });
-     
     } catch (error) {
       message.error('Lỗi khi xóa nhiều bản ghi');
       set({ loading: false });
