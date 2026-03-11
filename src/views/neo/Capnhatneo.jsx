@@ -17,7 +17,7 @@ const EditableCell = ({ editing, dataIndex, inputType, options = [], children, .
   if (inputType === 'number') inputNode = <InputNumber style={{ width: '200' }} />;
   if (inputType === 'date') inputNode = <DatePicker style={{ width: '100%' }} />;
   if (inputType === 'select')
-    inputNode = <Select style={{ width: '100%' }} options={options} placeholder="Chọn đơn vị" showSearch optionLabelProp="label" />;
+    inputNode = <Select style={{ width: '100%' }} options={options} placeholder="Chọn danh mục" showSearch optionLabelProp="label" />;
 
   // ✅ CHỈ BẮT BUỘC CÁC FIELD QUAN TRỌNG
   const requiredFields = ['donViId', 'neoId'];
@@ -133,7 +133,6 @@ const Capnhatneo = () => {
 
   const handleDeleteMultiple = () => {
     if (!selectedRowKeys.length) return;
-
     Modal.confirm({
       title: `Xóa ${selectedRowKeys.length} bản ghi đã chọn?`,
       okText: 'Xóa',
