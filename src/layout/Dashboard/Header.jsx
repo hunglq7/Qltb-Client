@@ -76,6 +76,7 @@ export default function Header() {
     await authService.logout();
     naVigate('/login');
   };
+
   return (
     <header className="pc-header">
       <div className="header-wrapper">

@@ -10,13 +10,10 @@ export const useTonghopbienapStore = create((set, get) => ({
   fetchTonghopbienap: async () => {
     set({ loading: true });
     try {
-      const res = await tonghopbienapService.getTonghopbienap();
-      console.log('Store fetchTonghopbienap response:', res);
+      const res = await tonghopbienapService.getTonghopbienap();   
 
       // Backend trả về { data: [...], success: true }
-      const data = res.data?.data && Array.isArray(res.data.data) ? res.data.data : [];
-      console.log('Store fetchTonghopbienap final data:', data);
-
+      const data = res.data?.data && Array.isArray(res.data.data) ? res.data.data : []; 
       set({
         dataTonghopbienap: data,
         loading: false
@@ -63,8 +60,7 @@ export const useTonghopbienapStore = create((set, get) => ({
   updateTonghopbienap: async (payload) => {
     set({ loading: true });
     try {
-      const res = await tonghopbienapService.updateTonghopbienap(payload);
-      console.log('Update response:', res);
+      const res = await tonghopbienapService.updateTonghopbienap(payload); 
 
       // Backend trả về { data: result, success: true }
       const updatedData = res.data?.data || res.data;

@@ -1,4 +1,5 @@
 import api from '../../utils/Api';
+
 const loginWithUserCredentials = async (email, password) => {
   const data = {
     email,
@@ -17,8 +18,10 @@ const logout = () => {
   localStorage.clear();
 };
 
+
+
 export const authService = {
   loginWithUserCredentials,
   logout,
-  accessToken
-};
+  accessToken,
+}

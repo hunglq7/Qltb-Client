@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber, Select, DatePicker, Checkbox } from 'antd';
+import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber, Select, DatePicker, Checkbox, Tag } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { useTonghopbienapStore } from '/src/stores/bienap/tonghopbienapStore';
 import { useDonviStore } from '/src/stores/donvi/donviStore'; // Assuming this store exists
@@ -107,7 +107,7 @@ const Capnhatbienap = () => {
       phongbanId: null,
       viTriLapDat: '',
       ngayLap: dayjs(new Date()),
-      duPhong: false,
+      duPhong: true,
       ghiChu: ''
     };
     setLocalData([newRow]);
@@ -174,7 +174,7 @@ const Capnhatbienap = () => {
         BienapId: Number(row.bienapId),
         PhongbanId: Number(row.phongbanId),
         ViTriLapDat: row.viTriLapDat || '',
-        NgayLap: row.ngayLap ? dayjs(row.ngayLap).toISOString() : null,
+        NgayLap: row.ngayLap ? dayjs(row.ngayLap).format('YYYY-MM-DD') : null,
         DuPhong: !!row.duPhong,
         GhiChu: row.ghiChu || ''
       };
@@ -235,8 +235,12 @@ const Capnhatbienap = () => {
       title: 'Dự phòng',
       dataIndex: 'duPhong',
       editable: true,
-      inputType: 'boolean',
-      render: (value) => (value ? 'Có' : 'Không')
+      inputType: 'select',
+      options: [
+        { label: 'Đang dùng', value: true },
+        { label: 'Dự phòng', value: false }
+      ],
+      render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
     },
     { title: 'Ghi chú', dataIndex: 'ghiChu', editable: true },
     {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber, Select, DatePicker } from 'antd';
+import { Table, Form, Input, Button, Space, Popconfirm, message, Row, Modal, InputNumber, Select, DatePicker, Tag } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { useTonghopneoStore } from '../../stores/neo/tonghopneoStors';
 import { useDonviStore } from '../../stores/donvi/donviStore';
@@ -95,7 +95,7 @@ const Capnhatneo = () => {
       ngayLap: dayjs(new Date()),
       tinhTrangKyThuat: '',
       loaiThietBi: '',
-      duPhong: false,
+      duPhong: true,
       ghiChu: ''
     };
     setLocalData([newRow]);
@@ -166,11 +166,12 @@ const Capnhatneo = () => {
         id: record.id || 0,
         donViId: Number(row.donViId),
         neoId: Number(row.neoId),
+        donViTinh: row.donViTinh,
         viTriLapDat: row.viTriLapDat,
         soLuong: Number(row.soLuong),
         tinhTrangKyThuat: row.tinhTrangKyThuat,
         ngayLap: row.ngayLap ? dayjs(row.ngayLap).format('YYYY-MM-DD') : null,
-        duPhong: row.duPhong || false,
+        duPhong: row.duPhong || true,
         ghiChu: row.ghiChu
       };
 
@@ -236,11 +237,17 @@ const Capnhatneo = () => {
       editable: true,
       inputType: 'select',
       options: [
-        { label: 'Có', value: true },
-        { label: 'Không', value: false }
+        { label: 'Đang dùng', value: true },
+        { label: 'Dự phòng', value: false }
       ],
-      render: (value) => (value ? 'Có' : 'Không')
+      render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
     },
+    //   {
+    //   title: 'Dự phòng',
+    //   dataIndex: 'duPhong',
+    //   key: 'duPhong',
+    //   render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
+    // },
     { title: 'Ghi chú', dataIndex: 'ghiChu', editable: true, render: (value) => value || '' },
     {
       title: 'Hành động',

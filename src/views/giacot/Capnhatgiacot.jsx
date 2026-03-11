@@ -266,7 +266,7 @@ const Capnhatgiacot = () => {
         }
       : col
   );
-  console.log(filteredData);
+
   // ================= EXPORT EXCEL =================
   const handleExportExcel = () => {
     // Map dữ liệu theo cột và tiêu đề tiếng Việt

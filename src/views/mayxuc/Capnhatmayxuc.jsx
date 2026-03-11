@@ -224,7 +224,7 @@ function Capnhatmayxuc() {
       children: editing ? <ThongsoMayXucTable thongsomayxuc={mayxuc} /> : <div>Chọn bản ghi để xem thông số kỹ thuật</div>
     }
   ];
-  console.log(dataTonghopMayxuc);
+
   return (
     <>
       <Row gutter={8} style={{ marginBottom: 12 }}>

@@ -38,7 +38,7 @@ function Capnhatmaycao() {
       setLoading(false);
     }
   };
-  console.log(data);
+
   const fetchMaycao = async () => {
     try {
       const res = await danhmucmaycaoService.getDanhmucmaycaos();

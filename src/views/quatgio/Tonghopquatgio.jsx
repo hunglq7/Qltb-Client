@@ -52,7 +52,7 @@ const Tonghopquatgio = () => {
     fetchDanhmucquatgio();
     fetchData();
   }, []);
-  console.log(dataDonvi, dataDanhmucquatgio, dataTonghopquatgio);
+
   // 1. Sửa hàm fetchData để đồng bộ pagination
   const fetchData = async (page = 1, size = 10) => {
     await getTonghopquatgioPaging({
