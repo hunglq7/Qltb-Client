@@ -13,7 +13,6 @@ import ActionBar from '/src/components/ActionBar';
 // ================= EDIT ABLECELL =================
 const EditableCell = ({ editing, dataIndex, inputType, options = [], children, ...restProps }) => {
   let inputNode = <Input />;
-
   if (inputType === 'number') inputNode = <InputNumber style={{ width: '200' }} />;
   if (inputType === 'date') inputNode = <DatePicker style={{ width: '100%' }} />;
   if (inputType === 'select')
@@ -242,12 +241,7 @@ const Capnhatneo = () => {
       ],
       render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
     },
-    //   {
-    //   title: 'Dự phòng',
-    //   dataIndex: 'duPhong',
-    //   key: 'duPhong',
-    //   render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'Đang dùng' : 'Dự phòng'}</Tag>
-    // },
+
     { title: 'Ghi chú', dataIndex: 'ghiChu', editable: true, render: (value) => value || '' },
     {
       title: 'Hành động',

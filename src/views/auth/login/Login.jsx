@@ -16,8 +16,13 @@ export default function LoginPage() {
     //   </Col>
     // </Row>
 
-    <div className="auth-main backgoud-img bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
+    <div className="auth-main backgoud-img bg-body-tertiary min-vh-100 d-flex flex-row  align-items-center">
       <div className="auth-wrapper v1 ">
+        {/* <div className=" d-flex flex-column align-items-center justify-content-center ">
+          <div style={{ color: 'green', fontSize: 20 }}>CÔNG TY CP THAN MÔNG DƯƠNG</div>
+          <div style={{ color: 'orange', fontSize: 20 }}>PHẦN MỀM QUẢN LÝ THIẾT BỊ</div>
+        </div> */}
+
         <div className="auth-form">
           <div className="position-relative  ">
             <div className="auth-bg">
@@ -26,7 +31,6 @@ export default function LoginPage() {
               <span className="r s"></span>
               <span className="r"></span>
             </div>
-
             <AuthLoginForm link="/register" />
           </div>
         </div>
