@@ -12,7 +12,7 @@ const LoginPage = Loadable(lazy(() => import('views/auth/login/Login')));
 const RegisterPage = Loadable(lazy(() => import('views/auth/register/Register')));
 // error page
 const Page404 = Loadable(lazy(() => import('views/page404/Page404')));
-const Page500 = Loadable(lazy(() => import('views/page500/Page500')));
+const Page500 = Loadable(lazy(() => import('views/page500/page500')));
 // ==============================|| AUTH PAGES ROUTING ||============================== //
 
 const PagesRoutes = {
