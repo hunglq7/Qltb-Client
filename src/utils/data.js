@@ -1,13 +1,13 @@
-import bomnuoc from '/assets/images/thietbi/Bomnuoc.jpg';
-import maycao from '/assets/images/thietbi/mangcao-sgb.jpg';
-import bangtai from '/assets/images/thietbi/Bang-tai.jpg';
-import bienap from '/assets/images/thietbi/Bienap.jpg';
-import capdien from '/assets/images/thietbi/capdien.png';
-import aptomat from '/assets/images/thietbi/Ap-to-mat.png';
-import maykhoan from '/assets/images/thietbi/Maykhoan.jpg';
-import khoidongtu from '/assets/images/thietbi/khoi-dong-tu.jpg';
-import toidien from '/assets/images/thietbi/toidien.jpg';
-import mayxuc from '/assets/images/thietbi/ZCY-60.jpg';
+import bomnuoc from 'assets/images/thietbi/Bomnuoc.jpg';
+import maycao from 'assets/images/thietbi/mangcao-sgb.jpg';
+import bangtai from 'assets/images/thietbi/Bang-tai.jpg';
+import bienap from 'assets/images/thietbi/Bienap.jpg';
+import capdien from 'assets/images/thietbi/capdien.png';
+import aptomat from 'assets/images/thietbi/Ap-to-mat.png';
+import maykhoan from 'assets/images/thietbi/Maykhoan.jpg';
+import khoidongtu from 'assets/images/thietbi/khoi-dong-tu.jpg';
+import toidien from 'assets/images/thietbi/toidien.jpg';
+import mayxuc from 'assets/images/thietbi/ZCY-60.jpg';
 
 export const myData = [
   {
