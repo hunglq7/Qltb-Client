@@ -11,7 +11,7 @@ const ThongsoMaycao = Loadable(lazy(() => import('views/maycao/Capnhatthongsomay
 const CapnhatMaycao = Loadable(lazy(() => import('views/maycao/Capnhatmaycao')));
 // render - máy xúc
 const DanhmucMayxuc = Loadable(lazy(() => import('views/mayxuc/DanhmucMayxuc')));
-const ThongsoMayxuc = Loadable(lazy(() => import('views/mayxuc/CapnhatThongSoMayxuc')));
+const ThongsoMayxuc = Loadable(lazy(() => import('views/mayxuc/CapnhatThongsoMayxuc')));
 const CapnhatMayxuc = Loadable(lazy(() => import('views/mayxuc/Capnhatmayxuc')));
 
 //render - Tời điện
