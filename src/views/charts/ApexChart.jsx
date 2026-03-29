@@ -3,7 +3,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 // project-imports
-import DuphongBomnuocChart from '../../sections/charts/apex-charts/DuphongBomnuocChart';
+import BomnuocChart from 'sections/charts/apex-charts/BomnuocChart';
 import MainCard from 'components/MainCard';
 import ApexBarChart from 'sections/charts/apex-charts/BarChart';
 import ApexBarHorizontalChart from 'sections/charts/apex-charts/BarHorizontalChart';
@@ -23,7 +23,7 @@ export default function ApexChartPage() {
       <Row>
         <Col sm={24}>
           <MainCard title="Biểu đồ thiết bị bơm nước">
-            <DuphongBomnuocChart />
+            <BomnuocChart />
           </MainCard>
         </Col>
         {/* <Col sm={6}>

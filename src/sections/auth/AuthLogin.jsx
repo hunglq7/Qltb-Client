@@ -46,6 +46,7 @@ export default function AuthLoginForm({ className, link }) {
       // Ví dụ: lưu token
       if (res?.resultObj) {
         localStorage.setItem('accessToken', res.resultObj);
+        localStorage.setItem('lastActivity', Date.now().toString());
       }
 
       message.success('Đăng nhập thành công');
@@ -64,12 +65,12 @@ export default function AuthLoginForm({ className, link }) {
 
   return (
     <MainCard className="mb-0 w-100 ">
-      <div className="text-center">
+      {/* <div className="text-center">
         <Image style={{ width: 84, height: 64 }} src={Logo} alt="logo" />
-      </div>
+      </div> */}
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <h4 className={`text-center f-w-500 mt-4 mb-3 ${className}`}>Login</h4>
+        <h4 className={`text-center f-w-500 mt-4 mb-3 text-primary ${className}`}>Đăng nhập</h4>
 
         {/* Email */}
         <Form.Group className="mb-3">
