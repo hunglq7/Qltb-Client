@@ -234,6 +234,26 @@ const capNhatThiebi = {
           url: '/neo/capnhatneo'
         }
       ]
+    },
+    {
+      id: 'AptomatKhoidongtu',
+      title: 'Aptomat, Khởi Động Từ',
+      type: 'collapse',
+      icon: <i className="ph ph-gear" />,
+      children: [
+        {
+          id: 'danhmucaptomatkhoidongtu',
+          title: 'Danh mục aptomat khởi động tự',
+          type: 'item',
+          url: '/aptomatkhoidongtu/danhmucaptomatkhoidongtu'
+        },
+        {
+          id: 'capnhataptomatkhoidongtu',
+          title: 'Cập nhật aptomat khởi động tự',
+          type: 'item',
+          url: '/aptomatkhoidongtu/capnhataptomatkhoidongtu'
+        }
+      ]
     }
   ]
 };

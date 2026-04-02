@@ -6,7 +6,7 @@ import { useCapnhatgiacotStore } from '/src/stores/giacot/capnhatgiacotStore';
 import { useDanhmucgiacotStore } from '/src/stores/giacot/danhmucgiacotStore';
 import { useDonviStore } from '/src/stores/donvi/donviStore';
 const GiacotChart = () => {
-  const [filterDonVi, setFilterDonVi] = useState(null); // null nghĩa là chọn "Tất cả"
+  const [filterDonVi, setFilterDonVi] = useState(''); // '' nghĩa là chọn "Tất cả"
   const { dataCapnhatgiacot, fetchCapnhatgiacot } = useCapnhatgiacotStore();
   const { dataDanhmucgiacot, fetchDanhmucgiacot } = useDanhmucgiacotStore();
   const { dataDonvi, fetchDonvi } = useDonviStore();
@@ -27,9 +27,10 @@ const GiacotChart = () => {
   // ================= XỬ LÝ DỮ LIỆU BIỂU ĐỒ (SUM) =================
   const chartData = useMemo(() => {
     // 1. Lọc dữ liệu theo đơn vị nếu có chọn filter
-    const filteredSource = filterDonVi
-      ? dataCapnhatgiacot.filter((item) => Number(item.donViId) === Number(filterDonVi))
-      : dataCapnhatgiacot;
+    const filteredSource =
+      filterDonVi && filterDonVi !== ''
+        ? dataCapnhatgiacot.filter((item) => Number(item.donViId) === Number(filterDonVi))
+        : dataCapnhatgiacot;
 
     // 2. Tính SUM theo loaiThietBiId
     const sumData = filteredSource.reduce((acc, item) => {
@@ -82,8 +83,8 @@ const GiacotChart = () => {
           style={{ width: 250 }}
           placeholder="Chọn đơn vị để xem báo cáo"
           allowClear
-          onChange={(value) => setFilterDonVi(value)}
-          options={[{ label: '--- Tất cả đơn vị ---', value: null }, ...donViOptions]}
+          onChange={(value) => setFilterDonVi(value || '')}
+          options={[{ label: '--- Tất cả đơn vị ---', value: '' }, ...donViOptions]}
         />
       </Row>
 

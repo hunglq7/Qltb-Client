@@ -8,7 +8,7 @@ import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
 
 // ================= EDIT ABLECELL =================
-const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
+const EditableCell = ({ editing, dataIndex, children, inputType, ...restProps }) => {
   return (
     <td {...restProps}>
       {editing ? (
