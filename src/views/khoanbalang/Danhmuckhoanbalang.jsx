@@ -54,7 +54,6 @@ const Danhmuckhoanbalang = () => {
 
   // ================= EDIT =================
   const isEditing = (record) => record.key === editingKey;
-
   const edit = (record) => {
     form.setFieldsValue({
       tenThietBi: record.tenThietBi,
