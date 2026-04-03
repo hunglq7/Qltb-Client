@@ -44,6 +44,9 @@ const Capnhatkhoanbalang = Loadable(lazy(() => import('views/khoanbalang/Capnhat
 //Render - Neo
 const Danhmucneo = Loadable(lazy(() => import('views/neo/Danhmucneo')));
 const Capnhatneo = Loadable(lazy(() => import('views/neo/Capnhatneo')));
+//Render-AptomatKhoidongtu
+const Danhmucaptomatkhoidongtu = Loadable(lazy(() => import('views/aptomatkhoidongtu/Danhmucaptomatkhoidongtu')));
+const Capnhataptomatkhoidongtu = Loadable(lazy(() => import('views/aptomatkhoidongtu/Capnhataptomatkhoidongtu')));
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const CapnhatthietbiRouters = {
@@ -204,6 +207,19 @@ const CapnhatthietbiRouters = {
             {
               path: 'capnhatneo',
               element: <Capnhatneo />
+            }
+          ]
+        },
+        {
+          path: 'aptomatkhoidongtu',
+          children: [
+            {
+              path: 'danhmucaptomatkhoidongtu',
+              element: <Danhmucaptomatkhoidongtu />
+            },
+            {
+              path: 'capnhataptomatkhoidongtu',
+              element: <Capnhataptomatkhoidongtu />
             }
           ]
         }

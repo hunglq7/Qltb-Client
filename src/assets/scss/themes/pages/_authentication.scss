@@ -40,14 +40,35 @@
   left: 0;
   transform: none;
   z-index: 5;
-  color: #007bff;
+  color: #12b81f;
+  background: transparent;
+  padding: 2px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+  text-align: center; 
+}
+
+@supports(background-clip: text) or (-webkit-background-clip: text) {
+ .auth-bg-blue,
+.auth-bg-green {
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: none;
+  z-index: 5;
+  color: #12b81f;
   background: transparent;
   padding: 2px 10px;
   border-radius: 5px;
   font-weight: 600;
   text-align: center;
+  color: transparent;
+  background-color: #f5df16;
+background-image: radial-gradient(circle, #6ccf1a 0%, #00d4ff 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
 }
-
+}
 .auth-bg-blue {
   font-size: 2rem;
 }
