@@ -60,6 +60,7 @@ function Capnhatmayxuc() {
       pageIndex: page,
       pageSize: size
     });
+
     // Nếu bạn muốn quản lý state pagination tại component:
     setPagination((prev) => ({
       ...prev,
@@ -85,7 +86,6 @@ function Capnhatmayxuc() {
       ...record,
       ngayLap: record.ngayLap ? dayjs(record.ngayLap) : null
     });
-
     setModalOpen(true);
   };
 

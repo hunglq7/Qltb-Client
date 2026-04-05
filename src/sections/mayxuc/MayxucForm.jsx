@@ -2,6 +2,7 @@ import { SaveOutlined } from '@ant-design/icons';
 import { Select, Input, Form, DatePicker, Space, Button, Switch } from 'antd';
 import { memo } from 'react';
 const { TextArea } = Input;
+
 function MayxucForm({ handleSubmit, form, mayXucList = [], donViList = [], onCancel, loaiThietBiList = [] }) {
   const formItemLayout = {
     labelCol: {
@@ -68,6 +69,7 @@ function MayxucForm({ handleSubmit, form, mayXucList = [], donViList = [], onCan
       <Form.Item name="ghiChu" label="Ghi chú">
         <TextArea />
       </Form.Item>
+
       <Form.Item wrapperCol={{ offset: 6 }}>
         <Space>
           <Button
