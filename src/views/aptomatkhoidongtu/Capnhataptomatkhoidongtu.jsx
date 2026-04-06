@@ -1,9 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import Badge from 'react-bootstrap/Badge';
-import { Form, Button, Space, Modal, Tabs, Table, message, Tag, Row, Popconfirm } from 'antd';
-import MainCard from 'components/MainCard';
+import { Form, Button, Space, Modal, Table, message, Tag, Row, Popconfirm } from 'antd';
 import ActionBar from '/src/components/ActionBar';
 import SearchBar from '/src/components/SearchBar';
 import * as XLSX from 'xlsx';
@@ -15,7 +13,6 @@ import AptomatKhoidongtuForm from '../../sections/aptomatkhoidongtu/AptomatKhoid
 const Capnhataptomatkhoidongtu = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [form] = Form.useForm();
-  const [aptomatkhoidongtu, setAptomatKhoidongtu] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const { dataDonvi, fetchDonvi } = useDonviStore();
@@ -23,7 +20,6 @@ const Capnhataptomatkhoidongtu = () => {
   const {
     loading,
     dataTonghopaptomatkhoidongtu,
-    fetchTonghopaptomatkhoidongtus,
     getTonghopaptomatkhoidongtuPaging,
     createTonghopaptomatkhoidongtu,
     updateTonghopaptomatkhoidongtu,
@@ -69,36 +65,12 @@ const Capnhataptomatkhoidongtu = () => {
   // ================= ADD =================
   const handleOpenAdd = () => {
     setEditing(null);
-    form.resetFields();
-    form.setFieldsValue({ duPhong: true, kheHoPhongNo: true, napMoNhanh: true, tayDao: true, noiDat: true });
     setModalOpen(true);
   };
 
   // ================= EDIT =================
   const handleOpenEdit = (record) => {
     setEditing(record);
-    setAptomatKhoidongtu(record);
-    form.setFieldsValue({
-      aptomatKhoidongtuId: record.aptomatkhoidongtuId,
-      donViId: record.donViId,
-      viTriLapDat: record.viTriLapDat,
-      dienApSuDung: record.dienApSuDung,
-      idm: record.idm,
-      dienApDieuKhien: record.dienApDieuKhien,
-      cheDoLamViec: record.cheDoLamViec,
-      thongGio: record.thongGio,
-      noiDat: record.noiDat,
-      kheHoPhongNo: record.kheHoPhongNo,
-      napMoNhanh: record.napMoNhanh,
-      tayDao: record.tayDao,
-      bitCoCap: record.bitCoCap,
-      capPhongNo: record.capPhongNo,
-      tinhTrangThietBi: record.tinhTrangThietBi,
-      duPhong: record.duPhong,
-      ghiChu: record.ghiChu,
-      ngayKiemDinh: record.ngayKiemDinh ? dayjs(record.ngayKiemDinh) : null,
-      namSanXuat: record.namSanXuat ? dayjs(record.namSanXuat) : null
-    });
     setModalOpen(true);
   };
   // ================= DELETE =================
@@ -124,34 +96,20 @@ const Capnhataptomatkhoidongtu = () => {
     try {
       const payload = {
         Id: editing?.id || 0,
-        aptomatkhoidongtuId: values.aptomatKhoidongtuId,
-        DonViId: values.donViId,
-        ViTriLapDat: values.viTriLapDat,
-        NgayKiemDinh: values.ngayKiemDinh ? values.ngayKiemDinh.format('YYYY-MM-DD') : null,
-        NamSanXuat: values.namSanXuat ? values.namSanXuat.format('YYYY-MM-DD') : null,
-        DienApSuDung: values.dienApSuDung,
-        Idm: values.idm,
-        DienApDieuKhien: values.dienApDieuKhien,
-        CheDoLamViec: values.cheDoLamViec,
-        ThongGio: values.thongGio,
-        NoiDat: values.noiDat,
-        KheHoPhongNo: values.kheHoPhongNo,
-        NapMoNhanh: values.napMoNhanh,
-        TayDao: values.tayDao,
-        BitCoCap: values.bitCoCap,
-        CapPhongNo: values.capPhongNo,
-        TinhTrangThietBi: values.tinhTrangThietBi,
-        DuPhong: values.duPhong || false,
-        GhiChu: values.ghiChu
+        ...values,
+        NgayKiemDinh: values.ngayKiemDinh?.format('YYYY-MM-DD'),
+        NamSanXuat: values.namSanXuat?.format('YYYY-MM-DD'),
+        DuPhong: values.duPhong ?? false
       };
+
       if (editing) {
         await updateTonghopaptomatkhoidongtu(payload);
       } else {
         await createTonghopaptomatkhoidongtu(payload);
       }
+
       setModalOpen(false);
       setEditing(null);
-      form.resetFields();
       fetchData(1, pagination.pageSize);
     } catch {
       message.error('Lưu dữ liệu thất bại');
@@ -334,12 +292,57 @@ const Capnhataptomatkhoidongtu = () => {
         }}
       />
       <Modal
-        title={editing ? 'Cập nhật thiết bị' : `Thêm mới thiết bị`}
+        title={editing ? 'Cập nhật thiết bị' : 'Thêm mới thiết bị'}
         open={modalOpen}
-        footer={null} // ✅ để Form tự submit
+        footer={null}
         onCancel={() => setModalOpen(false)}
         zIndex={1500}
         width={1000}
+        afterOpenChange={(open) => {
+          if (!open) return;
+
+          if (!editing) {
+            // ===== ADD =====
+            form.resetFields();
+            form.setFieldsValue({
+              kheHoPhongNo: true,
+              napMoNhanh: true,
+              tayDao: true,
+              noiDat: true,
+              duPhong: true
+            });
+
+            // focus chuẩn
+            setTimeout(() => {
+              const input = document.querySelector('.ant-select-selection-search-input');
+              input?.focus();
+              // document.querySelector('.ant-select-selector')?.click();
+            }, 100);
+          } else {
+            // ===== EDIT =====
+            form.setFieldsValue({
+              aptomatKhoidongtuId: editing.aptomatkhoidongtuId,
+              donViId: editing.donViId,
+              viTriLapDat: editing.viTriLapDat,
+              dienApSuDung: editing.dienApSuDung,
+              idm: editing.idm,
+              dienApDieuKhien: editing.dienApDieuKhien,
+              cheDoLamViec: editing.cheDoLamViec,
+              thongGio: editing.thongGio,
+              noiDat: editing.noiDat,
+              kheHoPhongNo: editing.kheHoPhongNo,
+              napMoNhanh: editing.napMoNhanh,
+              tayDao: editing.tayDao,
+              bitCoCap: editing.bitCoCap,
+              capPhongNo: editing.capPhongNo,
+              tinhTrangThietBi: editing.tinhTrangThietBi,
+              duPhong: editing.duPhong,
+              ghiChu: editing.ghiChu,
+              ngayKiemDinh: editing.ngayKiemDinh ? dayjs(editing.ngayKiemDinh) : null,
+              namSanXuat: editing.namSanXuat ? dayjs(editing.namSanXuat) : null
+            });
+          }
+        }}
       >
         <AptomatKhoidongtuForm
           open={modalOpen}
