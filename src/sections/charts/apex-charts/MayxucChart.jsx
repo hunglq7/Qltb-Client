@@ -17,10 +17,8 @@ const MayxucChart = () => {
   /* ================= BIỂU ĐỒ DỰ PHÒNG ================= */
   const { labels, series } = useMemo(() => {
     if (!listData.length) return { labels: [], series: [] };
-
     const counts = listData.reduce((acc, item) => {
       const key = item.duPhong === true || item.duPhong === 'true' ? 'Đang dùng' : 'Dự phòng';
-
       acc[key] = (acc[key] || 0) + (item.soLuong || 1);
       return acc;
     }, {});
